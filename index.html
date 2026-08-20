@@ -614,10 +614,10 @@ body {
   <div id="customPanel" class="custom-panel">
     <h3>📋 自定义练习 - 输入题号范围</h3>
     <div class="input-row">
-      <input type="text" id="customInput" placeholder="例如：1,3,5-10,451-460（单选题1-450，判断题451-620）" onkeydown="if(event.key==='Enter')startCustom()">
+      <input type="text" id="customInput" placeholder="例如：1,3,5-10（请在对应题型下输入，单选题1-431，判断题1-170）" onkeydown="if(event.key==='Enter')startCustom()">
       <button class="btn" onclick="startCustom()">开始练习</button>
     </div>
-    <div class="hint">支持逗号分隔和范围，如：1,3,5-10,100-120。单选题编号1-450，判断题编号451-620。</div>
+    <div class="hint">支持逗号分隔和范围，如：1,3,5-10,100-120。单选题编号1-431，判断题编号1-170。</div>
   </div>
 
   <!-- Question card -->
@@ -815,7 +815,7 @@ function startCustom() {
   }
   currentQuestions = ALL_QUESTIONS.filter(function(q) { return ids.has(q.id); });
   if (currentQuestions.length === 0) {
-    alert('未找到匹配的题目，请检查题号。\n单选题1-450，判断题451-620。');
+    alert('未找到匹配的题目，请检查题号。\n单选题1-431，判断题1-170。');
     return;
   }
   currentIndex = 0;
