@@ -279,6 +279,19 @@ body {
   background: var(--card2);
   border-radius: 10px;
   border-left: 3px solid var(--primary);
+  white-space: pre-line;
+}
+.answer-placeholder {
+  display: inline-block;
+  background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(139,92,246,0.15));
+  border: 2px dashed rgba(59,130,246,0.5);
+  border-radius: 6px;
+  padding: 2px 10px;
+  margin: 0 4px;
+  color: #93c5fd;
+  font-weight: 700;
+  font-size: 1.05em;
+  letter-spacing: 2px;
 }
 
 /* Options */
@@ -448,6 +461,14 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.error-item .q-no {
+  font-size: 0.8em;
+  color: #60a5fa;
+  font-weight: 600;
+  font-family: 'SF Mono', 'Consolas', monospace;
+  flex-shrink: 0;
+  min-width: 36px;
 }
 .error-item .q-meta {
   display: flex;
@@ -895,7 +916,7 @@ function renderQuestion() {
     typeEl.textContent = '判断题';
     typeEl.className = 'q-type q-type-judge';
   }
-  document.getElementById('qText').textContent = q.question;
+  document.getElementById('qText').innerHTML = q.question.replace(/（\s*）/g, '<span class="answer-placeholder">（ ）</span>');
   document.getElementById('progressBar').style.width = ((currentIndex + 1) / total * 100) + '%';
 
   var optionsDiv = document.getElementById('options');
@@ -1064,20 +1085,14 @@ function renderErrorList() {
   var html = '';
   for (var i = 0; i < errorQuestions.length; i++) {
     var q = errorQuestions[i];
-    var ansDisplay;
-    if (q.type === 'single') {
-      ansDisplay = q.answer + '. ' + (q.options[q.answer] || '');
-    } else {
-      ansDisplay = q.answer === 'T' ? '正确' : '错误';
-    }
     var typeTag = q.type === 'single' ? 'q-type-single-sm' : 'q-type-judge-sm';
     var typeLabel = q.type === 'single' ? '单选' : '判断';
     html += '<div class="error-item" onclick="gotoQuestion(' + q.id + ')">';
+    html += '<span class="q-no">#' + q.gid + '</span>';
     html += '<span class="q-text">' + q.question + '</span>';
     html += '<div class="q-meta">';
     html += '<span class="q-type-tag ' + typeTag + '">' + typeLabel + '</span>';
-    html += '<span class="q-answer">' + ansDisplay + '</span>';
-    html += '<button class="remove-btn" onclick="event.stopPropagation();removeError(' + q.id + ')" title="移出错题本">×</button>';
+    html += '<button class="remove-btn" onclick="event.stopPropagation();removeError(' + q.id + ')" title="移出错题本">x</button>';
     html += '</div></div>';
   }
   listDiv.innerHTML = html;
