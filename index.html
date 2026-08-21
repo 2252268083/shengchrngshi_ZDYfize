@@ -816,7 +816,7 @@ function restoreTabState(tab) {
     currentIndex = state.index;
     userAnswers = state.answers;
     isAnswered = state.answered;
-  } else {
+  } else if (tab !== 'custom') {
     currentQuestions = ALL_QUESTIONS.filter(function(q) { return q.type === tab; });
     currentIndex = 0;
     userAnswers = {};
@@ -867,6 +867,13 @@ function startCustom() {
   var input = document.getElementById('customInput').value.trim();
   if (!input) return;
   var ids = new Set();
+  // 先提取所有数字（支持从混合文本中提取题号）
+  var numMatches = input.match(/\d+/g);
+  if (!numMatches) {
+    alert('未找到有效的题号。\n单选题1-450，判断题451-620。');
+    return;
+  }
+  // 按逗号分段，支持范围如 189-197
   var parts = input.split(',');
   for (var p = 0; p < parts.length; p++) {
     var trimmed = parts[p].trim();
@@ -879,6 +886,12 @@ function startCustom() {
     } else {
       var num = Number(trimmed);
       if (num) ids.add(num);
+    }
+  }
+  // 如果逗号分段没提取到，就用正则提取的全部数字
+  if (ids.size === 0) {
+    for (var n = 0; n < numMatches.length; n++) {
+      ids.add(Number(numMatches[n]));
     }
   }
   var questions = ALL_QUESTIONS.filter(function(q) { return ids.has(q.gid); });
