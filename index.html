@@ -920,7 +920,7 @@ function renderQuestion() {
   }
   var q = currentQuestions[currentIndex];
   var total = currentQuestions.length;
-  document.getElementById('qNum').textContent = '第 ' + (currentIndex + 1) + ' / ' + total + ' 题';
+  document.getElementById('qNum').textContent = '#' + q.gid + '  第 ' + (currentIndex + 1) + ' / ' + total + ' 题';
   var typeEl = document.getElementById('qType');
   if (q.type === 'single') {
     typeEl.textContent = '单选题';
