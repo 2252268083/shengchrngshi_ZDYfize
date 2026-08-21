@@ -677,6 +677,11 @@ body {
 <script>
 // ====== DATA ======
 var ALL_QUESTIONS = [];
+var wrongSet = new Set();
+var currentQuestions = [];
+var currentIndex = 0;
+var userAnswers = {};
+var isAnswered = {};
 
 function init() {
   fetch('questions.json')
@@ -769,6 +774,35 @@ function updateErrorCount() {
 }
 
 // ====== TABS ======
+var currentTab = '';
+var tabStates = {};
+
+function saveTabState() {
+  if (currentTab && currentTab !== 'error') {
+    tabStates[currentTab] = {
+      questions: currentQuestions,
+      index: currentIndex,
+      answers: JSON.parse(JSON.stringify(userAnswers)),
+      answered: JSON.parse(JSON.stringify(isAnswered))
+    };
+  }
+}
+
+function restoreTabState(tab) {
+  var state = tabStates[tab];
+  if (state) {
+    currentQuestions = state.questions;
+    currentIndex = state.index;
+    userAnswers = state.answers;
+    isAnswered = state.answered;
+  } else {
+    currentQuestions = ALL_QUESTIONS.filter(function(q) { return q.type === tab; });
+    currentIndex = 0;
+    userAnswers = {};
+    isAnswered = {};
+  }
+}
+
 function setupTabClicks() {
   document.querySelectorAll('.tab').forEach(function(tab) {
     tab.addEventListener('click', function() { switchTab(tab.dataset.tab); });
@@ -776,6 +810,7 @@ function setupTabClicks() {
 }
 
 function switchTab(tab) {
+  saveTabState();
   currentTab = tab;
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
   document.querySelector('[data-tab="' + tab + '"]').classList.add('active');
@@ -789,17 +824,18 @@ function switchTab(tab) {
   } else if (tab === 'custom') {
     document.getElementById('customPanel').style.display = 'block';
     document.getElementById('mainCard').style.display = 'block';
+    restoreTabState(tab);
     if (currentQuestions.length === 0) {
       document.getElementById('qText').textContent = '请在上方输入题号后开始练习';
       document.getElementById('options').innerHTML = '';
       document.getElementById('qNum').textContent = '';
+    } else {
+      renderQuestion();
+      updateStats();
     }
   } else {
     document.getElementById('mainCard').style.display = 'block';
-    currentQuestions = ALL_QUESTIONS.filter(function(q) { return q.type === tab; });
-    currentIndex = 0;
-    userAnswers = {};
-    isAnswered = {};
+    restoreTabState(tab);
     renderQuestion();
     updateStats();
   }
@@ -824,14 +860,16 @@ function startCustom() {
       if (num) ids.add(num);
     }
   }
-  currentQuestions = ALL_QUESTIONS.filter(function(q) { return ids.has(q.gid); });
-  if (currentQuestions.length === 0) {
+  var questions = ALL_QUESTIONS.filter(function(q) { return ids.has(q.gid); });
+  if (questions.length === 0) {
     alert('未找到匹配的题目，请检查题号。\n单选题1-450，判断题451-620。');
     return;
   }
+  currentQuestions = questions;
   currentIndex = 0;
   userAnswers = {};
   isAnswered = {};
+  tabStates.custom = null;
   switchTab('custom');
   document.getElementById('customPanel').style.display = 'block';
   document.getElementById('mainCard').style.display = 'block';
@@ -935,8 +973,9 @@ function selectAnswer(key) {
   showToast(isCorrect);
 
   if (isCorrect) {
-    // Auto-advance on correct answer
+    var tabAtAnswer = currentTab;
     setTimeout(function() {
+      if (currentTab !== tabAtAnswer) return;
       if (currentIndex < currentQuestions.length - 1) {
         currentIndex++;
         renderQuestion();
@@ -1061,9 +1100,21 @@ function startErrorPractice() {
 function gotoQuestion(qid) {
   var q = ALL_QUESTIONS.find(function(q) { return q.id === qid; });
   if (!q) return;
-  switchTab(q.type);
-  currentIndex = currentQuestions.findIndex(function(q) { return q.id === qid; });
-  if (currentIndex >= 0) renderQuestion();
+  saveTabState();
+  var targetTab = q.type;
+  if (!tabStates[targetTab]) {
+    tabStates[targetTab] = {
+      questions: ALL_QUESTIONS.filter(function(qq) { return qq.type === targetTab; }),
+      index: 0,
+      answers: {},
+      answered: {}
+    };
+  }
+  var idx = tabStates[targetTab].questions.findIndex(function(qq) { return qq.id === qid; });
+  if (idx >= 0) {
+    tabStates[targetTab].index = idx;
+  }
+  switchTab(targetTab);
 }
 
 function removeError(qid) {
