@@ -288,6 +288,31 @@ body {
 }
 .jump-btn:hover { background: var(--primary2); }
 
+/* Shuffle toggle */
+.shuffle-toggle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  margin-left: auto;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.8em;
+  color: var(--text2);
+  transition: all .2s;
+  user-select: none;
+}
+.shuffle-toggle:hover { border-color: var(--primary); color: var(--text); }
+.shuffle-toggle.active {
+  border-color: #f59e0b;
+  background: rgba(245,158,11,0.1);
+  color: #fbbf24;
+}
+.shuffle-icon { font-size: 1.1em; }
+.shuffle-label { font-weight: 600; }
+
 /* Progress */
 .progress-wrap { margin-bottom: 20px; }
 .progress {
@@ -400,6 +425,21 @@ body {
 }
 .result-toast.correct { background: #065f46; color: #6ee7b7; border: 1px solid #059669; }
 .result-toast.wrong { background: #7f1d1d; color: #fca5a5; border: 1px solid #dc2626; }
+.msg-toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 0.9em;
+  z-index: 200;
+  background: rgba(245,158,11,0.9);
+  color: #fff;
+  animation: slideDown .3s ease, fadeOut .3s 1.2s ease forwards;
+  pointer-events: none;
+}
 @keyframes slideDown {
   from { transform: translateX(-50%) translateY(-60px); opacity: 0; }
   to { transform: translateX(-50%) translateY(0); opacity: 1; }
@@ -543,6 +583,64 @@ body {
 .empty-state .icon { font-size: 3.5em; margin-bottom: 16px; opacity: 0.5; }
 .empty-state p { font-size: 0.95em; }
 
+/* Error history */
+.error-history {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.history-title {
+  font-size: 0.9em;
+  color: var(--text2);
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+.history-list { display: flex; flex-direction: column; gap: 8px; }
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  cursor: pointer;
+  transition: all .2s;
+  gap: 12px;
+}
+.history-item:hover { border-color: var(--primary); }
+.history-item .h-info { flex: 1; }
+.history-item .h-date {
+  font-size: 0.85em;
+  color: var(--text);
+  font-weight: 600;
+}
+.history-item .h-score {
+  font-size: 0.78em;
+  color: var(--text2);
+  margin-top: 2px;
+}
+.history-item .h-score.good { color: var(--success); }
+.history-item .h-score.bad { color: var(--danger); }
+.history-item .h-count {
+  font-size: 0.75em;
+  color: var(--text2);
+  white-space: nowrap;
+}
+.history-item .redo-btn {
+  padding: 5px 14px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.78em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+  white-space: nowrap;
+}
+.history-item .redo-btn:hover { background: var(--primary2); }
+
 /* Final score overlay */
 .overlay {
   position: fixed;
@@ -671,6 +769,10 @@ body {
     <button class="tab" data-tab="judge">判断题<span class="badge" id="judgeCount">0</span></button>
     <button class="tab" data-tab="error">错题本<span class="badge danger" id="errorCount">0</span></button>
     <button class="tab" data-tab="custom">自定义练习</button>
+    <span class="shuffle-toggle" id="shuffleToggle" onclick="toggleShuffle()" title="切换顺序/随机模式">
+      <span class="shuffle-icon">&#9776;</span>
+      <span class="shuffle-label" id="shuffleLabel">顺序</span>
+    </span>
   </div>
 
   <!-- Custom panel -->
@@ -719,6 +821,13 @@ body {
       <div class="icon">&#x1F4AF;</div>
       <p>暂无错题，继续保持！</p>
     </div>
+    <div id="errorHistory" class="error-history">
+      <h3 class="history-title">📝 错题练习历史</h3>
+      <div id="historyList" class="history-list"></div>
+      <div id="historyEmpty" class="empty-state" style="padding:16px;">
+        <p style="font-size:0.85em;color:var(--text2);">暂无历史记录</p>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -738,6 +847,8 @@ body {
 // ====== DATA ======
 var ALL_QUESTIONS = [];
 var wrongSet = new Set();
+var errorHistory = [];
+var isErrorPractice = false;
 var currentQuestions = [];
 var currentIndex = 0;
 var userAnswers = {};
@@ -751,6 +862,7 @@ function init() {
       document.getElementById('singleCount').textContent = ALL_QUESTIONS.filter(function(q) { return q.type === 'single'; }).length;
       document.getElementById('judgeCount').textContent = ALL_QUESTIONS.filter(function(q) { return q.type === 'judge'; }).length;
       loadWrongSet();
+      loadErrorHistory();
       fetchIP();
       switchTab('single');
     })
@@ -836,6 +948,59 @@ function updateErrorCount() {
 // ====== TABS ======
 var currentTab = '';
 var tabStates = {};
+var shuffleMode = false;
+var originalOrder = null;
+var pendingSeqJump = false;
+
+function shuffleArray(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
+function toggleShuffle() {
+  shuffleMode = !shuffleMode;
+  var toggle = document.getElementById('shuffleToggle');
+  var label = document.getElementById('shuffleLabel');
+  if (shuffleMode) {
+    toggle.classList.add('active');
+    label.textContent = '随机';
+  } else {
+    toggle.classList.remove('active');
+    label.textContent = '顺序';
+  }
+  if (currentQuestions.length === 0) return;
+
+  var curQ = currentQuestions[currentIndex];
+  if (shuffleMode) {
+    // 保存原始顺序，只打乱当前题之后的题目
+    originalOrder = currentQuestions.slice();
+    var head = currentQuestions.slice(0, currentIndex + 1);
+    var tail = currentQuestions.slice(currentIndex + 1);
+    tail = shuffleArray(tail);
+    currentQuestions = head.concat(tail);
+  } else {
+    // 恢复原始顺序，定位当前题
+    pendingSeqJump = true;
+    if (originalOrder && originalOrder.length > 0) {
+      currentQuestions = originalOrder;
+      originalOrder = null;
+    } else {
+      currentQuestions.sort(function(a, b) { return a.gid - b.gid; });
+    }
+    for (var i = 0; i < currentQuestions.length; i++) {
+      if (currentQuestions[i].id === curQ.id) {
+        currentIndex = i;
+        break;
+      }
+    }
+  }
+  renderQuestion();
+  updateStats();
+}
 
 function saveTabState() {
   if (currentTab && currentTab !== 'error') {
@@ -860,6 +1025,7 @@ function restoreTabState(tab) {
     currentIndex = 0;
     userAnswers = {};
     isAnswered = {};
+    if (shuffleMode) { currentQuestions = shuffleArray(currentQuestions); }
   }
 }
 
@@ -881,6 +1047,7 @@ function switchTab(tab) {
   if (tab === 'error') {
     document.getElementById('errorPanel').style.display = 'block';
     renderErrorList();
+    renderErrorHistory();
   } else if (tab === 'custom') {
     document.getElementById('customPanel').style.display = 'block';
     document.getElementById('mainCard').style.display = 'block';
@@ -909,7 +1076,7 @@ function startCustom() {
   // 先提取所有数字（支持从混合文本中提取题号）
   var numMatches = input.match(/\d+/g);
   if (!numMatches) {
-    alert('未找到有效的题号。\n单选题1-450，判断题451-620。');
+    showToastMsg('未找到有效的题号');
     return;
   }
   // 按逗号分段，支持范围如 189-197
@@ -935,10 +1102,11 @@ function startCustom() {
   }
   var questions = ALL_QUESTIONS.filter(function(q) { return ids.has(q.gid); });
   if (questions.length === 0) {
-    alert('未找到匹配的题目，请检查题号。\n单选题1-450，判断题451-620。');
+    showToastMsg('未找到匹配的题目，请检查题号');
     return;
   }
   currentQuestions = questions;
+  if (shuffleMode) { currentQuestions = shuffleArray(currentQuestions); }
   currentIndex = 0;
   userAnswers = {};
   isAnswered = {};
@@ -1029,24 +1197,39 @@ function renderQuestion() {
 
 // ====== JUMP TO QUESTION ======
 function jumpToQuestion() {
-  var input = document.getElementById('jumpInput').value.trim();
+  var inputEl = document.getElementById('jumpInput');
+  if (!inputEl) return;
+  var input = inputEl.value.trim();
   if (!input) return;
-  var targetGid = Number(input);
-  if (!targetGid || targetGid < 1 || targetGid > 620) {
-    alert('请输入有效的题号（1-620）');
+  if (!currentQuestions || currentQuestions.length === 0) {
+    showToastMsg('当前没有题目可跳转');
     return;
   }
-  // 在当前题目列表中查找
+  var targetGid = Number(input);
+  if (!targetGid || targetGid < 1 || targetGid > 620) {
+    showToastMsg('请输入有效题号（1-620）');
+    return;
+  }
   for (var i = 0; i < currentQuestions.length; i++) {
     if (currentQuestions[i].gid === targetGid) {
       currentIndex = i;
       renderQuestion();
       updateStats();
-      document.getElementById('jumpInput').value = '';
+      inputEl.value = '';
       return;
     }
   }
-  alert('当前题目列表中未找到 #' + targetGid + ' 题');
+  showToastMsg('当前列表中未找到 #' + targetGid);
+}
+
+function showToastMsg(msg) {
+  var old = document.querySelector('.msg-toast');
+  if (old) old.remove();
+  var toast = document.createElement('div');
+  toast.className = 'msg-toast';
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(function() { if (toast.parentNode) toast.remove(); }, 2000);
 }
 
 // ====== ANSWER ======
@@ -1071,8 +1254,31 @@ function selectAnswer(key) {
     var tabAtAnswer = currentTab;
     setTimeout(function() {
       if (currentTab !== tabAtAnswer) return;
-      if (currentIndex < currentQuestions.length - 1) {
-        currentIndex++;
+      var jumped = false;
+      if (pendingSeqJump) {
+        pendingSeqJump = false;
+        // 跳转到未答题中最小的题号
+        var minIdx = -1, minGid = Infinity;
+        for (var i = 0; i < currentQuestions.length; i++) {
+          if (!isAnswered[currentQuestions[i].id] && currentQuestions[i].gid < minGid) {
+            minGid = currentQuestions[i].gid;
+            minIdx = i;
+          }
+        }
+        if (minIdx >= 0) {
+          currentIndex = minIdx;
+          jumped = true;
+        }
+      }
+      if (!jumped) {
+        var maxIter2 = currentQuestions.length;
+        do {
+          currentIndex++;
+          if (currentIndex >= currentQuestions.length) break;
+          maxIter2--;
+        } while (maxIter2 > 0 && isAnswered[currentQuestions[currentIndex].id]);
+      }
+      if (currentIndex < currentQuestions.length) {
         renderQuestion();
         updateStats();
       } else if (Object.keys(isAnswered).length === currentQuestions.length) {
@@ -1127,15 +1333,32 @@ function showResult() {
   document.getElementById('finalScore').textContent = pct + '%';
   document.getElementById('finalDetail').textContent = '答对 ' + correct + ' 题 / 共 ' + currentQuestions.length + ' 题';
   document.getElementById('resultOverlay').style.display = 'flex';
+
+  if (isErrorPractice) {
+    saveErrorHistory(correct, currentQuestions.length);
+  }
 }
 
 function closeResult() {
   document.getElementById('resultOverlay').style.display = 'none';
+  isErrorPractice = false;
 }
 
 // ====== NAVIGATION ======
 function nextQuestion() {
-  if (currentIndex < currentQuestions.length - 1) { currentIndex++; renderQuestion(); }
+  pendingSeqJump = false;
+  if (!currentQuestions || currentQuestions.length === 0) return;
+  var start = currentIndex;
+  var maxIter = currentQuestions.length;
+  do {
+    currentIndex++;
+    if (currentIndex >= currentQuestions.length) {
+      currentIndex = start;
+      break;
+    }
+    maxIter--;
+  } while (maxIter > 0 && isAnswered[currentQuestions[currentIndex].id]);
+  if (currentIndex !== start) renderQuestion();
 }
 
 function prevQuestion() {
@@ -1176,9 +1399,11 @@ function startErrorPractice() {
   if (wrongSet.size === 0) return;
   currentQuestions = ALL_QUESTIONS.filter(function(q) { return wrongSet.has(q.id); });
   if (currentQuestions.length === 0) return;
+  if (shuffleMode) { currentQuestions = shuffleArray(currentQuestions); }
   currentIndex = 0;
   userAnswers = {};
   isAnswered = {};
+  isErrorPractice = true;
   document.getElementById('mainCard').style.display = 'block';
   document.getElementById('errorPracticeInfo').style.display = 'inline';
   document.getElementById('errorPracticeInfo').textContent = '正在练习 ' + currentQuestions.length + ' 道错题';
@@ -1192,8 +1417,10 @@ function gotoQuestion(qid) {
   saveTabState();
   var targetTab = q.type;
   if (!tabStates[targetTab]) {
+    var questions = ALL_QUESTIONS.filter(function(qq) { return qq.type === targetTab; });
+    if (shuffleMode) { questions = shuffleArray(questions); }
     tabStates[targetTab] = {
-      questions: ALL_QUESTIONS.filter(function(qq) { return qq.type === targetTab; }),
+      questions: questions,
       index: 0,
       answers: {},
       answered: {}
@@ -1211,6 +1438,89 @@ function removeError(qid) {
   saveWrongSet();
   renderErrorList();
   updateErrorCount();
+}
+
+// ====== ERROR HISTORY ======
+function saveErrorHistory(correct, total) {
+  var now = new Date();
+  var dateStr = now.getFullYear() + '-' +
+    String(now.getMonth() + 1).padStart(2, '0') + '-' +
+    String(now.getDate()).padStart(2, '0') + ' ' +
+    String(now.getHours()).padStart(2, '0') + ':' +
+    String(now.getMinutes()).padStart(2, '0');
+  var record = {
+    date: dateStr,
+    correct: correct,
+    total: total,
+    questionIds: currentQuestions.map(function(q) { return q.id; })
+  };
+  errorHistory.unshift(record);
+  if (errorHistory.length > 50) { errorHistory = errorHistory.slice(0, 50); }
+  localStorage.setItem('ai_exam_error_history', JSON.stringify(errorHistory));
+  renderErrorHistory();
+}
+
+function loadErrorHistory() {
+  try {
+    var saved = localStorage.getItem('ai_exam_error_history');
+    if (saved) { errorHistory = JSON.parse(saved); }
+  } catch(e) { errorHistory = []; }
+}
+
+function renderErrorHistory() {
+  var listDiv = document.getElementById('historyList');
+  var emptyDiv = document.getElementById('historyEmpty');
+  if (!listDiv) return;
+  if (errorHistory.length === 0) {
+    listDiv.innerHTML = '';
+    if (emptyDiv) emptyDiv.style.display = 'block';
+    return;
+  }
+  if (emptyDiv) emptyDiv.style.display = 'none';
+  var html = '';
+  for (var i = 0; i < errorHistory.length; i++) {
+    var h = errorHistory[i];
+    var pct = h.total > 0 ? Math.round(h.correct / h.total * 100) : 0;
+    var scoreClass = pct >= 60 ? 'good' : 'bad';
+    html += '<div class="history-item" onclick="redoHistory(' + i + ')">';
+    html += '<div class="h-info">';
+    html += '<div class="h-date">' + h.date + '</div>';
+    html += '<div class="h-score ' + scoreClass + '">答对 ' + h.correct + ' / ' + h.total + '（' + pct + '%）</div>';
+    html += '</div>';
+    html += '<span class="h-count">' + h.total + ' 题</span>';
+    html += '<button class="redo-btn" onclick="event.stopPropagation();redoHistory(' + i + ')">重新答题</button>';
+    html += '</div>';
+  }
+  listDiv.innerHTML = html;
+}
+
+function redoHistory(idx) {
+  if (idx < 0 || idx >= errorHistory.length) return;
+  var record = errorHistory[idx];
+  if (!record.questionIds || record.questionIds.length === 0) {
+    showToastMsg('该历史记录没有题目数据');
+    return;
+  }
+  var questions = [];
+  for (var i = 0; i < record.questionIds.length; i++) {
+    var q = ALL_QUESTIONS.find(function(qq) { return qq.id === record.questionIds[i]; });
+    if (q) questions.push(q);
+  }
+  if (questions.length === 0) {
+    showToastMsg('未找到对应的题目');
+    return;
+  }
+  currentQuestions = questions;
+  if (shuffleMode) { currentQuestions = shuffleArray(currentQuestions); }
+  currentIndex = 0;
+  userAnswers = {};
+  isAnswered = {};
+  isErrorPractice = true;
+  document.getElementById('mainCard').style.display = 'block';
+  document.getElementById('errorPracticeInfo').style.display = 'inline';
+  document.getElementById('errorPracticeInfo').textContent = '重新练习历史错题（' + questions.length + ' 题）';
+  renderQuestion();
+  updateStats();
 }
 
 // ====== KEYBOARD ======
