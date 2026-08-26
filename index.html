@@ -254,6 +254,40 @@ body {
 .q-type-single { background: rgba(59,130,246,0.15); color: #93c5fd; }
 .q-type-judge { background: rgba(139,92,246,0.15); color: #a78bfa; }
 
+/* Jump to question */
+.jump-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.jump-label { font-size: 0.78em; color: var(--text2); }
+.jump-input {
+  width: 60px;
+  padding: 5px 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 0.82em;
+  text-align: center;
+  font-family: 'SF Mono', 'Consolas', monospace;
+  transition: border-color .2s;
+}
+.jump-input:focus { outline: none; border-color: var(--primary); }
+.jump-btn {
+  padding: 5px 12px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.78em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+}
+.jump-btn:hover { background: var(--primary2); }
+
 /* Progress */
 .progress-wrap { margin-bottom: 20px; }
 .progress {
@@ -652,7 +686,12 @@ body {
   <!-- Question card -->
   <div id="mainCard" class="card">
     <div class="card-header">
-      <span class="q-num" id="qNum">第 1 / 450 题</span>
+      <span class="q-num" id="qNum">#1  第 1 / 450 题</span>
+      <div class="jump-wrap">
+        <span class="jump-label">跳至</span>
+        <input type="text" id="jumpInput" class="jump-input" placeholder="题号" onkeydown="if(event.key==='Enter')jumpToQuestion()">
+        <button class="jump-btn" onclick="jumpToQuestion()">Go</button>
+      </div>
       <span class="q-type q-type-single" id="qType">单选题</span>
     </div>
     <div class="progress-wrap">
@@ -986,6 +1025,28 @@ function renderQuestion() {
 
   document.getElementById('prevBtn').disabled = currentIndex === 0;
   document.getElementById('nextBtn').disabled = currentIndex === total - 1;
+}
+
+// ====== JUMP TO QUESTION ======
+function jumpToQuestion() {
+  var input = document.getElementById('jumpInput').value.trim();
+  if (!input) return;
+  var targetGid = Number(input);
+  if (!targetGid || targetGid < 1 || targetGid > 620) {
+    alert('请输入有效的题号（1-620）');
+    return;
+  }
+  // 在当前题目列表中查找
+  for (var i = 0; i < currentQuestions.length; i++) {
+    if (currentQuestions[i].gid === targetGid) {
+      currentIndex = i;
+      renderQuestion();
+      updateStats();
+      document.getElementById('jumpInput').value = '';
+      return;
+    }
+  }
+  alert('当前题目列表中未找到 #' + targetGid + ' 题');
 }
 
 // ====== ANSWER ======
