@@ -1503,7 +1503,8 @@ function redoHistory(idx) {
   }
   var questions = [];
   for (var i = 0; i < record.questionIds.length; i++) {
-    var q = ALL_QUESTIONS.find(function(qq) { return qq.id === record.questionIds[i]; });
+    var qid = record.questionIds[i];
+    var q = ALL_QUESTIONS.find(function(qq) { return String(qq.id) === String(qid); });
     if (q) questions.push(q);
   }
   if (questions.length === 0) {
