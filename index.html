@@ -1664,8 +1664,8 @@ function setupKeyboard() {
     if (currentQuestions.length === 0) return;
     if (document.getElementById('mainCard').style.display === 'none') return;
     var q = currentQuestions[currentIndex];
-    if (e.key === 'ArrowRight') { e.preventDefault(); nextQuestion(); }
-    else if (e.key === 'ArrowLeft') { e.preventDefault(); prevQuestion(); }
+    if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') { e.preventDefault(); nextQuestion(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') { e.preventDefault(); prevQuestion(); }
     else if (q.type === 'single') {
       if (e.key === '1') selectAnswer('A');
       else if (e.key === '2') selectAnswer('B');
