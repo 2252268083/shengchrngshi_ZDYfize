@@ -904,7 +904,9 @@ function init() {
       loadErrorHistory();
       startClock();
       fetchIP();
-      switchTab('single');
+      var restored = restoreProgress();
+      var targetTab = (restored && restored.ok && restored.tab) ? restored.tab : 'single';
+      switchTab(targetTab);
     })
     .catch(function(e) {
       console.error('Failed to load questions:', e);
@@ -991,6 +993,83 @@ var tabStates = {};
 var shuffleMode = false;
 var originalOrder = null;
 var pendingSeqJump = false;
+// 刷题进度持久化（刷新后恢复）
+var PROGRESS_KEY = 'ai_exam_progress_v1';
+function persistProgress() {
+  try {
+    var payload = {
+      currentTab: currentTab,
+      shuffleMode: !!shuffleMode,
+      updatedAt: Date.now()
+    };
+    // 保存各Tab状态（题目顺序只存gid列表，避免重复存整题题干占空间）
+    payload.states = {};
+    var tabs = Object.keys(tabStates);
+    for (var i = 0; i < tabs.length; i++) {
+      var t = tabs[i];
+      var s = tabStates[t];
+      if (!s) continue;
+      payload.states[t] = {
+        index: s.index || 0,
+        answers: s.answers || {},
+        answered: s.answered || {},
+        // 只存gid顺序数组（刷新后根据gid回填原题）
+        gids: (s.questions || []).map(function(q) { return q.gid; })
+      };
+    }
+    // 把当前正在显示、但还没saveTabState的题也保存一下（避免只在切Tab时才写）
+    if (currentTab && currentTab !== 'error') {
+      payload.states[currentTab] = payload.states[currentTab] || {};
+      payload.states[currentTab].index = currentIndex;
+      payload.states[currentTab].answers = JSON.parse(JSON.stringify(userAnswers));
+      payload.states[currentTab].answered = JSON.parse(JSON.stringify(isAnswered));
+      payload.states[currentTab].gids = currentQuestions.map(function(q) { return q.gid; });
+      payload.currentTab = currentTab;
+    }
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify(payload));
+  } catch (e) { /* 忽略写localStorage失败（隐私模式等）*/ }
+}
+function restoreProgress() {
+  var result = { ok: false, tab: null };
+  if (!ALL_QUESTIONS || ALL_QUESTIONS.length === 0) return result;
+  try {
+    var raw = localStorage.getItem(PROGRESS_KEY);
+    if (!raw) return result;
+    var payload = JSON.parse(raw);
+    if (!payload || !payload.states) return result;
+    // 重建gid到题目的快速映射
+    var byGid = {};
+    for (var i = 0; i < ALL_QUESTIONS.length; i++) byGid[ALL_QUESTIONS[i].gid] = ALL_QUESTIONS[i];
+    // 恢复 tabStates
+    Object.keys(payload.states).forEach(function(tab) {
+      var s = payload.states[tab];
+      if (!s || !s.gids || !Array.isArray(s.gids)) return;
+      var qs = [];
+      for (var j = 0; j < s.gids.length; j++) {
+        var q = byGid[s.gids[j]];
+        if (q) qs.push(q);
+      }
+      if (qs.length === 0) return;
+      tabStates[tab] = {
+        questions: qs,
+        index: Math.min(Math.max(0, s.index || 0), qs.length - 1),
+        answers: s.answers || {},
+        answered: s.answered || {}
+      };
+    });
+    shuffleMode = !!payload.shuffleMode;
+    // 同步UI：toggle按钮
+    try {
+      var toggle = document.getElementById('shuffleToggle');
+      var label = document.getElementById('shuffleLabel');
+      if (shuffleMode) { if (toggle) toggle.classList.add('active'); if (label) label.textContent = '随机'; }
+      else { if (toggle) toggle.classList.remove('active'); if (label) label.textContent = '顺序'; }
+    } catch(e){}
+    result.ok = true;
+    result.tab = payload.currentTab || 'single';
+  } catch (e) { /* ignore */ }
+  return result;
+}
 
 // ====== TIMER ======
 var studyStartTs = Date.now();   // 学习总时长起点（可从localStorage续接）
@@ -1087,6 +1166,7 @@ function toggleShuffle() {
   }
   renderQuestion();
   updateStats();
+  persistProgress();
 }
 
 function saveTabState() {
@@ -1098,6 +1178,7 @@ function saveTabState() {
       answered: JSON.parse(JSON.stringify(isAnswered))
     };
   }
+  persistProgress();
 }
 
 function restoreTabState(tab) {
@@ -1324,6 +1405,7 @@ function jumpToQuestion() {
       currentIndex = i;
       renderQuestion();
       updateStats();
+      persistProgress();
       inputEl.value = '';
       return;
     }
@@ -1357,6 +1439,7 @@ function selectAnswer(key) {
   saveWrongSet();
   renderQuestion();
   updateStats();
+  persistProgress();
   showToast(isCorrect);
 
   if (isCorrect) {
@@ -1390,6 +1473,7 @@ function selectAnswer(key) {
       if (currentIndex < currentQuestions.length) {
         renderQuestion();
         updateStats();
+        persistProgress();
       } else if (Object.keys(isAnswered).length === currentQuestions.length) {
         showResult();
       }
@@ -1422,6 +1506,7 @@ function resetCurrentQuestion() {
   // 重新渲染+更新统计
   renderQuestion();
   updateStats();
+  persistProgress();
   showToastMsg('本题已重置，可重新作答');
 }
 
@@ -1491,11 +1576,11 @@ function nextQuestion() {
     }
     maxIter--;
   } while (maxIter > 0 && isAnswered[currentQuestions[currentIndex].id]);
-  if (currentIndex !== start) renderQuestion();
+  if (currentIndex !== start) { renderQuestion(); updateStats(); persistProgress(); }
 }
 
 function prevQuestion() {
-  if (currentIndex > 0) { currentIndex--; renderQuestion(); }
+  if (currentIndex > 0) { currentIndex--; renderQuestion(); updateStats(); persistProgress(); }
 }
 
 // ====== ERROR LIST ======
