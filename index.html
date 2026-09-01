@@ -486,6 +486,17 @@ body {
 .nav-btn.primary:hover:not(:disabled) {
   box-shadow: 0 4px 15px rgba(59,130,246,0.3);
 }
+.nav-btn.reset-btn {
+  background: rgba(245,158,11,0.1);
+  border-color: rgba(245,158,11,0.4);
+  color: #fbbf24;
+  font-weight: 600;
+}
+.nav-btn.reset-btn:hover:not(:disabled) {
+  background: rgba(245,158,11,0.2);
+  border-color: var(--warning);
+  box-shadow: 0 4px 15px rgba(245,158,11,0.2);
+}
 
 /* Keyboard hints */
 .kbd-hint {
@@ -803,6 +814,7 @@ body {
     <div class="options" id="options"></div>
     <div class="nav">
       <button class="nav-btn" id="prevBtn" onclick="prevQuestion()">← 上一题</button>
+      <button class="nav-btn reset-btn" id="resetBtn" onclick="resetCurrentQuestion()" style="display:none;">↺ 重置本题</button>
       <button class="nav-btn primary" id="nextBtn" onclick="nextQuestion()">下一题 →</button>
     </div>
     <div class="kbd-hint">
@@ -1193,6 +1205,14 @@ function renderQuestion() {
 
   document.getElementById('prevBtn').disabled = currentIndex === 0;
   document.getElementById('nextBtn').disabled = currentIndex === total - 1;
+
+  // 显示/隐藏重置本题按钮：仅当用户答错时可见
+  var resetBtn = document.getElementById('resetBtn');
+  if (resetBtn) {
+    var answered = !!q && !!isAnswered[q.id];
+    var isWrong = answered && userAnswers[q.id] !== q.answer;
+    resetBtn.style.display = (answered && isWrong) ? '' : 'none';
+  }
 }
 
 // ====== JUMP TO QUESTION ======
@@ -1290,6 +1310,30 @@ function selectAnswer(key) {
   if (Object.keys(isAnswered).length === currentQuestions.length) {
     setTimeout(showResult, 800);
   }
+}
+
+// ====== RESET CURRENT QUESTION ======
+function resetCurrentQuestion() {
+  var q = currentQuestions[currentIndex];
+  if (!q || !isAnswered[q.id]) return;
+  // 仅在答错的情况下允许重置
+  var wasCorrect = userAnswers[q.id] === q.answer;
+  if (wasCorrect) {
+    showToastMsg('答对的题目无需重置');
+    return;
+  }
+  // 清除本题的答题记录，并同步错题本
+  delete isAnswered[q.id];
+  delete userAnswers[q.id];
+  wrongSet.delete(q.id);
+  saveWrongSet();
+  // 去除当前页面可能残留的答对/答错toast
+  var oldToast = document.querySelector('.result-toast');
+  if (oldToast) oldToast.remove();
+  // 重新渲染+更新统计
+  renderQuestion();
+  updateStats();
+  showToastMsg('本题已重置，可重新作答');
 }
 
 function showToast(isCorrect) {
