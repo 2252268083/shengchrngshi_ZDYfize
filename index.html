@@ -327,6 +327,27 @@ body {
 .shuffle-icon { font-size: 1.1em; }
 .shuffle-label { font-weight: 600; }
 
+/* Reset-all progress button */
+.reset-all-btn {
+  margin-left: 10px;
+  padding: 6px 14px;
+  border: 1px solid #fca5a5;
+  background: rgba(239,68,68,0.1);
+  color: #ef4444;
+  border-radius: 20px;
+  font-size: 0.82em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+  user-select: none;
+}
+.reset-all-btn:hover {
+  background: rgba(239,68,68,0.18);
+  border-color: #ef4444;
+  transform: translateY(-1px);
+}
+.reset-all-btn:active { transform: translateY(0); }
+
 /* Progress */
 .progress-wrap { margin-bottom: 20px; }
 .progress {
@@ -810,6 +831,9 @@ body {
       <span class="shuffle-icon">&#9776;</span>
       <span class="shuffle-label" id="shuffleLabel">顺序</span>
     </span>
+    <button class="reset-all-btn" onclick="resetAllProgress()" title="清空所有答题进度（答过的题/做到哪），但保留错题本和学习时长">
+      🗑 重置刷题进度
+    </button>
   </div>
 
   <!-- Custom panel -->
@@ -876,6 +900,33 @@ body {
     <div class="big-score" id="finalScore">0%</div>
     <div class="detail" id="finalDetail"></div>
     <button class="btn" onclick="closeResult()">关闭</button>
+  </div>
+</div>
+
+<!-- Reset progress confirm overlay (avoid native confirm) -->
+<div id="resetConfirmOverlay" class="overlay" style="display:none">
+  <div class="overlay-card" style="max-width:480px;text-align:left;">
+    <h2 style="margin-top:0;color:#ef4444;">⚠ 确定重置刷题进度？</h2>
+    <div class="detail" style="font-size:0.95em;line-height:1.7;">
+      <div style="padding:10px 14px;background:rgba(239,68,68,0.07);border-radius:8px;margin:10px 0;border:1px solid #fecaca;color:#991b1b;">
+        <b>将被清空：</b><br>
+        · 所有答题记录（答对/答错/未答）<br>
+        · 每个Tab 做到哪一题的位置<br>
+        · 顺序 / 随机 模式开关（恢复为顺序）<br>
+        · 所有 Tab 全部回到 <b>第 1 题 未答状态</b>
+      </div>
+      <div style="padding:10px 14px;background:rgba(34,197,94,0.07);border-radius:8px;margin:10px 0;border:1px solid #bbf7d0;color:#166534;">
+        <b>不会被删除：</b><br>
+        · 📕 错题本（收集的全部错题）<br>
+        · ⏱ 累计学习时长<br>
+        · 📝 错题练习历史记录
+      </div>
+      <div style="color:#94a3b8;font-size:0.85em;margin-top:10px;">此操作不可撤销。</div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:20px;">
+      <button class="btn" onclick="closeResetConfirm()">取消</button>
+      <button class="btn btn-primary" style="background:#ef4444;color:#fff;border-color:#ef4444;" onclick="confirmResetAllProgress()">✔ 确认重置</button>
+    </div>
   </div>
 </div>
 
@@ -995,6 +1046,52 @@ var originalOrder = null;
 var pendingSeqJump = false;
 // 刷题进度持久化（刷新后恢复）
 var PROGRESS_KEY = 'ai_exam_progress_v1';
+function resetAllProgress() {
+  // 避免原生confirm被浏览器抑制：使用自定义overlay
+  var ov = document.getElementById('resetConfirmOverlay');
+  if (ov) ov.style.display = 'flex';
+}
+function closeResetConfirm() {
+  var ov = document.getElementById('resetConfirmOverlay');
+  if (ov) ov.style.display = 'none';
+}
+function confirmResetAllProgress() {
+  closeResetConfirm();
+  try {
+    // 不清空：wrongSet / ai_exam_wrong_set_v2 / ai_exam_total_study_ms / ai_exam_error_history
+    localStorage.removeItem(PROGRESS_KEY);
+  } catch (e) {}
+  // 重置内存状态
+  tabStates = {};
+  userAnswers = {};
+  isAnswered = {};
+  shuffleMode = false;
+  originalOrder = null;
+  pendingSeqJump = false;
+  renderQuestion._lastKey = '';
+  // 同步UI：顺序按钮
+  try {
+    var toggle = document.getElementById('shuffleToggle');
+    var label = document.getElementById('shuffleLabel');
+    if (toggle) toggle.classList.remove('active');
+    if (label) label.textContent = '顺序';
+  } catch (e) {}
+  // 跳到单选Tab第1题（相当于从头开始）
+  currentTab = 'single';
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  var singleTabBtn = document.querySelector('[data-tab="single"]');
+  if (singleTabBtn) singleTabBtn.classList.add('active');
+  document.getElementById('mainCard').style.display = 'block';
+  document.getElementById('errorPanel').style.display = 'none';
+  document.getElementById('customPanel').style.display = 'none';
+  // 按原生题型过滤
+  currentQuestions = ALL_QUESTIONS.filter(function(q) { return q.type === 'single'; });
+  currentIndex = 0;
+  resetQTimer();
+  renderQuestion();
+  updateStats();
+  showToastMsg('✅ 刷题进度已重置（错题本 / 学习时长均保留）');
+}
 function persistProgress() {
   try {
     var payload = {
