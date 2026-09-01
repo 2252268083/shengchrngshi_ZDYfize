@@ -99,6 +99,20 @@ body {
   color: #f87171;
   margin-top: 2px;
 }
+.clock-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(59,130,246,0.1);
+  border: 1px solid rgba(59,130,246,0.3);
+  font-size: 0.82em;
+  color: #93c5fd;
+  font-family: 'SF Mono', 'Consolas', monospace;
+  font-weight: 600;
+  white-space: nowrap;
+}
 @keyframes pulse {
   0%,100% { opacity: 1; }
   50% { opacity: 0.4; }
@@ -744,7 +758,10 @@ body {
         <span style="color:#64748b;">|</span>
         <span>位置: <span class="ip-text" id="locationInfo">检测中...</span></span>
       </div>
-      <div class="ip-warning" style="text-align:right;">⚠ 未经允许使用将被标记</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:6px;">
+        <div class="clock-badge" id="clockDisplay">🕐 --:--:--</div>
+        <div class="ip-warning">⚠ 未经允许使用将被标记</div>
+      </div>
     </div>
   </div>
 </div>
@@ -772,12 +789,21 @@ body {
       <div class="stat-num" id="sRate" style="color:#fbbf24;">0%</div>
       <div class="stat-label">正确率</div>
     </div>
+    <div class="stat-card" style="background:rgba(139,92,246,0.07);border-color:rgba(139,92,246,0.25);">
+      <div class="stat-num" id="sStudyTime" style="color:#a78bfa;font-size:1.3em;line-height:1.25;">00:00</div>
+      <div class="stat-label">⏱ 学习时长</div>
+    </div>
+    <div class="stat-card" style="background:rgba(59,130,246,0.07);border-color:rgba(59,130,246,0.25);">
+      <div class="stat-num" id="sQTime" style="color:#60a5fa;font-size:1.3em;line-height:1.25;">00:00</div>
+      <div class="stat-label">⏳ 本题用时</div>
+    </div>
   </div>
 
   <!-- Tabs -->
   <div class="tabs">
     <button class="tab active" data-tab="single">单选题<span class="badge" id="singleCount">0</span></button>
     <button class="tab" data-tab="judge">判断题<span class="badge" id="judgeCount">0</span></button>
+    <button class="tab" data-tab="mixed">混合练习<span class="badge" id="mixedCount">0</span></button>
     <button class="tab" data-tab="error">错题本<span class="badge danger" id="errorCount">0</span></button>
     <button class="tab" data-tab="custom">自定义练习</button>
     <span class="shuffle-toggle" id="shuffleToggle" onclick="toggleShuffle()" title="切换顺序/随机模式">
@@ -873,8 +899,10 @@ function init() {
       ALL_QUESTIONS = data;
       document.getElementById('singleCount').textContent = ALL_QUESTIONS.filter(function(q) { return q.type === 'single'; }).length;
       document.getElementById('judgeCount').textContent = ALL_QUESTIONS.filter(function(q) { return q.type === 'judge'; }).length;
+      document.getElementById('mixedCount').textContent = ALL_QUESTIONS.length;
       loadWrongSet();
       loadErrorHistory();
+      startClock();
       fetchIP();
       switchTab('single');
     })
@@ -964,6 +992,53 @@ var shuffleMode = false;
 var originalOrder = null;
 var pendingSeqJump = false;
 
+// ====== TIMER ======
+var studyStartTs = Date.now();   // 学习总时长起点（可从localStorage续接）
+var currentQStartTs = Date.now();// 当前题目开始时间
+var STORED_TOTAL_KEY = 'ai_exam_total_study_ms';
+// 续接上一次的累计学习时长（跨刷新保留）
+var lastTotalMs = 0;
+try {
+  var v = parseInt(localStorage.getItem(STORED_TOTAL_KEY) || '0', 10);
+  if (!isNaN(v)) lastTotalMs = v;
+} catch (e) {}
+
+function pad2(n){ return n<10?'0'+n:''+n; }
+function fmtClockShort(totalSec){
+  if (totalSec < 0) totalSec = 0;
+  var s = totalSec % 60;
+  var m = Math.floor(totalSec / 60) % 60;
+  var h = Math.floor(totalSec / 3600);
+  if (h > 0) return pad2(h)+':'+pad2(m)+':'+pad2(s);
+  return pad2(m)+':'+pad2(s);
+}
+function updateClockDisplay() {
+  var now = new Date();
+  var clock = pad2(now.getHours())+':'+pad2(now.getMinutes())+':'+pad2(now.getSeconds());
+  var el = document.getElementById('clockDisplay');
+  if (el) el.textContent = '🕐 ' + now.getFullYear()+'/'+pad2(now.getMonth()+1)+'/'+pad2(now.getDate())+' '+clock;
+
+  // 学习总时长 = 本次打开累计 + 上次累计
+  var sessionMs = Date.now() - studyStartTs;
+  var totalMs = sessionMs + lastTotalMs;
+  // 5秒写回一次localStorage
+  if (Math.floor(sessionMs / 5000) !== updateClockDisplay._lastWroteBucket) {
+    updateClockDisplay._lastWroteBucket = Math.floor(sessionMs / 5000);
+    try { localStorage.setItem(STORED_TOTAL_KEY, String(totalMs)); } catch(e){}
+  }
+  var studyEl = document.getElementById('sStudyTime');
+  if (studyEl) studyEl.textContent = fmtClockShort(Math.floor(totalMs/1000));
+
+  // 单题用时
+  var qEl = document.getElementById('sQTime');
+  if (qEl) qEl.textContent = fmtClockShort(Math.floor((Date.now()-currentQStartTs)/1000));
+}
+function resetQTimer() { currentQStartTs = Date.now(); }
+function startClock() {
+  updateClockDisplay();
+  setInterval(updateClockDisplay, 1000);
+}
+
 function shuffleArray(arr) {
   var a = arr.slice();
   for (var i = a.length - 1; i > 0; i--) {
@@ -1032,6 +1107,13 @@ function restoreTabState(tab) {
     currentIndex = state.index;
     userAnswers = state.answers;
     isAnswered = state.answered;
+  } else if (tab === 'mixed') {
+    // 混合练习：单选题 + 判断题 全部 620 题（按gid升序）
+    currentQuestions = ALL_QUESTIONS.slice().sort(function(a,b){ return a.gid - b.gid; });
+    currentIndex = 0;
+    userAnswers = {};
+    isAnswered = {};
+    if (shuffleMode) { currentQuestions = shuffleArray(currentQuestions); }
   } else if (tab !== 'custom') {
     currentQuestions = ALL_QUESTIONS.filter(function(q) { return q.type === tab; });
     currentIndex = 0;
@@ -1137,7 +1219,14 @@ function renderQuestion() {
     document.getElementById('options').innerHTML = '';
     return;
   }
+  // 每次渲染新题（切换题 / 切Tab首次展示）→ 重置单题计时
+  // 用_gidLastRendered缓存，避免同一题重复触发（比如resetCurrentQuestion也调renderQuestion）
   var q = currentQuestions[currentIndex];
+  var key = q.gid + '_' + currentIndex + '_' + currentTab;
+  if (renderQuestion._lastKey !== key) {
+    renderQuestion._lastKey = key;
+    resetQTimer();
+  }
   var total = currentQuestions.length;
   document.getElementById('qNum').textContent = '#' + q.gid + '  第 ' + (currentIndex + 1) + ' / ' + total + ' 题';
   var typeEl = document.getElementById('qType');
