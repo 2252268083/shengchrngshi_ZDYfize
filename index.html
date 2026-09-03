@@ -327,13 +327,13 @@ body {
 .shuffle-icon { font-size: 1.1em; }
 .shuffle-label { font-weight: 600; }
 
-/* Option shuffle toggle (checkbox) */
-.option-shuffle-toggle {
-  display: flex;
+/* Option shuffle toggle (checkbox switch) */
+.option-shuffle-label {
+  display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 6px 14px;
+  gap: 7px;
   margin-left: 10px;
+  padding: 6px 12px;
   background: var(--card2);
   border: 1px solid var(--border);
   border-radius: 20px;
@@ -343,15 +343,44 @@ body {
   transition: all .2s;
   user-select: none;
 }
-.option-shuffle-toggle:hover { border-color: #10b981; color: var(--text); }
-.option-shuffle-toggle.active {
-  border-color: #10b981;
-  background: rgba(16,185,129,0.1);
-  color: #34d399;
+.option-shuffle-label:hover {
+  border-color: #8b5cf6;
+  color: var(--text);
 }
-.option-shuffle-toggle input[type="checkbox"] {
-  accent-color: #10b981;
+.option-shuffle-label input[type="checkbox"] { display: none; }
+.option-shuffle-switch {
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 16px;
+  background: var(--border);
+  border-radius: 10px;
+  transition: background .2s;
 }
+.option-shuffle-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  border-radius: 50%;
+  transition: all .2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,.25);
+}
+.option-shuffle-label input:checked + .option-shuffle-switch {
+  background: linear-gradient(90deg, #8b5cf6, #a78bfa);
+}
+.option-shuffle-label input:checked + .option-shuffle-switch .option-shuffle-knob {
+  left: 16px;
+}
+.option-shuffle-label:has(input:checked) {
+  border-color: #8b5cf6;
+  background: rgba(139,92,246,0.1);
+  color: #a78bfa;
+  font-weight: 600;
+}
+.option-shuffle-text { white-space: nowrap; }
 
 /* Reset-all progress button */
 .reset-all-btn {
@@ -853,16 +882,15 @@ body {
     <button class="tab" data-tab="mixed">混合练习<span class="badge" id="mixedCount">0</span></button>
     <button class="tab" data-tab="error">错题本<span class="badge danger" id="errorCount">0</span></button>
     <button class="tab" data-tab="custom">自定义练习</button>
-    <span class="shuffle-toggle" id="shuffleToggle" onclick="toggleShuffle()" title="切换题目顺序/随机模式">
+    <span class="shuffle-toggle" id="shuffleToggle" onclick="toggleShuffle()" title="切换顺序/随机模式">
       <span class="shuffle-icon">&#9776;</span>
       <span class="shuffle-label" id="shuffleLabel">顺序</span>
     </span>
-    <span class="option-shuffle-toggle" id="optionShuffleToggle" title="开启/关闭选择题选项随机顺序">
-      <label style="display:flex;align-items:center;gap:6px;cursor:pointer;margin:0;">
-        <input type="checkbox" id="optionShuffleChk" onchange="toggleOptionShuffle();" style="cursor:pointer;">
-        <span class="shuffle-label" id="optionShuffleLabel">选项随机</span>
-      </label>
-    </span>
+    <label class="option-shuffle-label" title="开启后单选题 A/B/C/D 选项随机排序，可随时开启/关闭">
+      <input type="checkbox" id="optionShuffleToggle" onchange="toggleOptionShuffle(this.checked)">
+      <span class="option-shuffle-switch"><span class="option-shuffle-knob"></span></span>
+      <span class="option-shuffle-text">选项随机</span>
+    </label>
     <button class="reset-all-btn" onclick="resetAllProgress()" title="清空所有答题进度（答过的题/做到哪），但保留错题本和学习时长">
       🗑 重置刷题进度
     </button>
@@ -985,6 +1013,7 @@ function init() {
       document.getElementById('mixedCount').textContent = ALL_QUESTIONS.length;
       loadWrongSet();
       loadErrorHistory();
+      loadOptionShuffleMode();
       startClock();
       fetchIP();
       var restored = restoreProgress();
@@ -1074,11 +1103,13 @@ function updateErrorCount() {
 var currentTab = '';
 var tabStates = {};
 var shuffleMode = false;
-var optionShuffleMode = false;
 var originalOrder = null;
 var pendingSeqJump = false;
-// 当前单选题当前题的 显示顺序 key 数组（A/B/C/D乱序后的排列），用于键盘 1/2/3/4 快捷键映射
-var currentDisplayOptionKeys = [];
+// 选项随机模式（仅影响单选题A/B/C/D显示顺序，不影响正确答案判断）
+var optionShuffleMode = false;
+// 当前题目选项显示顺序（如 ['C','A','D','B']），用于键盘1-4和selectAnswer按显示位置选择
+var currentOptionOrder = [];
+var OPTION_SHUFFLE_KEY = 'ai_exam_option_shuffle_v1';
 // 刷题进度持久化（刷新后恢复）
 var PROGRESS_KEY = 'ai_exam_progress_v1';
 function resetAllProgress() {
@@ -1101,10 +1132,8 @@ function confirmResetAllProgress() {
   userAnswers = {};
   isAnswered = {};
   shuffleMode = false;
-  optionShuffleMode = false;
   originalOrder = null;
   pendingSeqJump = false;
-  currentDisplayOptionKeys = [];
   renderQuestion._lastKey = '';
   // 同步UI：顺序按钮
   try {
@@ -1113,15 +1142,7 @@ function confirmResetAllProgress() {
     if (toggle) toggle.classList.remove('active');
     if (label) label.textContent = '顺序';
   } catch (e) {}
-  // 同步UI：选项随机开关
-  try {
-    var optToggle = document.getElementById('optionShuffleToggle');
-    var optChk = document.getElementById('optionShuffleChk');
-    var optLabel = document.getElementById('optionShuffleLabel');
-    if (optToggle) optToggle.classList.remove('active');
-    if (optChk) optChk.checked = false;
-    if (optLabel) optLabel.textContent = '选项随机: 关';
-  } catch (e) {}
+  // 注意：选项随机模式（optionShuffleMode）在此不重置，保持用户设置
   // 跳到单选Tab第1题（相当于从头开始）
   currentTab = 'single';
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
@@ -1136,14 +1157,13 @@ function confirmResetAllProgress() {
   resetQTimer();
   renderQuestion();
   updateStats();
-  showToastMsg('✅ 刷题进度已重置（错题本 / 学习时长均保留）');
+  showToastMsg('✅ 刷题进度已重置（错题本 / 学习时长 / 选项随机设置均保留）');
 }
 function persistProgress() {
   try {
     var payload = {
       currentTab: currentTab,
       shuffleMode: !!shuffleMode,
-      optionShuffleMode: !!optionShuffleMode,
       updatedAt: Date.now()
     };
     // 保存各Tab状态（题目顺序只存gid列表，避免重复存整题题干占空间）
@@ -1202,7 +1222,6 @@ function restoreProgress() {
       };
     });
     shuffleMode = !!payload.shuffleMode;
-    optionShuffleMode = !!payload.optionShuffleMode;
     // 同步UI：toggle按钮
     try {
       var toggle = document.getElementById('shuffleToggle');
@@ -1210,25 +1229,44 @@ function restoreProgress() {
       if (shuffleMode) { if (toggle) toggle.classList.add('active'); if (label) label.textContent = '随机'; }
       else { if (toggle) toggle.classList.remove('active'); if (label) label.textContent = '顺序'; }
     } catch(e){}
-    // 同步UI：选项随机开关
-    try {
-      var optToggle = document.getElementById('optionShuffleToggle');
-      var optChk = document.getElementById('optionShuffleChk');
-      var optLabel = document.getElementById('optionShuffleLabel');
-      if (optionShuffleMode) {
-        if (optToggle) optToggle.classList.add('active');
-        if (optChk) optChk.checked = true;
-        if (optLabel) optLabel.textContent = '选项随机: 开';
-      } else {
-        if (optToggle) optToggle.classList.remove('active');
-        if (optChk) optChk.checked = false;
-        if (optLabel) optLabel.textContent = '选项随机: 关';
-      }
-    } catch(e){}
     result.ok = true;
     result.tab = payload.currentTab || 'single';
   } catch (e) { /* ignore */ }
   return result;
+}
+// ====== OPTION SHUFFLE ======
+// 加载选项随机设置（独立key，重置刷题进度不清除）
+function loadOptionShuffleMode() {
+  try {
+    var v = localStorage.getItem(OPTION_SHUFFLE_KEY);
+    optionShuffleMode = (v === '1' || v === 'true');
+  } catch(e) { optionShuffleMode = false; }
+  try {
+    var cb = document.getElementById('optionShuffleToggle');
+    if (cb) cb.checked = !!optionShuffleMode;
+  } catch(e) {}
+}
+function saveOptionShuffleMode() {
+  try { localStorage.setItem(OPTION_SHUFFLE_KEY, optionShuffleMode ? '1' : '0'); }
+  catch(e) {}
+}
+function toggleOptionShuffle(checked) {
+  optionShuffleMode = !!checked;
+  saveOptionShuffleMode();
+  // 重渲染当前题目以反映变化：若开启则重新打乱选项；关闭则恢复原生顺序
+  currentOptionOrder = [];
+  renderQuestion._lastKey = ''; // 触发计时重置逻辑可跳过（保持当前题，不重置计时）→ 但renderQuestion已用key缓存。这里打破缓存使用新key：
+  // 给 lastKey 加后缀使同一题在切换开关时被视为「新渲染」不合适，改为仅重新渲染选项（直接改renderQuestion缓存逻辑：新增 _optionShuffleSalt）
+  renderQuestion._optionShuffleSalt = (renderQuestion._optionShuffleSalt || 0) + 1;
+  renderQuestion();
+  showToastMsg(optionShuffleMode ? '🔀 选项随机已开启' : '↩️ 选项随机已关闭，恢复原顺序');
+}
+function shuffleArrayInPlace(arr) {
+  for (var i = arr.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+  }
+  return arr;
 }
 
 // ====== TIMER ======
@@ -1327,28 +1365,6 @@ function toggleShuffle() {
   renderQuestion();
   updateStats();
   persistProgress();
-}
-
-function toggleOptionShuffle() {
-  // 以 checkbox 实际状态为准，避免点击 label 与 onchange 双重调用导致状态抖动
-  var chk = document.getElementById('optionShuffleChk');
-  optionShuffleMode = !!(chk && chk.checked);
-  var optToggle = document.getElementById('optionShuffleToggle');
-  var optLabel = document.getElementById('optionShuffleLabel');
-  if (optionShuffleMode) {
-    if (optToggle) optToggle.classList.add('active');
-    if (optLabel) optLabel.textContent = '选项随机: 开';
-  } else {
-    if (optToggle) optToggle.classList.remove('active');
-    if (optLabel) optLabel.textContent = '选项随机: 关';
-  }
-  // 切换后立即刷新当前题的选项顺序，实现"随时开启/关闭"
-  // 为避免同一题在切换开关后（未切题时）仍然重复随机而"抖动"，这里强制清掉 lastKey 不影响计时，但让 currentDisplayOptionKeys 重建
-  currentDisplayOptionKeys = [];
-  renderQuestion._optionOrderCache = {};
-  renderQuestion();
-  persistProgress();
-  showToastMsg(optionShuffleMode ? '🔀 选择题选项已随机' : '↩️ 选择题选项已恢复默认顺序');
 }
 
 function saveTabState() {
@@ -1485,7 +1501,7 @@ function renderQuestion() {
   // 每次渲染新题（切换题 / 切Tab首次展示）→ 重置单题计时
   // 用_gidLastRendered缓存，避免同一题重复触发（比如resetCurrentQuestion也调renderQuestion）
   var q = currentQuestions[currentIndex];
-  var key = q.gid + '_' + currentIndex + '_' + currentTab;
+  var key = q.gid + '_' + currentIndex + '_' + currentTab + '_' + (renderQuestion._optionShuffleSalt || 0);
   if (renderQuestion._lastKey !== key) {
     renderQuestion._lastKey = key;
     resetQTimer();
@@ -1510,23 +1526,23 @@ function renderQuestion() {
 
   if (q.type === 'single') {
     var keys = ['A', 'B', 'C', 'D'];
-    // 选项随机模式：生成/读取 该题稳定的显示顺序（同一题在开启期间不反复打乱，避免抖动）
-    // 使用 q.id + optionShuffleMode 标志作 key：开关切换后需要重新打乱
-    renderQuestion._optionOrderCache = renderQuestion._optionOrderCache || {};
-    var orderCacheKey = q.id + '|' + (optionShuffleMode ? '1' : '0');
-    var displayKeys;
+    // 选项随机模式：打乱 A/B/C/D 显示顺序，但标签与正确答案仍匹配原题
+    var orderCacheKey = q.gid + '_' + (optionShuffleMode ? 'S' : 'N') + '_' + (renderQuestion._optionShuffleSalt || 0);
     if (optionShuffleMode) {
-      if (!renderQuestion._optionOrderCache[orderCacheKey]) {
-        renderQuestion._optionOrderCache[orderCacheKey] = shuffleArray(keys);
+      if (!renderQuestion._orderCache || renderQuestion._orderCache.key !== orderCacheKey) {
+        renderQuestion._orderCache = {
+          key: orderCacheKey,
+          order: shuffleArrayInPlace(['A', 'B', 'C', 'D'])
+        };
       }
-      displayKeys = renderQuestion._optionOrderCache[orderCacheKey];
+      keys = renderQuestion._orderCache.order.slice();
     } else {
-      displayKeys = keys;
+      // 关闭后：使用原生顺序，并清除缓存避免干扰
+      renderQuestion._orderCache = null;
     }
-    // 保存当前显示顺序，供键盘 1/2/3/4 使用
-    currentDisplayOptionKeys = displayKeys.slice();
-    for (var k = 0; k < displayKeys.length; k++) {
-      var key = displayKeys[k];
+    currentOptionOrder = keys.slice(); // 给键盘和「按显示序号选择」使用
+    for (var k = 0; k < keys.length; k++) {
+      var key = keys[k];
       var optText = q.options[key] || '';
       var cls = '';
       if (answered) {
@@ -1545,6 +1561,7 @@ function renderQuestion() {
       html += '</div>';
     }
   } else {
+    currentOptionOrder = ['T', 'F']; // 判断题保持固定：1=正确 2=错误
     var opts = [
       {key: 'T', label: '正确 (√)', idx: 1},
       {key: 'F', label: '错误 (×)', idx: 2}
@@ -1949,15 +1966,14 @@ function setupKeyboard() {
     if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') { e.preventDefault(); nextQuestion(); }
     else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') { e.preventDefault(); prevQuestion(); }
     else if (q.type === 'single') {
-      if (e.key === '1' || e.key === '2' || e.key === '3' || e.key === '4') {
-        var pos = parseInt(e.key, 10) - 1;
-        var mappedKey;
-        if (Array.isArray(currentDisplayOptionKeys) && currentDisplayOptionKeys.length === 4) {
-          mappedKey = currentDisplayOptionKeys[pos];
-        } else {
-          mappedKey = ['A','B','C','D'][pos];
-        }
-        if (mappedKey) selectAnswer(mappedKey);
+      // 按「显示顺序」的序号 1-4 选择，optionShuffleMode 开启时与标签A/B/C/D解耦
+      var keyIdx = -1;
+      if (e.key === '1') keyIdx = 0;
+      else if (e.key === '2') keyIdx = 1;
+      else if (e.key === '3') keyIdx = 2;
+      else if (e.key === '4') keyIdx = 3;
+      if (keyIdx >= 0 && currentOptionOrder && currentOptionOrder[keyIdx]) {
+        selectAnswer(currentOptionOrder[keyIdx]);
       }
     } else if (q.type === 'judge') {
       if (e.key === '1') selectAnswer('T');
