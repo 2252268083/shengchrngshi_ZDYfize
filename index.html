@@ -1031,32 +1031,94 @@
   </div>
 
   <h3>1. 修改配置文件参数</h3>
-  <h4>① 修改 zcbot_config.json</h4>
-  <p>修改 <code>robot</code> 文件夹下的 <code>zcbot_config.json</code> 文件中，各参数中的 IP 地址和 mission 中关于机器人的行动路线。备份好最终文件 <code>robot_5.1_zcbot_config.json</code></p>
+  <p>任务五需要修改 <strong>三个配置文件</strong>，全部在 <code>robot</code> 文件夹下。每个文件都必须改对，缺一不可。</p>
 
-  <div class="config-json"><span class="comment"># 将其中的 IP 改为机器人下装 IP</span>
-<span class="key">"rosbridge"</span>: { <span class="key">"url"</span>: <span class="str">"ws://192.168.0.x:8080"</span> }
+  <div class="callout callout-danger">
+    <div class="callout-title">⚠ 三个必须修改的配置文件</div>
+    <ol>
+      <li><code>broker_config.json</code> — photo-broker 监听服务配置（IP、端口、存图路径）</li>
+      <li><code>zcbot_config.json</code> — zcbot 主配置（机器人 IP、巡检路径、视觉模型 API、大模型 API）</li>
+      <li><code>vl_prompt.md</code> — 多模态视觉识别提示词（任务三已完成，确认路径正确）</li>
+    </ol>
+  </div>
 
-<span class="comment"># 设置机器人巡检路径</span>
-<span class="key">"mission"</span>: [
-    <span class="str">"点位：起点"</span>,
-    <span class="str">"点位：点位1"</span>,
-    <span class="str">"识别"</span>,
-    <span class="str">"点位：点位2"</span>,
-    <span class="str">"识别"</span>,
-    <span class="str">"点位：点位3"</span>,
-    <span class="str">"识别"</span>,
-    <span class="str">"点位：起点"</span>
-]
+  <h4>① 修改 broker_config.json（photo-broker 配置）</h4>
+  <p>修改 <code>robot/photo_broker</code> 文件夹下的 <code>broker_config.json</code>，把其中的 IP 地址改为<strong>本机 IP</strong>（photo-broker 运行在工作站上）。</p>
+  <div class="config-json"><span class="comment"># broker_config.json — photo-broker 监听服务配置</span>
+<span class="comment"># 把 host 改为本机 IP，port 保持默认</span>
+{
+    <span class="key">"server"</span>: {
+        <span class="key">"host"</span>: <span class="str">"0.0.0.0"</span>,          <span class="comment"># 监听所有网卡（或本机IP）</span>
+        <span class="key">"port"</span>: <span class="str">8002</span>             <span class="comment"># 监听端口，保持默认</span>
+    },
+    <span class="key">"save_dir"</span>: <span class="str">"./images"</span>,       <span class="comment"># 机器人拍照后图片保存路径</span>
+    <span class="key">"log_level"</span>: <span class="str">"INFO"</span>
+}</div>
 
-<span class="comment"># 调用本地视觉</span></div>
+  <h4>② 修改 zcbot_config.json（zcbot 主配置）</h4>
+  <p>修改 <code>robot</code> 文件夹下的 <code>zcbot_config.json</code>，这是<strong>最重要的配置文件</strong>，需要修改以下全部参数：</p>
+
+  <div class="config-json"><span class="comment"># zcbot_config.json — 完整配置</span>
+{
+    <span class="comment"># ====== 1. 机器人通信地址 ======</span>
+    <span class="comment"># 把 IP 改为机器人下装 IP（任务一 ping 测试通过的那个）</span>
+    <span class="key">"rosbridge"</span>: {
+        <span class="key">"url"</span>: <span class="str">"ws://192.168.0.x:8080"</span>
+    },
+
+    <span class="comment"># ====== 2. 多模态视觉模型 API（任务三测试的那个） ======</span>
+    <span class="comment"># 把 IP 改为多模态模型部署的 IP（通常为本机）</span>
+    <span class="key">"vl_model"</span>: {
+        <span class="key">"api_url"</span>: <span class="str">"http://192.168.0.x:11434/api/chat"</span>,
+        <span class="key">"model_name"</span>: <span class="str">"qwen3-vl"</span>,
+        <span class="key">"prompt_file"</span>: <span class="str">"vl_prompt.md"</span>
+    },
+
+    <span class="comment"># ====== 3. 微调大模型 API（任务四部署的那个） ======</span>
+    <span class="comment"># 把 IP 改为微调模型部署的 IP</span>
+    <span class="comment"># 把 model_path 改为 best_model_checkpoint 的路径</span>
+    <span class="key">"llm_model"</span>: {
+        <span class="key">"api_url"</span>: <span class="str">"http://192.168.0.x:8000/v1/chat/completions"</span>,
+        <span class="key">"model_path"</span>: <span class="str">"/mnt/workspace/output/.../checkpoint-15"</span>
+    },
+
+    <span class="comment"># ====== 4. 巡检路径（mission） ======</span>
+    <span class="comment"># 点位名称必须和建图时标记的完全一致</span>
+    <span class="comment"># "识别" 表示到达点位后拍照并调用多模态模型</span>
+    <span class="key">"mission"</span>: [
+        <span class="str">"点位：起点"</span>,
+        <span class="str">"点位：点位1"</span>,
+        <span class="str">"识别"</span>,
+        <span class="str">"点位：点位2"</span>,
+        <span class="str">"识别"</span>,
+        <span class="str">"点位：点位3"</span>,
+        <span class="str">"识别"</span>,
+        <span class="str">"点位：起点"</span>
+    ],
+
+    <span class="comment"># ====== 5. 图片保存路径 ======</span>
+    <span class="comment"># 和 broker_config.json 的 save_dir 对应</span>
+    <span class="key">"image_dir"</span>: <span class="str">"./images"</span>,
+
+    <span class="comment"># ====== 6. 语音播报配置 ======</span>
+    <span class="key">"tts"</span>: {
+        <span class="key">"enabled"</span>: true,
+        <span class="key">"lang"</span>: <span class="str">"zh-CN"</span>
+    }
+}</div>
 
   <div class="callout callout-danger">
     <div class="callout-title">⚠ 警示</div>
     <p><strong>1. 冒号必须中文：</strong>mission 中 <code>点位：</code> 的冒号必须是<strong>中文冒号（：）</strong>，不能用英文冒号（:）。</p>
     <p><strong>2. 点位命名必须与地图一致：</strong>mission 中写 <code>点位：点位1</code>，你在任务二建图时标记的点位名也必须叫 <code>点位1</code>，名字必须完全一致。</p>
     <p><strong>3. 建议直接用数字命名：</strong>建图时点位命名直接用 <code>点位1</code>、<code>点位2</code>、<code>点位3</code>（阿拉伯数字1/2/3），不要用中文"一/二/三"或其他写法。</p>
+    <p><strong>4. 三个 IP 必须改对：</strong>rosbridge（机器人下装IP）、vl_model API（多模态模型IP）、llm_model API（微调模型IP），三个IP不能搞混。</p>
+    <p><strong>5. model_path 路径：</strong>填任务四训练日志中 <code>best_model_checkpoint</code> 后的完整路径。</p>
   </div>
+
+  <h4>③ 确认 vl_prompt.md（多模态提示词）</h4>
+  <p>任务三编写的 <code>vl_prompt.md</code> 文件已经放在 <code>robot</code> 文件夹下。确保 <code>zcbot_config.json</code> 中 <code>prompt_file</code> 的路径指向正确。</p>
+  <p>备份好最终文件 <code>robot_5.1_zcbot_config.json</code></p>
 
   <h3>2. 融合系统环境集成</h3>
   <h4>① 机器人运行环境集成</h4>
@@ -1163,9 +1225,20 @@
 {"instruction": "穿着黄色上衣", "input": "", "output": "播报：穿着黄色上衣"}
 {"instruction": "总结本次mission：点位1拍照识别穿着红色上衣，播报穿着红色上衣", "input": "", "output": "本次巡检完成3个点位的巡检，在点位1发现穿着红色上衣，已播报穿着红色上衣"}</div>
 
-  <h3>任务五：zcbot_config.json 关键配置</h3>
-  <div class="code-block"><span class="comment"># IP 改为机器人下装 IP</span>
-"rosbridge": { "url": "ws://192.168.0.x:8080" }
+  <h3>任务五：三个配置文件速查</h3>
+  <div class="code-block"><span class="comment"># ====== 1. broker_config.json ======</span>
+<span class="comment"># photo-broker 监听配置，host 改为本机IP</span>
+"server": { "host": "0.0.0.0", "port": 8002 }
+"save_dir": "./images"
+
+<span class="comment"># ====== 2. zcbot_config.json ======</span>
+<span class="comment"># 三个IP必须改对，不能搞混</span>
+"rosbridge": { "url": "ws://机器人下装IP:8080" }       <span class="comment"># 机器人IP</span>
+"vl_model":  { "api_url": "http://多模态模型IP:11434/api/chat",
+               "model_name": "qwen3-vl",
+               "prompt_file": "vl_prompt.md" }         <span class="comment"># 多模态模型IP</span>
+"llm_model": { "api_url": "http://微调模型IP:8000/v1/chat/completions",
+               "model_path": ".../checkpoint-15" }     <span class="comment"># 微调模型IP+路径</span>
 
 <span class="comment"># 巡检路径</span>
 "mission": [
@@ -1177,7 +1250,10 @@
     "点位：点位3",
     "识别",
     "点位：起点"
-]</div>
+]
+
+<span class="comment"># ====== 3. vl_prompt.md ======</span>
+<span class="comment"># 任务三已完成，确认路径在 zcbot_config.json 的 prompt_file 中正确指向</span></div>
 
   <div class="callout callout-danger">
     <div class="callout-title">⚠ 必须注意</div>
