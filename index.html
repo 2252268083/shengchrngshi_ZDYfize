@@ -207,6 +207,36 @@
   .config-json .key { color: #79c0ff; }
   .config-json .str { color: #a5d6ff; }
   .config-json .comment { color: #8b949e; }
+  /* FAQ / Troubleshooting */
+  .faq-item {
+    background: var(--card2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 16px; margin: 12px 0;
+  }
+  .faq-q {
+    font-weight: 700; color: var(--accent2); margin-bottom: 8px;
+    font-size: 0.98em; display: flex; align-items: flex-start; gap: 8px;
+  }
+  .faq-q .q-badge {
+    background: var(--accent); color: #fff; border-radius: 5px;
+    padding: 1px 8px; font-size: 0.8em; flex-shrink: 0; margin-top: 2px;
+  }
+  .faq-row { margin: 6px 0; font-size: 0.9em; line-height: 1.6; padding-left: 4px; }
+  .faq-row .lbl {
+    display: inline-block; font-weight: 700; padding: 1px 7px;
+    border-radius: 4px; margin-right: 6px; font-size: 0.85em;
+  }
+  .lbl-sym { background: rgba(239,68,68,0.18); color: #f87171; }
+  .lbl-cause { background: rgba(245,158,11,0.18); color: #fbbf24; }
+  .lbl-fix { background: rgba(34,197,94,0.18); color: #4ade80; }
+  .faq-row code, .faq-item code {
+    background: var(--code-bg); padding: 1px 6px; border-radius: 4px;
+    font-size: 0.9em; color: var(--accent2);
+  }
+  .faq-cat {
+    color: var(--text2); font-size: 0.9em; font-weight: 700;
+    margin: 20px 0 6px; padding-bottom: 4px;
+    border-bottom: 2px solid var(--border);
+  }
   /* Progress bar */
   .progress-container { margin: 20px 0; }
   .progress-bar-bg {
@@ -267,6 +297,7 @@
   <a href="#task4">任务四 20分</a>
   <a href="#task5">任务五 40分</a>
   <a href="#cheatsheet">需要背</a>
+  <a href="#faq">排错FAQ</a>
 </nav>
 
 <div class="container">
@@ -1435,6 +1466,229 @@
     数据集 instruction = "穿着红色上衣" → output = "播报：穿着红色上衣"<br>
     数据集 instruction = "穿着蓝色上衣" → output = "播报：穿着蓝色上衣"<br>
     数据集 instruction = "穿着黄色上衣" → output = "播报：穿着黄色上衣"
+  </div>
+</div>
+
+<!-- 常见问题与排错 -->
+<div class="section" id="faq">
+  <div class="section-title"><span class="num">🔧</span>常见问题、可能遇到的错误与排错命令</div>
+  <p>比赛现场遇到报错不要慌，先看下面这张表。每个问题按 <strong>现象 → 原因 → 解决</strong> 排列，最后附<strong>万能排错命令</strong>。</p>
+
+  <div class="faq-cat">🖥 任务一：环境搭建与通讯</div>
+
+  <div class="faq-item">
+    <div class="faq-q"><span class="q-badge">问题</span>pip install 安装依赖失败、卡住、超时、报红字</div>
+    <div class="faq-row"><span class="lbl lbl-sym">现象</span>下载很慢、<code>ReadTimeout</code>、<code>ConnectionError</code>、一堆红色 ERROR</div>
+    <div class="faq-row"><span class="lbl lbl-cause">原因</span>默认 PyPI 源在国外，赛场断网/慢网访问不了</div>
+    <div class="faq-row"><span class="lbl lbl-fix">解决</span>换国内镜像源安装：
+      <div class="code-block"><span class="cmd">pip</span> install <span class="flag">-r</span> requirements.txt <span class="flag">-i</span> https://pypi.tuna.tsinghua.edu.cn/simple</div>
+      单独装某个包：<code>pip install &lt;包名&gt; -i https://pypi.tuna.tsinghua.edu.cn/simple</code>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q"><span class="q-badge">问题</span>conda activate 激活环境无效 / 提示不是内部命令</div>
+    <div class="faq-row"><span class="lbl lbl-sym">现象</span><code>conda activate 环境名</code> 没反应，或提示 conda 无法识别</div>
+    <div class="faq-row"><span class="lbl lbl-cause">原因</span>没用 Anaconda Prompt，或当前 shell 没初始化 conda</div>
+    <div class="faq-row"><span class="lbl lbl-fix">解决</span>① 用 <strong>Anaconda Prompt</strong>（开始菜单里找）而不是普通 cmd；② 或先执行 <code>conda init</code> 后重开终端；③ 查看已有环境用 <code>conda env list</code></div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q"><span class="q-badge">问题</span>ping 不通机器人下装 IP</div>
+    <div class="faq-row"><span class="lbl lbl-sym">现象</span><code>ping 192.168.0.x</code> 显示"请求超时/无法访问目标主机"</div>
+    <div class="faq-row"><span class="lbl lbl-cause">原因</span>① 电脑和机器人不在同一网段；② 网线没插好/WiFi没连；③ IP 抄错；④ 防火墙拦截</div>
+    <div class="faq-row"><span class="lbl lbl-fix">解决</span>① <code>ipconfig</code> 确认本机 IP 与机器人前三段一致；② 重新插拔网线；③ 核对工作台贴纸上的机器人 IP；④ 临时关闭防火墙再 ping；⑤ 用 <code>ping &lt;机器人IP&gt; -t</code> 持续测试</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q"><span class="q-badge">问题</span>photo-broker 启动报错：端口 8002 被占用（Address already in use）</div>
+    <div class="faq-row"><span class="lbl lbl-sym">现象</span>启动时报 <code>OSError: [Errno 98/10048] Address already in use</code></div>
+    <div class="faq-row"><span class="lbl lbl-cause">原因</span>上一次的服务没关，8002 端口还被占着</div>
+    <div class="faq-row"><span class="lbl lbl-fix">解决</span>查端口占用进程并杀掉：
+      <div class="code-block"><span class="cmd">netstat</span> <span class="flag">-ano</span> | <span class="cmd">findstr</span> :8002
+<span class="cmd">taskkill</span> <span class="flag">/PID</span> &lt;进程号&gt; <span class="flag">/F</span></div>
+      （最后一列数字就是进程号 PID，照着填）
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q"><span class="q-badge">问题</span>综合管理平台 / rosbridge 连不上机器人</div>
+    <div class="faq-row"><span class="lbl lbl-sym">现象</span>网页平台打不开，或 zcbot 报 <code>ConnectionRefusedError / websocket 连接失败</code></div>
+    <div class="faq-row"><span class="lbl lbl-cause">原因</span>① rosbridge 的 <code>ws://IP:8080</code> 中 IP 错；② 机器人端服务没起；③ 端口不对</div>
+    <div class="faq-row"><span class="lbl lbl-fix">解决</span>① 确认 <code>zcbot_config.json</code> 里 rosbridge url 用的是<strong>机器人下装 IP</strong>；② 先能 ping 通再连；③ 8080 端口是 rosbridge 默认端口别乱改</div>
+  </div>
+
+  <div class="faq-cat">🗺 任务二：建图、定位与导航</div>
+
+  <div class="faq-item">
+    <div class="faq-q"><span class="q-badge">问题</span>建图工具 / 远程部署界面连不上机器人</div>
+    <div class="faq-row"><span class="lbl lbl-sym">现象</span>界面打不开、点连接没反应、一直转圈</div>
+    <div class="faq-row"><span class="lbl lbl-cause">原因</span>机器人 rosbridge 服务没连上（同任务一连不上的问题）</div>
+    <div class="faq-row"><span class="lbl lbl-fix">解决</span>先保证任务一 ping 通、平台能连上，再开建图工具；确认机器人已开机且处于下装模式</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q"><span class="q-badge">问题</span>栅格地图导出后找不到文件</div>
+    <div class="faq-row"><span class="lbl lbl-sym">现象</span>点了导出但不知道存哪了 / 文件夹里没有 .png/.pgm</div>
+    <div class="faq-row"><span class="lbl lbl-cause">原因</span>导出路径没注意，或文件保存在工具默认目录</div>
+    <div class="faq-row"><span class="lbl lbl-fix">解决</span>① 导出时看清保存路径；② 常见在工具安装目录或 <code>地图/map</code> 文件夹；③ 用文件管理器搜索 <code>*.pgm</code> 或 <code>*.yaml</code></div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q"><span class="q-badge">问题</span>导航时机器人定位漂移、乱跑、不按路径走</div>
+    <div class="faq-row"><span class="lbl lbl-sym">现象</span>机器人位置和地图对不上，或撞墙、不走规划路径</div>
+    <div class="faq-row"><span class="lbl lbl-cause">原因</span>① 初始点位没对准；② 地图边界没修好有杂点；③ 禁行区域画小了</div>
+    <div class="faq-row"><span class="lbl lbl-fix">解决</span>① 重新设置初始点并对准朝向；② 用修图工具把地图毛刺/黑点清干净；③ <strong>禁行区域只能画大不能画小</strong>，把障碍周围多圈一圈</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q"><span class="q-badge">问题</span>任务五运行时机器人找不到点位 / 报点位不存在</div>
+    <div class="faq-row"><span class="lbl lbl-sym">现象</span>zcbot 日志报 <code>point not found / 找不到点位</code></div>
+    <div class="faq-row"><span class="lbl lbl-cause">原因</span>mission 里写的点位名和地图上标记的名字<strong>对不上</strong>（多字、少字、中文数字、冒号用错）</div>
+    <div class="faq-row"><span class="lbl lbl-fix">解决</span>① 地图上点位统一命名 <code>点位1</code>、<code>点位2</code>、<code>点位3</code>（阿拉伯数字）；② mission 里写 <code>"点位：点位1"</code>，<strong>冒号必须是中文（：）</strong>；③ 名字逐字核对完全一致</div>
+  </div>
+
+  <div class="faq-cat">🤖 任务三：提示词与多模态模型</div>
+
+  <div class="faq-item">
+    <div class="faq-q"><span class="q-badge">问题</span>vl_model_test.py 运行报错：连接不上模型 / Connection refused</div>
+    <div class="faq-row"><span class="lbl lbl-sym">现象</span>报 <code>ConnectionRefusedError</code>、<code>Failed to connect</code>、请求超时</div>
+    <div class="faq-row"><span class="lbl lbl-cause">原因</span>① ollama 服务没启动；② 脚本里的 IP/端口填错；③ 模型没拉取</div>
+    <div class="faq-row"><span class="lbl lbl-fix">解决</span>① 启动 ollama 服务：<code>ollama serve</code>；② 查看已下载模型：<code>ollama list</code>；③ 没有就拉取：<code>ollama pull qwen3-vl:32b-instruct</code>；④ 脚本里 <code>TEST_IP</code> 填视觉模型所在机器 IP，端口 <code>11434</code></div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q"><span class="q-badge">问题</span>多模态模型输出一大堆分析过程 / 多余文字 / JSON</div>
+    <div class="faq-row"><span class="lbl lbl-sym">现象</span>不直接输出场景名，而是输出"我分析图片中人物穿着……所以是……"</div>
+    <div class="faq-row"><span class="lbl lbl-cause">原因</span>提示词约束不够强，模型把"分析维度"也输出了</div>
+    <div class="faq-row"><span class="lbl lbl-fix">解决</span>强化 vl_prompt.md 的巡检约束和输出规则：明确"不要输出分析过程/解释/JSON/编号/多余文字"，"只输出一个结果且必须完全一致"；可加一句"直接输出场景名称，不要任何前缀后缀"</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q"><span class="q-badge">问题</span>模型识别颜色不准 / 经常误判</div>
+    <div class="faq-row"><span class="lbl lbl-sym">现象</span>红色被识别成蓝色/黄色，或多人时认错主体</div>
+    <div class="faq-row"><span class="lbl lbl-cause">原因</span>① 光线/角度影响；② 提示词没强调躯干主色和主体选择</div>
+    <div class="faq-row"><span class="lbl lbl-fix">解决</span>提示词强调"重点观察躯干部分衣物颜色""多人时优先识别最清晰、最居中、最主要的人物""不要根据背景、姿态、阴影判断"</div>
+  </div>
+
+  <div class="faq-cat">🧠 任务四：大模型训练与微调</div>
+
+  <div class="faq-item">
+    <div class="faq-q"><span class="q-badge">问题</span>训练一开始就报错：CUDA out of memory（显存不足）</div>
+    <div class="faq-row"><span class="lbl lbl-sym">现象</span>报 <code>torch.cuda.OutOfMemoryError: CUDA out of memory</code></div>
+    <div class="faq-row"><span class="lbl lbl-cause">原因</span>batch size 太大，显存装不下</div>
+    <div class="faq-row"><span class="lbl lbl-fix">解决</span>① 把 <strong>batch size 调小</strong>（如 4 → 2 或 1）；② 增大<strong>梯度累计步数</strong>补偿（如 4 → 8）；③ 句子最大长度 1024 不要改大；④ 确认勾选了 <strong>Flash Attention</strong>；⑤ 重启内核清显存再跑</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q"><span class="q-badge">问题</span>数据集报错 / 训练读不到数据</div>
+    <div class="faq-row"><span class="lbl lbl-sym">现象</span>报数据格式错误、字段缺失、找不到文件</div>
+    <div class="faq-row"><span class="lbl lbl-cause">原因</span>数据集 instruction/output 格式不对，或文件编码/路径问题</div>
+    <div class="faq-row"><span class="lbl lbl-fix">解决</span>① 数据集用 <strong>UTF-8</strong> 编码保存；② 确认 instruction 是场景名（穿着红色上衣…），output 是 <code>播报：穿着红色上衣</code>（中文冒号）；③ 检查三种颜色样本齐全、数量均衡；④ 文件放到训练界面指定的数据目录</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q"><span class="q-badge">问题</span>训练完找不到 checkpoint / best_model_checkpoint</div>
+    <div class="faq-row"><span class="lbl lbl-sym">现象</span>不知道权重文件夹在哪，或文件夹里没有 checkpoint-xx</div>
+    <div class="faq-row"><span class="lbl lbl-cause">原因</span>存储目录（output）路径没注意，或没到保存步数</div>
+    <div class="faq-row"><span class="lbl lbl-fix">解决</span>① 看训练界面"日志路径（--logging_dir）/存储目录"参数，按路径找；② <strong>checkpoint 是 C 开头带数字的文件夹</strong>（如 <code>checkpoint-15</code>）；③ 存储步数设为 10，epoch 15 一定会生成；④ best_model_checkpoint 路径看日志最后几行</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q"><span class="q-badge">问题</span>微调后部署的模型调用不通（8000 端口）</div>
+    <div class="faq-row"><span class="lbl lbl-sym">现象</span>small_model/summary 连接 <code>http://IP:8000/v1</code> 失败</div>
+    <div class="faq-row"><span class="lbl lbl-cause">原因</span>① 部署服务没启动；② 模型路径没指向 best_model_checkpoint；③ IP/端口错</div>
+    <div class="faq-row"><span class="lbl lbl-fix">解决</span>① 确认部署/推理服务已启动并监听 8000；② 部署时模型路径填 best_model_checkpoint 完整路径；③ 部署参数：生成序列最大长度 512、温度 0.1、Top-k 10、Top-p 0.4、重复惩罚 1.05；④ 本机自测 <code>curl http://localhost:8000/v1/models</code></div>
+  </div>
+
+  <div class="faq-cat">🔗 任务五：具身智能融合</div>
+
+  <div class="faq-item">
+    <div class="faq-q"><span class="q-badge">问题</span>zcbot 启动报错：找不到配置文件 / 模块</div>
+    <div class="faq-row"><span class="lbl lbl-sym">现象</span>报 <code>FileNotFoundError: zcbot_config.json</code> 或 <code>ModuleNotFoundError</code></div>
+    <div class="faq-row"><span class="lbl lbl-cause">原因</span>① 没在 robot 文件夹目录下运行；② 配置文件名/路径不对；③ 依赖没装全</div>
+    <div class="faq-row"><span class="lbl lbl-fix">解决</span>① 先 <code>cd</code> 进到 <code>robot</code> 文件夹再运行；② 确认 <code>zcbot_config.json</code>、<code>vl_prompt.md</code>、<code>prompt.md</code>、<code>summary_prompt.md</code> 都在同目录；③ 缺模块用 <code>pip install &lt;模块名&gt; -i 清华源</code> 装上</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q"><span class="q-badge">问题</span>两个终端启动顺序搞混 / photo-broker 没收到图</div>
+    <div class="faq-row"><span class="lbl lbl-sym">现象</span>机器人巡检但不拍照、images 文件夹没图、报错连不上 broker</div>
+    <div class="faq-row"><span class="lbl lbl-cause">原因</span>photo-broker（8002）没先启动，或 zcbot 里 image_dir 与 broker 的 save_dir 不一致</div>
+    <div class="faq-row"><span class="lbl lbl-fix">解决</span><strong>先开终端1启动 photo-broker</strong>，再开终端2启动 zcbot：
+      <div class="code-block"><span class="comment"># 终端1（先启动，保持开着）</span>
+<span class="cmd">photo-broker</span> <span class="flag">--config</span> broker_config.json
+
+<span class="comment"># 终端2（后启动）</span>
+<span class="cmd">zcbot</span> <span class="flag">--config</span> zcbot_config.json</div>
+      并确认 <code>broker_config.json</code> 的 <code>save_dir</code> 与 <code>zcbot_config.json</code> 的 <code>image_dir</code> 都是 <code>./images</code>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q"><span class="q-badge">问题</span>机器人能走但不识别 / 不播报结果</div>
+    <div class="faq-row"><span class="lbl lbl-sym">现象</span>机器人到点位拍照了，但没有语音播报识别结果</div>
+    <div class="faq-row"><span class="lbl lbl-cause">原因</span>① vlm 视觉模型没连上；② tts 被关闭；③ prompt_file 路径错；④ mission 里漏了"识别"</div>
+    <div class="faq-row"><span class="lbl lbl-fix">解决</span>① 确认 vlm 的 base_url（11434）能通、ollama 在跑；② tts 模块 <code>"enabled": true</code>；③ 三个 prompt_file 路径（vl_prompt.md / prompt.md / summary_prompt.md）都正确；④ mission 中每个点位后都要有 <code>"识别"</code> 这一步</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q"><span class="q-badge">问题</span>三个 IP 容易搞混，不知道填哪个</div>
+    <div class="faq-row"><span class="lbl lbl-cause">原因</span>zcbot_config 里有三处 IP，分别指向不同设备</div>
+    <div class="faq-row"><span class="lbl lbl-fix">解决</span>对照下表，<strong>三个 IP 千万别填反</strong>：
+      <table class="param-table">
+        <tr><th>配置项</th><th>填什么 IP</th><th>端口</th></tr>
+        <tr><td>rosbridge.url</td><td>机器人下装 IP（任务一 ping 的那个）</td><td>8080</td></tr>
+        <tr><td>vlm.base_url</td><td>多模态视觉模型所在机器 IP（ollama）</td><td>11434</td></tr>
+        <tr><td>small_model.base_url</td><td>任务四微调后部署模型所在机器 IP</td><td>8000</td></tr>
+        <tr><td>summary.base_url</td><td>同 small_model（同一个微调模型）</td><td>8000</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="faq-cat">⌨ 万能排错 / 常用命令速查</div>
+  <div class="faq-item">
+    <div class="faq-q"><span class="q-badge">命令</span>遇到问题先跑这些命令自查</div>
+    <div class="code-block"><span class="comment"># 查看本机所有 IP（确认网段、找局域网IP）</span>
+<span class="cmd">ipconfig</span>
+
+<span class="comment"># 测试和机器人/模型服务器通不通（Ctrl+C 停止）</span>
+<span class="cmd">ping</span> 192.168.0.x
+<span class="cmd">ping</span> 192.168.0.x <span class="flag">-t</span>
+
+<span class="comment"># 查看端口被谁占用（最后一列是 PID）</span>
+<span class="cmd">netstat</span> <span class="flag">-ano</span> | <span class="cmd">findstr</span> :8002
+<span class="cmd">netstat</span> <span class="flag">-ano</span> | <span class="cmd">findstr</span> :8080
+
+<span class="comment"># 强制杀掉占用端口的进程</span>
+<span class="cmd">taskkill</span> <span class="flag">/PID</span> &lt;进程号&gt; <span class="flag">/F</span>
+
+<span class="comment"># conda 环境相关</span>
+<span class="cmd">conda</span> env list
+<span class="cmd">conda</span> activate &lt;环境名&gt;
+
+<span class="comment"># pip 安装（走清华镜像，断网慢网必备）</span>
+<span class="cmd">pip</span> install &lt;包名&gt; <span class="flag">-i</span> https://pypi.tuna.tsinghua.edu.cn/simple
+
+<span class="comment"># ollama 多模态模型相关</span>
+<span class="cmd">ollama</span> serve
+<span class="cmd">ollama</span> list
+<span class="cmd">ollama</span> pull qwen3-vl:32b-instruct
+
+<span class="comment"># 测试部署模型接口是否通</span>
+<span class="cmd">curl</span> http://localhost:8000/v1/models
+
+<span class="comment"># 任务五两个服务（两个终端，broker 先启动）</span>
+<span class="cmd">photo-broker</span> <span class="flag">--config</span> broker_config.json
+<span class="cmd">zcbot</span> <span class="flag">--config</span> zcbot_config.json</div>
+  </div>
+
+  <div class="callout callout-warn">
+    <div class="callout-title">💡 排错通用思路（按顺序来）</div>
+    <p><strong>1. 先看网络：</strong>能 ping 通吗？IP 和网段对吗？</p>
+    <p><strong>2. 再看服务：</strong>该启动的都启动了吗？（ollama / photo-broker / 部署模型 / zcbot）端口被占了吗？</p>
+    <p><strong>3. 再看配置：</strong>三个 IP 填对了吗？prompt_file 路径对吗？点位名和地图一致吗？冒号是中文吗？</p>
+    <p><strong>4. 最后看数据：</strong>数据集格式/编码对吗？checkpoint 路径对吗？</p>
+    <p><strong>5. 改完一定重启服务</strong>让配置生效；截图保留报错信息，便于对照本表排查。</p>
   </div>
 </div>
 
