@@ -1225,35 +1225,65 @@
 {"instruction": "穿着黄色上衣", "input": "", "output": "播报：穿着黄色上衣"}
 {"instruction": "总结本次mission：点位1拍照识别穿着红色上衣，播报穿着红色上衣", "input": "", "output": "本次巡检完成3个点位的巡检，在点位1发现穿着红色上衣，已播报穿着红色上衣"}</div>
 
-  <h3>任务五：三个配置文件速查</h3>
-  <div class="code-block"><span class="comment"># ====== 1. broker_config.json ======</span>
-<span class="comment"># photo-broker 监听配置，host 改为本机IP</span>
-"server": { "host": "0.0.0.0", "port": 8002 }
-"save_dir": "./images"
+  <h3>任务五：三个配置文件完整内容（背诵用）</h3>
+  <div class="code-block"><span class="comment"># ====== 1. broker_config.json 完整 ======</span>
+<span class="comment"># photo-broker 监听服务配置</span>
+<span class="comment"># host 改为本机 IP，port 保持默认</span>
+{
+    "server": {
+        "host": "0.0.0.0",
+        "port": 8002
+    },
+    "save_dir": "./images",
+    "log_level": "INFO"
+}
 
-<span class="comment"># ====== 2. zcbot_config.json ======</span>
-<span class="comment"># 三个IP必须改对，不能搞混</span>
-"rosbridge": { "url": "ws://机器人下装IP:8080" }       <span class="comment"># 机器人IP</span>
-"vl_model":  { "api_url": "http://多模态模型IP:11434/api/chat",
-               "model_name": "qwen3-vl",
-               "prompt_file": "vl_prompt.md" }         <span class="comment"># 多模态模型IP</span>
-"llm_model": { "api_url": "http://微调模型IP:8000/v1/chat/completions",
-               "model_path": ".../checkpoint-15" }     <span class="comment"># 微调模型IP+路径</span>
+<span class="comment"># ====== 2. zcbot_config.json 完整 ======</span>
+<span class="comment"># 最重要的配置文件，六个模块全部要配置</span>
+{
+    <span class="comment"># 1. 机器人通信地址（IP改为机器人下装IP）</span>
+    "rosbridge": {
+        "url": "ws://192.168.0.x:8080"
+    },
 
-<span class="comment"># 巡检路径</span>
-"mission": [
-    "点位：起点",
-    "点位：点位1",
-    "识别",
-    "点位：点位2",
-    "识别",
-    "点位：点位3",
-    "识别",
-    "点位：起点"
-]
+    <span class="comment"># 2. 多模态视觉模型 API（IP改为多模态模型IP）</span>
+    "vl_model": {
+        "api_url": "http://192.168.0.x:11434/api/chat",
+        "model_name": "qwen3-vl",
+        "prompt_file": "vl_prompt.md"
+    },
+
+    <span class="comment"># 3. 微调大模型 API（IP改为微调模型IP，model_path填best_model_checkpoint路径）</span>
+    "llm_model": {
+        "api_url": "http://192.168.0.x:8000/v1/chat/completions",
+        "model_path": "/mnt/workspace/output/.../checkpoint-15"
+    },
+
+    <span class="comment"># 4. 巡检路径（点位名称必须和建图标记完全一致）</span>
+    "mission": [
+        "点位：起点",
+        "点位：点位1",
+        "识别",
+        "点位：点位2",
+        "识别",
+        "点位：点位3",
+        "识别",
+        "点位：起点"
+    ],
+
+    <span class="comment"># 5. 图片保存路径（和 broker_config.json 的 save_dir 对应）</span>
+    "image_dir": "./images",
+
+    <span class="comment"># 6. 语音播报配置</span>
+    "tts": {
+        "enabled": true,
+        "lang": "zh-CN"
+    }
+}
 
 <span class="comment"># ====== 3. vl_prompt.md ======</span>
-<span class="comment"># 任务三已完成，确认路径在 zcbot_config.json 的 prompt_file 中正确指向</span></div>
+<span class="comment"># 任务三已完成的多模态提示词文件</span>
+<span class="comment"># 确认在 zcbot_config.json 的 prompt_file 中路径正确指向</span></div>
 
   <div class="callout callout-danger">
     <div class="callout-title">⚠ 必须注意</div>
