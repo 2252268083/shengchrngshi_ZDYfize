@@ -266,6 +266,7 @@
   <a href="#task3">任务三 20分</a>
   <a href="#task4">任务四 20分</a>
   <a href="#task5">任务五 40分</a>
+  <a href="#cheatsheet">需要背</a>
 </nav>
 
 <div class="container">
@@ -1079,6 +1080,156 @@
       <li>项目配置文件：<code>robot_5.1_zcbot_config.json</code></li>
       <li>演示成果：<code>robot_5.2_终端中zcbot命令执行输出内容.png</code></li>
     </ol>
+  </div>
+</div>
+
+<!-- 需要背诵的命令 -->
+<div class="section" id="cheatsheet">
+  <div class="section-title"><span class="num">📝</span>需要背诵的命令与内容</div>
+
+  <h3>任务一：环境搭建</h3>
+  <div class="code-block"><span class="comment"># 创建虚拟环境（离线）</span>
+<span class="cmd">conda create</span> <span class="flag">--name</span> 环境名称 <span class="flag">python=3.10</span> <span class="flag">--offline</span>
+
+<span class="comment"># 激活环境</span>
+<span class="cmd">conda activate</span> 环境名称
+
+<span class="comment"># 退出环境</span>
+<span class="cmd">conda deactivate</span>
+
+<span class="comment"># 安装离线依赖包</span>
+<span class="cmd">pip install</span> <span class="flag">--no-index</span> <span class="flag">--find-links=./offline_packages</span> <span class="flag">-r</span> requirements.txt
+
+<span class="comment"># 安装部署包（photo_broker + zcbot）</span>
+<span class="cmd">pip install</span> photo_broker-0.1.0-py3-none-any.whl
+<span class="cmd">pip install</span> zcbot-0.2.0-none-any.whl
+
+<span class="comment"># 启动 photo-broker 监听服务</span>
+<span class="cmd">photo-broker</span> <span class="flag">--config</span> broker_config.json
+
+<span class="comment"># 启动 zcbot 服务</span>
+<span class="cmd">zcbot</span> <span class="flag">--config</span> zcbot_config.json
+
+<span class="comment"># 导出环境依赖</span>
+<span class="cmd">pip freeze</span> <span class="flag">&gt;</span> requirements.txt
+
+<span class="comment"># 端口占用排查</span>
+<span class="cmd">lsof</span> <span class="flag">-i</span> :11434
+<span class="cmd">fuser</span> <span class="flag">-k</span> 11434/tcp
+
+<span class="comment"># ping 机器人</span>
+<span class="cmd">ping</span> <span class="flag">-c</span> 30 192.168.1.100</div>
+
+  <h3>任务三：提示词测试</h3>
+  <div class="code-block"><span class="comment"># 运行多模态模型测试</span>
+<span class="cmd">python3</span> vl_model_test.py</div>
+
+  <h3>任务四：数据集格式（SFT）</h3>
+  <div class="code-block">{"instruction": "穿着红色上衣", "input": "", "output": "播报：穿着红色上衣"}
+{"instruction": "穿着蓝色上衣", "input": "", "output": "播报：穿着蓝色上衣"}
+{"instruction": "穿着黄色上衣", "input": "", "output": "播报：穿着黄色上衣"}
+{"instruction": "总结本次mission：点位1拍照识别穿着红色上衣，播报穿着红色上衣", "input": "", "output": "本次巡检完成3个点位的巡检，在点位1发现穿着红色上衣，已播报穿着红色上衣"}</div>
+
+  <h3>任务五：zcbot_config.json 关键配置</h3>
+  <div class="code-block"><span class="comment"># IP 改为机器人下装 IP</span>
+"rosbridge": { "url": "ws://192.168.0.x:8080" }
+
+<span class="comment"># 巡检路径</span>
+"mission": [
+    "点位：起点",
+    "点位：点位1",
+    "识别",
+    "点位：点位2",
+    "识别",
+    "点位：点位3",
+    "识别",
+    "点位：起点"
+]</div>
+
+  <h3>任务四：核心参数速记</h3>
+  <table class="param-table">
+    <tr><th>参数</th><th>值</th></tr>
+    <tr><td>验证集拆分比例</td><td>0.1</td></tr>
+    <tr><td>句子最大长度</td><td>1024</td></tr>
+    <tr><td>训练方式</td><td>lora</td></tr>
+    <tr><td>LoRA 目标模块</td><td>ALL</td></tr>
+    <tr><td>LoRA 秩</td><td>16</td></tr>
+    <tr><td>LoRA alpha</td><td>32</td></tr>
+    <tr><td>LoRA dropout</td><td>0.05</td></tr>
+    <tr><td>batch size</td><td>4</td></tr>
+    <tr><td>学习率</td><td>1e-4</td></tr>
+    <tr><td>epoch</td><td>15</td></tr>
+    <tr><td>交叉验证步数</td><td>5</td></tr>
+    <tr><td>梯度累计步数</td><td>4</td></tr>
+    <tr><td>梯度裁剪</td><td>1.0</td></tr>
+    <tr><td>Flash Attention</td><td>勾选</td></tr>
+    <tr><td>neftune_noise_alpha</td><td>5</td></tr>
+    <tr><td>存储步数</td><td>10</td></tr>
+    <tr><td>部署: 生成序列最大长度</td><td>512</td></tr>
+    <tr><td>部署: 采样温度</td><td>0.1</td></tr>
+    <tr><td>部署: Top-k</td><td>10</td></tr>
+    <tr><td>部署: Top-p</td><td>0.4</td></tr>
+    <tr><td>部署: 重复惩罚</td><td>1.05</td></tr>
+  </table>
+
+  <h3>多模态提示词（vl_prompt.md）— 需要背诵</h3>
+  <div class="prompt-example">你是巡检机器人视觉识别助手。
+
+你的任务是根据巡检机器人拍摄到的图片，判断当前图片属于哪个指定场景。
+
+## 识别场景
+- 穿着红色上衣
+- 穿着蓝色上衣
+- 穿着黄色上衣
+
+## 识别规则
+1. 重点观察图片中人物躯干部分的衣物颜色。
+2. 如果人物上衣主要颜色为红色，则判断为"穿着红色上衣"。
+3. 如果人物上衣主要颜色为蓝色，则判断为"穿着蓝色上衣"。
+4. 如果人物上衣主要颜色为黄色，则判断为"穿着黄色上衣"。
+5. 当图片中存在多个人物时，优先识别画面中最清晰、最居中、最主要的人物。
+6. 只根据衣服颜色判断，不要根据背景、姿态、阴影、其他无关物体或无关文字做判断。
+
+## 分析维度
+内部分析时需要关注以下内容，但最终不要输出出来：
+- 场景类型
+- 场景判断规则
+- 环境整洁与异常情况
+- 现场安全违规与隐患排除
+- 整体巡检结果总结
+
+## 巡检约束
+1. 只识别指定的场景名称。
+2. 不要输出分析过程。
+3. 不要输出解释说明。
+4. 不要输出 JSON、编号、列表、代码块或多余文字。
+5. 不要输出"无法判断""不确定"等额外内容。
+6. 如果图片中存在干扰信息，仍然只输出最符合规则的场景名称。
+
+## 输出规则
+你的输出必须严格从以下三项中选择其一：
+- 穿着红色上衣
+- 穿着蓝色上衣
+- 穿着黄色上衣
+
+只输出一个结果，且必须完全一致，不要增加任何其他字符。
+
+## 输出示例
+输入图片中人物穿红色上衣：
+穿着红色上衣
+
+输入图片中人物穿蓝色上衣：
+穿着蓝色上衣
+
+输入图片中人物穿黄色上衣：
+穿着黄色上衣</div>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">数据集 instruction 与提示词的对应关系</div>
+    提示词中多模态模型输出的场景名称 = 数据集 instruction 的内容<br>
+    数据集 instruction = "穿着红色上衣" → output = "播报：穿着红色上衣"<br>
+    数据集 instruction = "穿着蓝色上衣" → output = "播报：穿着蓝色上衣"<br>
+    数据集 instruction = "穿着黄色上衣" → output = "播报：穿着黄色上衣"
   </div>
 </div>
 
