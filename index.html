@@ -438,6 +438,30 @@
   <p>使用 conda 命令激活虚拟环境，确认终端环境标识切换成功，留存截图 <code>robot_1.1_环境激活.png</code></p>
   <div class="code-block"><span class="cmd">conda activate</span> 环境名称</div>
 
+  <div class="callout callout-danger">
+    <div class="callout-title">⚠ 重点注意：环境创建了，但 <code>conda activate</code> 进不去（赛场 Linux 必看）</div>
+    <p><strong>现象：</strong>环境明明创建成功了，但一执行 <code>conda activate 环境名</code> 就报错，类似：</p>
+    <p><code>CommandNotFoundError: Your shell has not been properly configured to use 'conda activate'.</code><br>
+    或者终端前缀一直停在 <code>(base)</code>，怎么都切不到自己的环境。</p>
+    <p><strong>原因：</strong>赛场用的是 Linux（VMware 虚拟机），conda 装在 <code>/opt/miniconda3</code>，新开的终端没有初始化 conda，直接 activate 不认。</p>
+    <p><strong>解决（按顺序敲这三行）：</strong></p>
+    <div class="code-block"><span class="comment"># 1. 先看 conda 装在哪（确认路径）</span>
+<span class="cmd">which</span> conda
+<span class="comment"># 输出：/opt/miniconda3/bin/conda</span>
+
+<span class="comment"># 2. 先 source 初始化 conda（关键！每个新开终端都要先执行这一句）</span>
+<span class="cmd">source</span> /opt/miniconda3/etc/profile.d/conda.sh
+
+<span class="comment"># 3. 再激活你的环境</span>
+<span class="cmd">conda activate</span> robot_lbh</div>
+    <p style="margin-top:8px;"><strong>成功标志：</strong>终端最前面的提示符从 <code>(base)</code> 变成 <code>(robot_lbh)</code>（你的环境名），就说明进去了，如下图最后一行。</p>
+    <p style="margin-top:6px;">如果你的 conda 不在 <code>/opt/miniconda3</code>，用 <code>which conda</code> 输出的路径，把上面的 <code>/opt/miniconda3</code> 替换掉即可（例如 <code>/opt/anaconda3</code>）。</p>
+    <div class="img-wrapper" style="margin-top:10px;">
+      <img src="images/img_conda_activate.png" alt="conda activate进不去的解决方法">
+      <div class="caption">source 初始化后再 conda activate，提示符从 (base) 变为 (robot_lbh) 即成功</div>
+    </div>
+  </div>
+
   <div class="img-wrapper">
     <img src="images/img_11.png" alt="环境激活截图">
     <div class="caption">环境激活：conda activate → python --version → pip --version → conda deactivate</div>
@@ -1487,10 +1511,15 @@
   </div>
 
   <div class="faq-item">
-    <div class="faq-q"><span class="q-badge">问题</span>conda activate 激活环境无效 / 提示不是内部命令</div>
-    <div class="faq-row"><span class="lbl lbl-sym">现象</span><code>conda activate 环境名</code> 没反应，或提示 conda 无法识别</div>
-    <div class="faq-row"><span class="lbl lbl-cause">原因</span>没用 Anaconda Prompt，或当前 shell 没初始化 conda</div>
-    <div class="faq-row"><span class="lbl lbl-fix">解决</span>① 用 <strong>Anaconda Prompt</strong>（开始菜单里找）而不是普通 cmd；② 或先执行 <code>conda init</code> 后重开终端；③ 查看已有环境用 <code>conda env list</code></div>
+    <div class="faq-q"><span class="q-badge">问题</span>环境创建了但 conda activate 进不去（Linux 终端）</div>
+    <div class="faq-row"><span class="lbl lbl-sym">现象</span>报 <code>CommandNotFoundError: Your shell has not been properly configured to use 'conda activate'</code>，或提示符一直停在 <code>(base)</code> 切不过去</div>
+    <div class="faq-row"><span class="lbl lbl-cause">原因</span>赛场 Linux 虚拟机里 conda 装在 <code>/opt/miniconda3</code>，新开终端没初始化 conda，直接 activate 不认</div>
+    <div class="faq-row"><span class="lbl lbl-fix">解决</span>每个新开终端先 source 再 activate（<strong>详见任务一红色警示框</strong>）：
+      <div class="code-block"><span class="cmd">which</span> conda
+<span class="cmd">source</span> /opt/miniconda3/etc/profile.d/conda.sh
+<span class="cmd">conda activate</span> robot_lbh</div>
+      成功标志：提示符由 <code>(base)</code> 变为 <code>(robot_lbh)</code>。查看已有环境用 <code>conda env list</code>；想一劳永逸可执行 <code>conda init bash</code> 后重开终端。
+    </div>
   </div>
 
   <div class="faq-item">
@@ -1662,7 +1691,9 @@
 <span class="comment"># 强制杀掉占用端口的进程</span>
 <span class="cmd">taskkill</span> <span class="flag">/PID</span> &lt;进程号&gt; <span class="flag">/F</span>
 
-<span class="comment"># conda 环境相关</span>
+<span class="comment"># conda 环境相关（Linux 下 activate 进不去时，先 source）</span>
+<span class="cmd">which</span> conda
+<span class="cmd">source</span> /opt/miniconda3/etc/profile.d/conda.sh
 <span class="cmd">conda</span> env list
 <span class="cmd">conda</span> activate &lt;环境名&gt;
 
