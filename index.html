@@ -3,1988 +3,1144 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>小K原创 - AI应用技术技能大赛理论题库</title>
+<title>实操任务书 - 生成式人工智能系统应用员赛项</title>
 <style>
-:root {
-  --bg: #0a0e17;
-  --card: #111827;
-  --card2: #1a1f2e;
-  --border: #1e293b;
-  --text: #c8d2e0;
-  --text2: #8892a4;
-  --primary: #3b82f6;
-  --primary2: #2563eb;
-  --success: #10b981;
-  --danger: #ef4444;
-  --warning: #f59e0b;
-  --radius: 14px;
-}
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  background-image:
-    radial-gradient(ellipse at 20% 50%, rgba(59,130,246,0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(139,92,246,0.04) 0%, transparent 50%);
-}
-
-/* Header */
-.header {
-  background: linear-gradient(135deg, #111827 0%, #1a1f2e 100%);
-  border-bottom: 1px solid var(--border);
-  padding: 16px 0;
-}
-.header-inner {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 0 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.brand-logo {
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(135deg, var(--primary), #8b5cf6);
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.3em;
-  color: #fff;
-  font-weight: bold;
-}
-.brand h1 {
-  font-size: 1.2em;
-  font-weight: 700;
-  background: linear-gradient(135deg, #60a5fa, #a78bfa);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.ip-badge {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(239,68,68,0.1);
-  border: 1px solid rgba(239,68,68,0.3);
-  border-radius: 20px;
-  padding: 8px 16px;
-  font-size: 0.78em;
-  color: #fca5a5;
-  flex-wrap: wrap;
-}
-.ip-badge .dot {
-  width: 8px;
-  height: 8px;
-  background: var(--danger);
-  border-radius: 50%;
-  animation: pulse 2s infinite;
-}
-.ip-badge .ip-text {
-  font-family: 'SF Mono', 'Consolas', monospace;
-  font-weight: 600;
-}
-.ip-warning {
-  font-size: 0.7em;
-  color: #f87171;
-  margin-top: 2px;
-}
-.clock-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border-radius: 20px;
-  background: rgba(59,130,246,0.1);
-  border: 1px solid rgba(59,130,246,0.3);
-  font-size: 0.82em;
-  color: #93c5fd;
-  font-family: 'SF Mono', 'Consolas', monospace;
-  font-weight: 600;
-  white-space: nowrap;
-}
-@keyframes pulse {
-  0%,100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
-/* Main container */
-.container { max-width: 960px; margin: 0 auto; padding: 20px; }
-
-/* Stats row */
-.stats-row {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-.stat-card {
-  flex: 1;
-  min-width: 100px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  text-align: center;
-  transition: all .2s;
-}
-.stat-card:hover { border-color: var(--primary); }
-.stat-card .stat-num {
-  font-size: 1.8em;
-  font-weight: 700;
-  line-height: 1.2;
-}
-.stat-card .stat-label { font-size: 0.75em; color: var(--text2); margin-top: 4px; }
-.stat-card.total .stat-num { color: #60a5fa; }
-.stat-card.correct .stat-num { color: var(--success); }
-.stat-card.wrong .stat-num { color: var(--danger); }
-.stat-card.remain .stat-num { color: #fbbf24; }
-
-/* Tabs */
-.tabs {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 20px;
-  background: var(--card);
-  border-radius: var(--radius);
-  padding: 5px;
-  border: 1px solid var(--border);
-}
-.tab {
-  flex: 1;
-  padding: 12px 10px;
-  border: none;
-  border-radius: 10px;
-  background: transparent;
-  color: var(--text2);
-  cursor: pointer;
-  text-align: center;
-  font-size: 0.9em;
-  transition: all .25s;
-  font-weight: 500;
-  position: relative;
-}
-.tab:hover { color: var(--text); background: rgba(255,255,255,0.03); }
-.tab.active {
-  background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(139,92,246,0.15));
-  color: #fff;
-  font-weight: 600;
-  box-shadow: 0 2px 10px rgba(59,130,246,0.15);
-}
-.tab .badge {
-  background: rgba(255,255,255,0.12);
-  color: #94a3b8;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-size: 0.75em;
-  margin-left: 6px;
-  font-weight: 500;
-}
-.tab.active .badge { background: rgba(255,255,255,0.2); color: #fff; }
-.tab .badge.danger { background: rgba(239,68,68,0.2); color: #fca5a5; }
-.tab.active .badge.danger { background: rgba(239,68,68,0.35); color: #fecaca; }
-
-/* Custom panel */
-.custom-panel {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px;
-  margin-bottom: 20px;
-  display: none;
-}
-.custom-panel h3 {
-  font-size: 0.95em;
-  margin-bottom: 12px;
-  color: #93c5fd;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.custom-panel .input-row { display: flex; gap: 10px; }
-.custom-panel input {
-  flex: 1;
-  padding: 12px 16px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text);
-  font-size: 0.9em;
-  outline: none;
-  transition: border-color .2s;
-}
-.custom-panel input:focus { border-color: var(--primary); }
-.custom-panel .btn {
-  padding: 12px 24px;
-  border-radius: 10px;
-  border: none;
-  background: linear-gradient(135deg, var(--primary), var(--primary2));
-  color: #fff;
-  cursor: pointer;
-  font-size: 0.9em;
-  font-weight: 600;
-  transition: all .2s;
-  white-space: nowrap;
-}
-.custom-panel .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(59,130,246,0.3); }
-.custom-panel .hint { font-size: 0.78em; color: var(--text2); margin-top: 10px; }
-
-/* Main card */
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 32px;
-  margin-bottom: 20px;
-  transition: all .2s;
-}
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-.card-header .q-num {
-  font-size: 0.9em;
-  color: #93c5fd;
-  font-weight: 600;
-}
-.card-header .q-type {
-  font-size: 0.75em;
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-weight: 500;
-}
-.q-type-single { background: rgba(59,130,246,0.15); color: #93c5fd; }
-.q-type-judge { background: rgba(139,92,246,0.15); color: #a78bfa; }
-
-/* Jump to question */
-.jump-wrap {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
-}
-.jump-label { font-size: 0.78em; color: var(--text2); }
-.jump-input {
-  width: 60px;
-  padding: 5px 8px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text);
-  font-size: 0.82em;
-  text-align: center;
-  font-family: 'SF Mono', 'Consolas', monospace;
-  transition: border-color .2s;
-}
-.jump-input:focus { outline: none; border-color: var(--primary); }
-.jump-btn {
-  padding: 5px 12px;
-  background: var(--primary);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.78em;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all .2s;
-}
-.jump-btn:hover { background: var(--primary2); }
-
-/* Shuffle toggle */
-.shuffle-toggle {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 6px 14px;
-  margin-left: auto;
-  background: var(--card2);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 0.8em;
-  color: var(--text2);
-  transition: all .2s;
-  user-select: none;
-}
-.shuffle-toggle:hover { border-color: var(--primary); color: var(--text); }
-.shuffle-toggle.active {
-  border-color: #f59e0b;
-  background: rgba(245,158,11,0.1);
-  color: #fbbf24;
-}
-.shuffle-icon { font-size: 1.1em; }
-.shuffle-label { font-weight: 600; }
-
-/* Option shuffle toggle (checkbox switch) */
-.option-shuffle-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  margin-left: 10px;
-  padding: 6px 12px;
-  background: var(--card2);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 0.8em;
-  color: var(--text2);
-  transition: all .2s;
-  user-select: none;
-}
-.option-shuffle-label:hover {
-  border-color: #8b5cf6;
-  color: var(--text);
-}
-.option-shuffle-label input[type="checkbox"] { display: none; }
-.option-shuffle-switch {
-  position: relative;
-  display: inline-block;
-  width: 30px;
-  height: 16px;
-  background: var(--border);
-  border-radius: 10px;
-  transition: background .2s;
-}
-.option-shuffle-knob {
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 12px;
-  height: 12px;
-  background: #fff;
-  border-radius: 50%;
-  transition: all .2s;
-  box-shadow: 0 1px 3px rgba(0,0,0,.25);
-}
-.option-shuffle-label input:checked + .option-shuffle-switch {
-  background: linear-gradient(90deg, #8b5cf6, #a78bfa);
-}
-.option-shuffle-label input:checked + .option-shuffle-switch .option-shuffle-knob {
-  left: 16px;
-}
-.option-shuffle-label:has(input:checked) {
-  border-color: #8b5cf6;
-  background: rgba(139,92,246,0.1);
-  color: #a78bfa;
-  font-weight: 600;
-}
-.option-shuffle-text { white-space: nowrap; }
-
-/* Reset-all progress button */
-.reset-all-btn {
-  margin-left: 10px;
-  padding: 6px 14px;
-  border: 1px solid #fca5a5;
-  background: rgba(239,68,68,0.1);
-  color: #ef4444;
-  border-radius: 20px;
-  font-size: 0.82em;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all .2s;
-  user-select: none;
-}
-.reset-all-btn:hover {
-  background: rgba(239,68,68,0.18);
-  border-color: #ef4444;
-  transform: translateY(-1px);
-}
-.reset-all-btn:active { transform: translateY(0); }
-
-/* Progress */
-.progress-wrap { margin-bottom: 20px; }
-.progress {
-  height: 5px;
-  background: var(--border);
-  border-radius: 3px;
-  overflow: hidden;
-}
-.progress-bar {
-  height: 100%;
-  background: linear-gradient(90deg, var(--primary), #8b5cf6);
-  border-radius: 3px;
-  transition: width .4s ease;
-}
-
-/* Question */
-.question-text {
-  font-size: 1.15em;
-  line-height: 1.85;
-  margin-bottom: 24px;
-  color: #e2e8f0;
-  padding: 16px 20px;
-  background: var(--card2);
-  border-radius: 10px;
-  border-left: 3px solid var(--primary);
-  white-space: pre-line;
-}
-.answer-placeholder {
-  display: inline-block;
-  background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(139,92,246,0.15));
-  border: 2px dashed rgba(59,130,246,0.5);
-  border-radius: 6px;
-  padding: 2px 10px;
-  margin: 0 4px;
-  color: #93c5fd;
-  font-weight: 700;
-  font-size: 1.05em;
-  letter-spacing: 2px;
-}
-
-/* Options */
-.options { display: flex; flex-direction: column; gap: 10px; }
-.option {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 15px 18px;
-  border: 2px solid var(--border);
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all .2s;
-  background: var(--card2);
-  position: relative;
-  overflow: hidden;
-}
-.option::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 0;
-  transition: width .3s;
-}
-.option:hover { border-color: var(--primary); transform: translateX(3px); }
-.option.selected { border-color: var(--primary); background: rgba(59,130,246,0.08); }
-.option.selected::before { width: 3px; background: var(--primary); }
-.option.correct { border-color: var(--success); background: rgba(16,185,129,0.08); }
-.option.correct::before { width: 3px; background: var(--success); }
-.option.wrong { border-color: var(--danger); background: rgba(239,68,68,0.08); }
-.option.wrong::before { width: 3px; background: var(--danger); }
-.option-key {
-  width: 38px; height: 38px;
-  border-radius: 50%;
-  background: var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 0.9em;
-  flex-shrink: 0;
-  transition: all .2s;
-}
-.option:hover .option-key { background: rgba(59,130,246,0.2); color: var(--primary); }
-.option.selected .option-key { background: var(--primary); color: #fff; }
-.option.correct .option-key { background: var(--success); color: #fff; }
-.option.wrong .option-key { background: var(--danger); color: #fff; }
-.option-text { flex: 1; font-size: 0.95em; }
-.option-mark {
-  font-size: 1.3em;
-  flex-shrink: 0;
-}
-.option.correct .option-mark { color: var(--success); }
-.option.wrong .option-mark { color: var(--danger); }
-
-/* Result toast */
-.result-toast {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 24px;
-  border-radius: 30px;
-  font-weight: 600;
-  font-size: 0.9em;
-  z-index: 200;
-  animation: slideDown .3s ease, fadeOut .3s 1.2s ease forwards;
-  pointer-events: none;
-}
-.result-toast.correct { background: #065f46; color: #6ee7b7; border: 1px solid #059669; }
-.result-toast.wrong { background: #7f1d1d; color: #fca5a5; border: 1px solid #dc2626; }
-.msg-toast {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 12px 24px;
-  border-radius: 30px;
-  font-weight: 600;
-  font-size: 0.9em;
-  z-index: 200;
-  background: rgba(245,158,11,0.9);
-  color: #fff;
-  animation: slideDown .3s ease, fadeOut .3s 1.2s ease forwards;
-  pointer-events: none;
-}
-@keyframes slideDown {
-  from { transform: translateX(-50%) translateY(-60px); opacity: 0; }
-  to { transform: translateX(-50%) translateY(0); opacity: 1; }
-}
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-/* Navigation */
-.nav {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-  margin-top: 24px;
-}
-.nav-btn {
-  padding: 12px 28px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--card2);
-  color: var(--text);
-  cursor: pointer;
-  font-size: 0.9em;
-  font-weight: 500;
-  transition: all .2s;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.nav-btn:hover:not(:disabled) {
-  border-color: var(--primary);
-  background: rgba(59,130,246,0.1);
-  transform: translateY(-1px);
-}
-.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-.nav-btn.primary {
-  background: linear-gradient(135deg, var(--primary), var(--primary2));
-  border-color: transparent;
-  color: #fff;
-  font-weight: 600;
-}
-.nav-btn.primary:hover:not(:disabled) {
-  box-shadow: 0 4px 15px rgba(59,130,246,0.3);
-}
-.nav-btn.reset-btn {
-  background: rgba(245,158,11,0.1);
-  border-color: rgba(245,158,11,0.4);
-  color: #fbbf24;
-  font-weight: 600;
-}
-.nav-btn.reset-btn:hover:not(:disabled) {
-  background: rgba(245,158,11,0.2);
-  border-color: var(--warning);
-  box-shadow: 0 4px 15px rgba(245,158,11,0.2);
-}
-
-/* Keyboard hints */
-.kbd-hint {
-  text-align: center;
-  margin-top: 16px;
-  font-size: 0.78em;
-  color: var(--text2);
-}
-.kbd-hint kbd {
-  background: var(--border);
-  padding: 3px 8px;
-  border-radius: 5px;
-  border: 1px solid #334155;
-  font-family: inherit;
-  font-size: 0.9em;
-  color: #94a3b8;
-}
-
-/* Error panel */
-.error-panel { display: none; }
-.error-toolbar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--border);
-}
-.error-list { display: flex; flex-direction: column; gap: 8px; }
-.error-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 18px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--card);
-  cursor: pointer;
-  transition: all .2s;
-  gap: 12px;
-}
-.error-item:hover { border-color: var(--primary); transform: translateX(3px); }
-.error-item .q-text {
-  flex: 1;
-  font-size: 0.9em;
-  line-height: 1.5;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.error-item .q-no {
-  font-size: 0.8em;
-  color: #60a5fa;
-  font-weight: 600;
-  font-family: 'SF Mono', 'Consolas', monospace;
-  flex-shrink: 0;
-  min-width: 36px;
-}
-.error-item .q-meta {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-}
-.error-item .q-type-tag {
-  font-size: 0.7em;
-  padding: 3px 8px;
-  border-radius: 6px;
-  font-weight: 500;
-}
-.q-type-single-sm { background: rgba(59,130,246,0.15); color: #93c5fd; }
-.q-type-judge-sm { background: rgba(139,92,246,0.15); color: #a78bfa; }
-.error-item .q-answer {
-  color: var(--success);
-  font-weight: 600;
-  font-size: 0.85em;
-  white-space: nowrap;
-}
-.error-item .remove-btn {
-  background: none;
-  border: none;
-  color: #f87171;
-  cursor: pointer;
-  font-size: 1.3em;
-  padding: 0 6px;
-  line-height: 1;
-  transition: color .2s;
-}
-.error-item .remove-btn:hover { color: var(--danger); }
-.empty-state {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--text2);
-}
-.empty-state .icon { font-size: 3.5em; margin-bottom: 16px; opacity: 0.5; }
-.empty-state p { font-size: 0.95em; }
-
-/* Error history */
-.error-history {
-  margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border);
-}
-.history-title {
-  font-size: 0.9em;
-  color: var(--text2);
-  margin-bottom: 12px;
-  font-weight: 600;
-}
-.history-list { display: flex; flex-direction: column; gap: 8px; }
-.history-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 18px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--card);
-  cursor: pointer;
-  transition: all .2s;
-  gap: 12px;
-}
-.history-item:hover { border-color: var(--primary); }
-.history-item .h-info { flex: 1; }
-.history-item .h-date {
-  font-size: 0.85em;
-  color: var(--text);
-  font-weight: 600;
-}
-.history-item .h-score {
-  font-size: 0.78em;
-  color: var(--text2);
-  margin-top: 2px;
-}
-.history-item .h-score.good { color: var(--success); }
-.history-item .h-score.bad { color: var(--danger); }
-.history-item .h-count {
-  font-size: 0.75em;
-  color: var(--text2);
-  white-space: nowrap;
-}
-.history-item .redo-btn {
-  padding: 5px 14px;
-  background: var(--primary);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.78em;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all .2s;
-  white-space: nowrap;
-}
-.history-item .redo-btn:hover { background: var(--primary2); }
-
-/* Final score overlay */
-.overlay {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.75);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-  backdrop-filter: blur(4px);
-}
-.overlay-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 40px;
-  text-align: center;
-  max-width: 420px;
-  width: 90%;
-  animation: scaleIn .3s ease;
-}
-@keyframes scaleIn {
-  from { transform: scale(0.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-.overlay-card h2 { font-size: 1.5em; margin-bottom: 8px; }
-.overlay-card .big-score {
-  font-size: 4em;
-  font-weight: 800;
-  margin: 20px 0;
-  background: linear-gradient(135deg, #60a5fa, #a78bfa);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.overlay-card .detail { color: var(--text2); margin-bottom: 24px; font-size: 0.95em; }
-.overlay-card .btn {
-  padding: 12px 36px;
-  border-radius: 10px;
-  border: none;
-  background: linear-gradient(135deg, var(--primary), var(--primary2));
-  color: #fff;
-  cursor: pointer;
-  font-size: 1em;
-  font-weight: 600;
-  transition: all .2s;
-}
-.overlay-card .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(59,130,246,0.3); }
-
-/* Footer watermark */
-.footer {
-  text-align: center;
-  padding: 20px;
-  color: var(--text2);
-  font-size: 0.75em;
-  opacity: 0.6;
-}
-
-@media (max-width: 600px) {
-  .container { padding: 12px; }
-  .card { padding: 20px; }
-  .question-text { font-size: 1em; }
-  .tabs { gap: 4px; }
-  .tab { font-size: 0.8em; padding: 10px 6px; }
-  .header-inner { flex-direction: column; text-align: center; }
-  .nav { flex-wrap: wrap; }
-  .stats-row { gap: 8px; }
-  .stat-card { padding: 10px 12px; }
-  .stat-card .stat-num { font-size: 1.4em; }
-}
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --card2: #334155;
+    --text: #f1f5f9;
+    --text2: #94a3b8;
+    --border: #475569;
+    --accent: #6366f1;
+    --accent2: #818cf8;
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #f59e0b;
+    --blue: #3b82f6;
+    --purple: #a855f7;
+    --code-bg: #0d1117;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    padding: 0;
+  }
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e3a5f 100%);
+    padding: 60px 20px 40px;
+    text-align: center;
+    border-bottom: 3px solid var(--accent);
+  }
+  .hero h1 { font-size: 1.8em; margin-bottom: 10px; }
+  .hero .subtitle { color: var(--accent2); font-size: 1.1em; margin-bottom: 8px; }
+  .hero .meta { color: var(--text2); font-size: 0.9em; }
+  .hero .score-badge {
+    display: inline-block; background: rgba(99,102,241,0.2); border: 1px solid var(--accent);
+    border-radius: 20px; padding: 4px 16px; margin: 4px; font-size: 0.85em;
+  }
+  /* Nav */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(15,23,42,0.95); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 20px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+  }
+  .nav a {
+    color: var(--text2); text-decoration: none; padding: 6px 14px;
+    border-radius: 20px; font-size: 0.85em; transition: all .2s;
+    border: 1px solid transparent;
+  }
+  .nav a:hover { color: var(--text); background: var(--card2); border-color: var(--accent); }
+  .nav a.active { background: var(--accent); color: #fff; }
+  /* Container */
+  .container { max-width: 900px; margin: 0 auto; padding: 30px 20px; }
+  /* Section */
+  .section {
+    background: var(--card); border-radius: 12px; padding: 30px; margin-bottom: 30px;
+    border: 1px solid var(--border);
+  }
+  .section-title {
+    font-size: 1.4em; color: var(--accent2); margin-bottom: 20px;
+    padding-bottom: 10px; border-bottom: 2px solid var(--accent);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-title .num {
+    background: var(--accent); color: #fff; border-radius: 50%;
+    width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+    font-size: 0.7em; font-weight: bold; flex-shrink: 0;
+  }
+  .task-header {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 10px; margin-bottom: 15px;
+  }
+  .task-badge {
+    display: inline-block; padding: 4px 12px; border-radius: 20px;
+    font-size: 0.8em; font-weight: 600;
+  }
+  .badge-time { background: rgba(59,130,246,0.2); color: var(--blue); border: 1px solid rgba(59,130,246,0.3); }
+  .badge-score { background: rgba(34,197,94,0.2); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+  .bg-info {
+    background: rgba(99,102,241,0.08); border-left: 4px solid var(--accent);
+    padding: 15px; border-radius: 0 8px 8px 0; margin-bottom: 20px;
+    color: var(--text2); font-size: 0.95em;
+  }
+  h3 { color: var(--accent2); margin: 25px 0 12px; font-size: 1.15em; }
+  h4 { color: var(--text); margin: 18px 0 8px; font-size: 1em; }
+  p { margin-bottom: 10px; color: var(--text); }
+  ul, ol { margin: 10px 0 10px 20px; }
+  li { margin-bottom: 6px; color: var(--text); }
+  .code-block {
+    background: var(--code-bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 15px; margin: 12px 0;
+    font-family: "Fira Code", "Cascadia Code", monospace; font-size: 0.88em;
+    overflow-x: auto; color: #e6edf3; white-space: pre;
+  }
+  .code-block .comment { color: #8b949e; }
+  .code-block .cmd { color: #79c0ff; }
+  .code-block .flag { color: #ffa657; }
+  .img-wrapper {
+    margin: 15px 0; border-radius: 10px; overflow: hidden;
+    border: 1px solid var(--border); background: var(--card2);
+  }
+  .img-wrapper img { width: 100%; display: block; }
+  .img-wrapper .caption {
+    padding: 8px 15px; font-size: 0.82em; color: var(--text2);
+    text-align: center; border-top: 1px solid var(--border);
+  }
+  /* Tables */
+  .param-table {
+    width: 100%; border-collapse: collapse; margin: 15px 0;
+    font-size: 0.85em;
+  }
+  .param-table th {
+    background: var(--card2); color: var(--accent2);
+    padding: 10px 12px; text-align: left; border: 1px solid var(--border);
+    font-weight: 600;
+  }
+  .param-table td {
+    padding: 8px 12px; border: 1px solid var(--border); color: var(--text);
+  }
+  .param-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+  .param-table .default { color: var(--text2); }
+  .param-table .change { color: var(--green); font-weight: 600; }
+  .param-table .reason { color: var(--text2); font-size: 0.9em; }
+  /* Callout */
+  .callout {
+    border-radius: 8px; padding: 15px; margin: 15px 0;
+    border-left: 4px solid;
+  }
+  .callout-warn { background: rgba(245,158,11,0.1); border-color: var(--yellow); }
+  .callout-tip { background: rgba(34,197,94,0.1); border-color: var(--green); }
+  .callout-info { background: rgba(59,130,246,0.1); border-color: var(--blue); }
+  .callout-danger { background: rgba(239,68,68,0.1); border-color: var(--red); }
+  .callout-title { font-weight: 700; margin-bottom: 6px; }
+  .callout-warn .callout-title { color: var(--yellow); }
+  .callout-tip .callout-title { color: var(--green); }
+  .callout-info .callout-title { color: var(--blue); }
+  .callout-danger .callout-title { color: var(--red); }
+  /* Submit list */
+  .submit-list {
+    background: rgba(168,85,247,0.08); border: 1px solid rgba(168,85,247,0.3);
+    border-radius: 10px; padding: 15px 15px 15px 40px; margin: 15px 0;
+  }
+  .submit-list li { margin-bottom: 6px; }
+  .submit-list li code {
+    background: var(--code-bg); padding: 2px 8px; border-radius: 4px;
+    font-size: 0.85em; color: var(--accent2);
+  }
+  /* Rules */
+  .rules-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 10px; margin: 15px 0;
+  }
+  .rule-card {
+    background: var(--card2); border-radius: 8px; padding: 12px;
+    border: 1px solid var(--border); font-size: 0.88em;
+  }
+  .rule-card .rule-num { color: var(--accent2); font-weight: 700; }
+  /* Env cards */
+  .env-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;
+  }
+  @media (max-width: 700px) { .env-grid { grid-template-columns: 1fr; } }
+  .env-card {
+    background: var(--card2); border-radius: 10px; padding: 15px;
+    border: 1px solid var(--border);
+  }
+  .env-card h4 { color: var(--accent2); margin-bottom: 8px; }
+  .env-card ul { font-size: 0.88em; }
+  /* Task overview table */
+  .overview-table {
+    width: 100%; border-collapse: collapse; margin: 15px 0;
+    border-radius: 10px; overflow: hidden; border: 1px solid var(--border);
+  }
+  .overview-table th {
+    background: var(--accent); color: #fff; padding: 12px;
+    text-align: center; font-size: 0.9em;
+  }
+  .overview-table td {
+    padding: 10px 12px; border: 1px solid var(--border);
+    text-align: center; font-size: 0.9em;
+  }
+  .overview-table tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+  .overview-table .task-name { color: var(--accent2); font-weight: 600; }
+  .overview-table .score { color: var(--green); font-weight: 700; }
+  /* Prompt example */
+  .prompt-example {
+    background: var(--code-bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 15px; margin: 12px 0;
+    font-family: monospace; font-size: 0.88em; color: #e6edf3;
+    white-space: pre-wrap; line-height: 1.6;
+  }
+  /* Config json */
+  .config-json {
+    background: var(--code-bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 15px; margin: 12px 0;
+    font-family: monospace; font-size: 0.85em; color: #e6edf3;
+    white-space: pre-wrap; line-height: 1.5;
+  }
+  .config-json .key { color: #79c0ff; }
+  .config-json .str { color: #a5d6ff; }
+  .config-json .comment { color: #8b949e; }
+  /* Progress bar */
+  .progress-container { margin: 20px 0; }
+  .progress-bar-bg {
+    background: var(--card2); border-radius: 10px; overflow: hidden;
+    height: 12px; border: 1px solid var(--border);
+  }
+  .progress-bar-fill {
+    height: 100%; background: linear-gradient(90deg, var(--accent), var(--purple));
+    border-radius: 10px; transition: width .3s;
+  }
+  .progress-label { font-size: 0.82em; color: var(--text2); margin-top: 4px; }
+  /* Footer */
+  footer {
+    text-align: center; padding: 30px 20px; color: var(--text2);
+    font-size: 0.85em; border-top: 1px solid var(--border);
+  }
+  /* Flow chart */
+  .flow {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0; margin: 20px 0;
+  }
+  .flow-step {
+    background: var(--card2); border: 1px solid var(--accent);
+    border-radius: 8px; padding: 8px 16px; font-size: 0.82em;
+    text-align: center; min-width: 100px;
+  }
+  .flow-arrow { color: var(--accent2); padding: 0 6px; font-size: 1.2em; }
+  @media (max-width: 700px) {
+    .hero h1 { font-size: 1.3em; }
+    .section { padding: 20px 15px; }
+    .nav { gap: 4px; }
+    .nav a { padding: 4px 10px; font-size: 0.78em; }
+  }
+  /* Scroll behavior */
+  html { scroll-behavior: smooth; }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-inner">
-    <div class="brand">
-      <div class="brand-logo">K</div>
-      <div>
-        <h1>小K原创 - AI应用技术技能大赛理论题库</h1>
-        <div style="font-size:0.7em;color:var(--text2);">生成式人工智能系统应用员赛项 · 理论竞赛题库</div>
-      </div>
-    </div>
-    <div>
-      <div class="ip-badge">
-        <span class="dot"></span>
-        <span>IP: <span class="ip-text" id="ipDisplay">检测中...</span></span>
-        <span style="color:#64748b;">|</span>
-        <span>设备: <span class="ip-text" id="deviceInfo">检测中...</span></span>
-        <span style="color:#64748b;">|</span>
-        <span>位置: <span class="ip-text" id="locationInfo">检测中...</span></span>
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:6px;">
-        <div class="clock-badge" id="clockDisplay">🕐 --:--:--</div>
-        <div class="ip-warning">⚠ 未经允许使用将被标记</div>
-      </div>
-    </div>
+<!-- Hero -->
+<div class="hero">
+  <h1>第四届全国人工智能应用技术技能大赛 - 广东选拔赛</h1>
+  <div class="subtitle">【任务书】（生成式人工智能系统应用员）赛项 - （学生组）实操试题</div>
+  <div class="meta">
+    <span class="score-badge">比赛时长 180 分钟</span>
+    <span class="score-badge">总分 100 分</span>
+    <span class="score-badge">五大任务模块</span>
   </div>
+  <div class="meta" style="margin-top:8px;">广东省选拔赛组委会技术工作组 · 2026年7月</div>
 </div>
+
+<!-- Nav -->
+<nav class="nav" id="nav">
+  <a href="#notice" class="active">选手须知</a>
+  <a href="#env">竞赛环境</a>
+  <a href="#task1">任务一 10分</a>
+  <a href="#task2">任务二 10分</a>
+  <a href="#task3">任务三 20分</a>
+  <a href="#task4">任务四 20分</a>
+  <a href="#task5">任务五 40分</a>
+</nav>
 
 <div class="container">
-  <!-- Stats -->
-  <div class="stats-row">
-    <div class="stat-card total">
-      <div class="stat-num" id="sTotal">620</div>
-      <div class="stat-label">总题数</div>
-    </div>
-    <div class="stat-card correct">
-      <div class="stat-num" id="sCorrect">0</div>
-      <div class="stat-label">答对</div>
-    </div>
-    <div class="stat-card wrong">
-      <div class="stat-num" id="sWrong">0</div>
-      <div class="stat-label">答错</div>
-    </div>
-    <div class="stat-card remain">
-      <div class="stat-num" id="sRemain">0</div>
-      <div class="stat-label">剩余</div>
-    </div>
-    <div class="stat-card" style="--c:#f59e0b">
-      <div class="stat-num" id="sRate" style="color:#fbbf24;">0%</div>
-      <div class="stat-label">正确率</div>
-    </div>
-    <div class="stat-card" style="background:rgba(139,92,246,0.07);border-color:rgba(139,92,246,0.25);">
-      <div class="stat-num" id="sStudyTime" style="color:#a78bfa;font-size:1.3em;line-height:1.25;">00:00</div>
-      <div class="stat-label">⏱ 学习时长</div>
-    </div>
-    <div class="stat-card" style="background:rgba(59,130,246,0.07);border-color:rgba(59,130,246,0.25);">
-      <div class="stat-num" id="sQTime" style="color:#60a5fa;font-size:1.3em;line-height:1.25;">00:00</div>
-      <div class="stat-label">⏳ 本题用时</div>
-    </div>
-  </div>
 
-  <!-- Tabs -->
-  <div class="tabs">
-    <button class="tab active" data-tab="single">单选题<span class="badge" id="singleCount">0</span></button>
-    <button class="tab" data-tab="judge">判断题<span class="badge" id="judgeCount">0</span></button>
-    <button class="tab" data-tab="mixed">混合练习<span class="badge" id="mixedCount">0</span></button>
-    <button class="tab" data-tab="error">错题本<span class="badge danger" id="errorCount">0</span></button>
-    <button class="tab" data-tab="custom">自定义练习</button>
-    <span class="shuffle-toggle" id="shuffleToggle" onclick="toggleShuffle()" title="切换顺序/随机模式">
-      <span class="shuffle-icon">&#9776;</span>
-      <span class="shuffle-label" id="shuffleLabel">顺序</span>
-    </span>
-    <label class="option-shuffle-label" title="开启后单选题 A/B/C/D 选项随机排序，可随时开启/关闭">
-      <input type="checkbox" id="optionShuffleToggle" onchange="toggleOptionShuffle(this.checked)">
-      <span class="option-shuffle-switch"><span class="option-shuffle-knob"></span></span>
-      <span class="option-shuffle-text">选项随机</span>
-    </label>
-    <button class="reset-all-btn" onclick="resetAllProgress()" title="清空所有答题进度（答过的题/做到哪），但保留错题本和学习时长">
-      🗑 重置刷题进度
-    </button>
+<!-- 选手须知 -->
+<div class="section" id="notice">
+  <div class="section-title"><span class="num">!</span>选手须知</div>
+  <div class="rules-grid">
+    <div class="rule-card"><span class="rule-num">1.</span> 单人赛，180分钟，120分钟后可弃赛但不可提前离开赛位。</div>
+    <div class="rule-card"><span class="rule-num">2.</span> 全程物理断网，严禁手机/U盘/移动硬盘/纸质资料/预制代码/模型权重/数据集入场。</div>
+    <div class="rule-card"><span class="rule-num">3.</span> 仅可使用赛场统一预装软硬件，禁止删改系统核心配置，违规扣10-30分。</div>
+    <div class="rule-card"><span class="rule-num">4.</span> 规定时长结束后立即停止操作，按要求提交全部成果，逾期/漏提交计零分。</div>
+    <div class="rule-card"><span class="rule-num">5.</span> 设备故障举手报备裁判，禁止私自拆卸维修。</div>
+    <div class="rule-card"><span class="rule-num">6.</span> 所有任务须本人独立完成，严禁交流传递，查实取消全部成绩。</div>
+    <div class="rule-card"><span class="rule-num">7.</span> 严禁恶意删除篡改赛场文件/他人成果/系统配置。</div>
+    <div class="rule-card"><span class="rule-num">8.</span> 不得擅自离开赛位或与其他赛位选手交流。</div>
+    <div class="rule-card"><span class="rule-num">9.</span> 赛场物品不得带离。</div>
+    <div class="rule-card"><span class="rule-num">10.</span> 严格遵守安全操作规范，危及设备/人身安全立即停止比赛。</div>
+    <div class="rule-card"><span class="rule-num">11.</span> 登录账号密码从工作台贴纸获取。</div>
+    <div class="rule-card"><span class="rule-num">12.</span> 多模态大模型从工作台贴纸获取。</div>
+    <div class="rule-card"><span class="rule-num">13.</span> 比赛结束前统一整理提交至指定目录，缺失/错路径/命名不规范酌情扣分。</div>
+    <div class="rule-card"><span class="rule-num">14.</span> 时间截止后立即停止操作，超时提交无效。</div>
   </div>
-
-  <!-- Custom panel -->
-  <div id="customPanel" class="custom-panel">
-    <h3>📋 自定义练习 - 输入题号范围</h3>
-    <div class="input-row">
-      <input type="text" id="customInput" placeholder="例如：1,3,5-10,451-460（单选题1-450，判断题451-620）" onkeydown="if(event.key==='Enter')startCustom()">
-      <button class="btn" onclick="startCustom()">开始练习</button>
-    </div>
-    <div class="hint">支持逗号分隔和范围，如：1,3,5-10,100-120。单选题编号1-450，判断题编号451-620。</div>
-  </div>
-
-  <!-- Question card -->
-  <div id="mainCard" class="card">
-    <div class="card-header">
-      <span class="q-num" id="qNum">#1  第 1 / 450 题</span>
-      <div class="jump-wrap">
-        <span class="jump-label">跳至</span>
-        <input type="text" id="jumpInput" class="jump-input" placeholder="题号" onkeydown="if(event.key==='Enter')jumpToQuestion()">
-        <button class="jump-btn" onclick="jumpToQuestion()">Go</button>
-      </div>
-      <span class="q-type q-type-single" id="qType">单选题</span>
-    </div>
-    <div class="progress-wrap">
-      <div class="progress"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
-    </div>
-    <div class="question-text" id="qText"></div>
-    <div class="options" id="options"></div>
-    <div class="nav">
-      <button class="nav-btn" id="prevBtn" onclick="prevQuestion()">← 上一题</button>
-      <button class="nav-btn reset-btn" id="resetBtn" onclick="resetCurrentQuestion()" style="display:none;">↺ 重置本题</button>
-      <button class="nav-btn primary" id="nextBtn" onclick="nextQuestion()">下一题 →</button>
-    </div>
-    <div class="kbd-hint">
-      快捷键：<kbd>←</kbd> <kbd>→</kbd> 切换题目 &nbsp;|&nbsp; <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> 选择选项 &nbsp;|&nbsp; 答对自动跳转下一题
-    </div>
-  </div>
-
-  <!-- Error panel -->
-  <div id="errorPanel" class="error-panel">
-    <div class="error-toolbar">
-      <button class="btn btn-primary" onclick="startErrorPractice()" id="errorPracticeBtn">开始练习错题</button>
-      <span id="errorPracticeInfo" style="display:none;color:var(--accent);font-size:0.9em;"></span>
-    </div>
-    <div id="errorList" class="error-list"></div>
-    <div id="errorEmpty" class="empty-state">
-      <div class="icon">&#x1F4AF;</div>
-      <p>暂无错题，继续保持！</p>
-    </div>
-    <div id="errorHistory" class="error-history">
-      <h3 class="history-title">📝 错题练习历史</h3>
-      <div id="historyList" class="history-list"></div>
-      <div id="historyEmpty" class="empty-state" style="padding:16px;">
-        <p style="font-size:0.85em;color:var(--text2);">暂无历史记录</p>
-      </div>
-    </div>
+  <div class="callout callout-info">
+    <div class="callout-title">命名规则</div>
+    以 <code>robot_</code> 开头，后跟名称。提交物命名：<code>任务编号_名称</code><br>
+    示例：<code>robot_1.1_环境激活.png</code>、<code>robot_1.2_requirements.txt</code>、<code>robot_1.3_photo-broker监听服务运行.png</code>
   </div>
 </div>
 
-<!-- Score overlay -->
-<div id="resultOverlay" class="overlay" style="display:none">
-  <div class="overlay-card">
-    <h2>🎉 练习完成！</h2>
-    <div class="big-score" id="finalScore">0%</div>
-    <div class="detail" id="finalDetail"></div>
-    <button class="btn" onclick="closeResult()">关闭</button>
+<!-- 任务概览表 -->
+<div class="section">
+  <div class="section-title"><span class="num">📊</span>任务模块说明</div>
+  <table class="overview-table">
+    <tr><th>任务编号</th><th>比赛任务</th><th>分值</th><th>参考时长</th></tr>
+    <tr><td>任务一</td><td class="task-name">环境搭建与通讯调试</td><td class="score">10</td><td>半小时</td></tr>
+    <tr><td>任务二</td><td class="task-name">地图构建、定位和导航</td><td class="score">10</td><td>半小时</td></tr>
+    <tr><td>任务三</td><td class="task-name">提示词工程设计与优化</td><td class="score">20</td><td>半小时</td></tr>
+    <tr><td>任务四</td><td class="task-name">大模型训练与微调</td><td class="score">20</td><td>1小时</td></tr>
+    <tr><td>任务五</td><td class="task-name">具身智能融合应用</td><td class="score">40</td><td>1小时</td></tr>
+    <tr><td colspan="2" style="text-align:right;font-weight:700;">总分</td><td class="score">100</td><td>3小时</td></tr>
+  </table>
+</div>
+
+<!-- 竞赛环境 -->
+<div class="section" id="env">
+  <div class="section-title"><span class="num">🖥</span>一、赛项背景与总体要求</div>
+  <div class="bg-info">
+    本赛项对接国家"智能制造+人工智能"产业需求，围绕生成式大模型、机器人感知与导航、多模态交互、具身智能融合等核心技术，考核选手在工厂园区场景下，从环境部署/硬件通信、地图构建、自主导航、提示工程、模型微调，再到大模型与智能机器人深度融合应用的全流程工程化能力。
+  </div>
+  <div class="env-grid">
+    <div class="env-card">
+      <h4>硬件环境</h4>
+      <ul>
+        <li>智能机器人：差速底盘+激光雷达+深度相机</li>
+        <li>算力服务器/算力盒子：GPU算力</li>
+        <li>高性能工控机：GPU训练算力</li>
+        <li>大容量内存、高速硬盘</li>
+      </ul>
+    </div>
+    <div class="env-card">
+      <h4>软件环境</h4>
+      <ul>
+        <li>Ubuntu 24.04 LTS</li>
+        <li>PyTorch / TensorFlow</li>
+        <li>Visual Studio Code</li>
+        <li>智能机器人综合管理平台（建图/修图/定位/导航）</li>
+        <li>AI大模型训练与精调实训软件（LoRA/QLoRA微调）</li>
+        <li>模型评估工具（精度评测、损失可视化）</li>
+        <li>应用服务部署包（photo_broker + zcbot）</li>
+        <li>基础模型：Qwen1half-4b-chat + Qwen3-vl-32b-instruct</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout callout-tip">
+    <div class="callout-title">沙盘场景</div>
+    模拟智能机器人巡检工厂：<br>
+    ① 遇到穿着红色上衣的人物 → 播报"穿着红色上衣"<br>
+    ② 遇到穿着蓝色上衣的人物 → 播报"穿着蓝色上衣"<br>
+    ③ 遇到穿着黄色上衣的人物 → 播报"穿着黄色上衣"
+  </div>
+  <div class="callout callout-info">
+    <div class="callout-title">机器人指令解析</div>
+    <ul>
+      <li><code>播报：&lt;内容&gt;</code> → 让机器人语音播报</li>
+      <li><code>点位：&lt;点位名&gt;</code> → 导航到指定点位</li>
+      <li><code>点位：上一个拍照点位</code> → 返回上一次拍照的位置</li>
+    </ul>
+  </div>
+  <div class="flow">
+    <div class="flow-step">环境搭建</div><span class="flow-arrow">→</span>
+    <div class="flow-step">建图导航</div><span class="flow-arrow">→</span>
+    <div class="flow-step">提示词设计</div><span class="flow-arrow">→</span>
+    <div class="flow-step">模型微调</div><span class="flow-arrow">→</span>
+    <div class="flow-step">具身智能融合</div>
   </div>
 </div>
 
-<!-- Reset progress confirm overlay (avoid native confirm) -->
-<div id="resetConfirmOverlay" class="overlay" style="display:none">
-  <div class="overlay-card" style="max-width:480px;text-align:left;">
-    <h2 style="margin-top:0;color:#ef4444;">⚠ 确定重置刷题进度？</h2>
-    <div class="detail" style="font-size:0.95em;line-height:1.7;">
-      <div style="padding:10px 14px;background:rgba(239,68,68,0.07);border-radius:8px;margin:10px 0;border:1px solid #fecaca;color:#991b1b;">
-        <b>将被清空：</b><br>
-        · 所有答题记录（答对/答错/未答）<br>
-        · 每个Tab 做到哪一题的位置<br>
-        · 顺序 / 随机 模式开关（恢复为顺序）<br>
-        · 所有 Tab 全部回到 <b>第 1 题 未答状态</b>
-      </div>
-      <div style="padding:10px 14px;background:rgba(34,197,94,0.07);border-radius:8px;margin:10px 0;border:1px solid #bbf7d0;color:#166534;">
-        <b>不会被删除：</b><br>
-        · 📕 错题本（收集的全部错题）<br>
-        · ⏱ 累计学习时长<br>
-        · 📝 错题练习历史记录
-      </div>
-      <div style="color:#94a3b8;font-size:0.85em;margin-top:10px;">此操作不可撤销。</div>
-    </div>
-    <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:20px;">
-      <button class="btn" onclick="closeResetConfirm()">取消</button>
-      <button class="btn btn-primary" style="background:#ef4444;color:#fff;border-color:#ef4444;" onclick="confirmResetAllProgress()">✔ 确认重置</button>
-    </div>
+<!-- ==================== 任务一 ==================== -->
+<div class="section" id="task1">
+  <div class="section-title"><span class="num">1</span>任务一：环境搭建与通讯调试</div>
+  <div class="task-header">
+    <span class="task-badge badge-time">⏱ 半小时</span>
+    <span class="task-badge badge-score">📋 10 分</span>
+  </div>
+  <div class="bg-info">
+    <strong>任务背景：</strong>智能机器人与AI系统稳定运行，依赖模型API接口、网络与硬件通信的正确配置。本模块考核选手搭建可直接用于大模型与机器人开发的一体化环境的能力。
+  </div>
+
+  <h3>1. 虚拟环境创建与依赖安装</h3>
+  <h4>① 虚拟环境创建</h4>
+  <p>使用 conda 命令创建命名规范的专属虚拟环境，保证环境纯净、无系统全局包依赖混入。</p>
+  <div class="code-block"><span class="cmd">conda create</span> <span class="flag">--name</span> 环境名称 <span class="flag">python=3.10</span> <span class="flag">--offline</span></div>
+
+  <h4>② 依赖库安装</h4>
+  <p>将主办方提供的 <code>offline_packages</code> 文件夹和 <code>requirements.txt</code> 拷贝到桌面，在虚拟环境中安装：</p>
+  <div class="code-block"><span class="cmd">pip install</span> <span class="flag">--no-index</span> <span class="flag">--find-links=./offline_packages</span> <span class="flag">-r</span> requirements.txt</div>
+
+  <div class="img-wrapper">
+    <img src="images/img_25.png" alt="pip安装依赖">
+    <div class="caption">pip 安装离线依赖包</div>
+  </div>
+
+  <div class="callout callout-warn">
+    <div class="callout-title">常见问题：权限不够</div>
+    若显示 <code>Defaulting to user installation because normal site-packages is not writeable</code>，解决办法是带上 <code>--no-deps</code> 强制跳过全部依赖版本校验：
+    <div class="code-block"><span class="cmd">pip install</span> <span class="flag">--no-index</span> <span class="flag">--find-links=./offline_packages</span> <span class="flag">-r</span> requirements.txt <span class="flag">--no-deps</span></div>
+    <p style="margin-top:8px;">遇到版本问题，这个命令直接跳过。</p>
+  </div>
+
+  <h3>2. 虚拟环境激活和状态校验</h3>
+  <h4>① 环境激活</h4>
+  <p>使用 conda 命令激活虚拟环境，确认终端环境标识切换成功，留存截图 <code>robot_1.1_环境激活.png</code></p>
+  <div class="code-block"><span class="cmd">conda activate</span> 环境名称</div>
+
+  <div class="img-wrapper">
+    <img src="images/img_11.png" alt="环境激活截图">
+    <div class="caption">环境激活：conda activate → python --version → pip --version → conda deactivate</div>
+  </div>
+
+  <h4>② 环境状态校验</h4>
+  <p>激活后核查当前 Python 版本、pip 工具版本，确认运行环境为新建虚拟环境而非系统全局环境。</p>
+
+  <h4>③ 环境退出与重入测试</h4>
+  <div class="code-block"><span class="cmd">conda deactivate</span></div>
+  <p>执行退出命令后再次重新激活，验证环境可重复正常使用，无激活异常。</p>
+
+  <div class="img-wrapper">
+    <img src="images/img_05.png" alt="环境导出展示">
+    <div class="caption">环境导出展示（按要求命名文件）</div>
+  </div>
+
+  <h3>3. 软件部署与安装</h3>
+  <h4>① 部署包迁移</h4>
+  <p>把主办方提供的 <code>robot</code> 文件夹（含部署包）拷贝到系统桌面。</p>
+
+  <h4>② 应用程序安装</h4>
+  <p>在虚拟环境激活后（新开终端激活环境），使用 pip 安装 <code>robot/whl</code> 文件夹下的软件包：</p>
+  <div class="code-block"><span class="cmd">pip install</span> photo_broker-0.1.0-py3-none-any.whl
+<span class="cmd">pip install</span> zcbot-0.2.0-none-any.whl</div>
+  <div class="callout callout-warn">
+    <strong>注意：</strong>如果没有 whl 文件夹，要把这两个包复制到 whl 文件夹中，然后进入 whl 里面再安装。
+  </div>
+
+  <h4>③ 版本合规校验</h4>
+  <p>安装完成后，在虚拟环境下执行命令验证通信程序能运行：</p>
+  <div class="code-block"><span class="comment"># photo-broker 命令</span>
+<span class="cmd">photo-broker</span> <span class="flag">--config</span> broker_config.json
+
+<span class="comment"># zcbot 命令</span>
+<span class="cmd">zcbot</span> <span class="flag">--config</span> zcbot_config.json</div>
+
+  <h4>④ 环境导出备份</h4>
+  <div class="code-block"><span class="cmd">pip freeze</span> <span class="flag">&gt;</span> requirements.txt</div>
+  <p>导出后按要求命名：<code>robot_1.2_requirements.txt</code></p>
+
+  <div class="img-wrapper">
+    <img src="images/img_20.png" alt="photo-broker安装">
+    <div class="caption">photo-broker 安装与验证</div>
+  </div>
+
+  <h3>4. 机器人硬件通讯调试</h3>
+  <h4>① 机器人开机自检</h4>
+  <p>开机启动机器人底盘与激光雷达，检查雷达帧率、扫描角度正常，检查语音播报、摄像头启动正常。</p>
+
+  <h4>② 机器人感知环境测试</h4>
+  <p>在创建虚拟环境下执行命令运行监听 UploadServer 服务和 SubscribeServer 服务：</p>
+  <div class="code-block"><span class="cmd">photo-broker</span> <span class="flag">--config</span> broker_config.json</div>
+  <p>在智能机器人上装进行拍照测试，实现抓拍图片推送到工作站（存图路径：<code>robot/photo_broker</code>），留存截图 <code>robot_1.3_photo-broker监听服务运行.png</code></p>
+
+  <div class="callout callout-tip">
+    <strong>提示：</strong>每个任务最好一个终端，不要随便关终端，命令到时候全都不见了。
+  </div>
+
+  <div class="img-wrapper">
+    <img src="images/img_17.png" alt="photo-broker监听服务">
+    <div class="caption">photo-broker 监听服务运行</div>
+  </div>
+
+  <h4>③ 控制机器人移动测试</h4>
+  <p>使用工作台贴纸上的账号密码登录智能机器人综合管理平台：</p>
+  <p><code>【项目管理】→【部署项目】→【项目最右侧服务地点】→【机器人】→【远程部署】→ 点击"控制"</code></p>
+  <p>实现键盘遥控，验证运动方向与速度合理。</p>
+
+  <div class="img-wrapper">
+    <img src="images/img_01.png" alt="智能机器人综合管理平台">
+    <div class="caption">智能机器人综合管理平台 - 远程部署界面</div>
+  </div>
+
+  <h4>④ 通讯链路连通测试</h4>
+  <p>根据机器人下装 IP 地址，使用 ping 命令测试网络连通性，留存截图 <code>robot_1.4_网络ping机器人下装测试.png</code></p>
+
+  <div class="img-wrapper">
+    <img src="images/img_21.png" alt="网络ping测试">
+    <div class="caption">网络 ping 机器人下装测试（规范命名截图）</div>
+  </div>
+
+  <div class="img-wrapper">
+    <img src="images/img_10.png" alt="不懂的看这里">
+    <div class="caption">操作参考指引</div>
+  </div>
+
+  <h4>⑤ 常见故障调试</h4>
+  <p>自主排查并解决端口占用、IP冲突、通讯链路配置错误、语音播报异常、摄像头拍摄异常等故障。</p>
+
+  <div class="code-block"><span class="comment"># ========== 1. 端口占用排查&amp;释放 (例 11434、8001) ==========</span>
+<span class="cmd">lsof</span> <span class="flag">-i</span> :11434
+<span class="cmd">netstat</span> <span class="flag">-tulpn</span> | <span class="cmd">grep</span> 11434
+<span class="cmd">fuser</span> <span class="flag">-k</span> 11434/tcp
+
+<span class="comment"># ========== 2. IP冲突、网段排查 ==========</span>
+<span class="cmd">ip</span> a
+<span class="cmd">arp</span> <span class="flag">-a</span>
+<span class="comment"># 关闭防火墙</span>
+<span class="cmd">ufw</span> disable
+
+<span class="comment"># ========== 3. 机器人链路连通测试 (修改为机器人IP) ==========</span>
+<span class="cmd">ping</span> <span class="flag">-c</span> 30 192.168.1.100
+<span class="cmd">curl</span> 192.168.1.100:8080
+
+<span class="comment"># ========== 4. 摄像头故障排查 ==========</span>
+<span class="cmd">ls</span> /dev/video*
+<span class="cmd">sudo</span> <span class="cmd">chmod</span> 666 /dev/video0
+
+<span class="comment"># ========== 5. 语音音频设备检测 ==========</span>
+<span class="cmd">aplay</span> <span class="flag">-l</span>
+<span class="cmd">aplay</span> /usr/share/sounds/alsa/Front_Center.wav</div>
+
+  <div class="callout callout-danger">
+    <div class="callout-title">提交物</div>
+    <ol class="submit-list">
+      <li>环境部署过程截图：<code>robot_1.1_环境激活.png</code></li>
+      <li>项目依赖文件：<code>robot_1.2_requirements.txt</code></li>
+      <li>通讯调试资料：<code>robot_1.3_photo-broker监听服务运行.png</code>、<code>robot_1.4_网络ping机器人下装测试.png</code></li>
+    </ol>
   </div>
 </div>
 
-<div class="footer">小K原创 &copy; 2026 · 仅供学习交流使用 · 未经允许禁止转载</div>
+<!-- ==================== 任务二 ==================== -->
+<div class="section" id="task2">
+  <div class="section-title"><span class="num">2</span>任务二：地图构建、定位与导航</div>
+  <div class="task-header">
+    <span class="task-badge badge-time">⏱ 半小时</span>
+    <span class="task-badge badge-score">📋 10 分</span>
+  </div>
+  <div class="bg-info">
+    <strong>任务背景：</strong>智能机器人自主作业的前提是高精度地图、可靠定位、安全导航。本模块考核选手在未知场景下，快速建图、精确定位、自主导航与避障的工程能力。
+  </div>
+
+  <h3>1. 环境扫描与栅格地图构建</h3>
+  <h4>① 创建 2D 栅格地图</h4>
+  <p>登录智能机器人综合管理平台：<code>【项目管理】→【部署项目】→【机器人】→【远程部署】→ 点击"建图工具"</code></p>
+  <p>进入建图界面，新建地图名称。<strong>楼层的名字不能重复。</strong></p>
+  <p>先点击建图，然后用键盘的 <kbd>W</kbd><kbd>S</kbd><kbd>A</kbd><kbd>D</kbd> 来控制扫图。</p>
+
+  <div class="img-wrapper">
+    <img src="images/img_14.png" alt="建图工具界面">
+    <div class="caption">智能机器人综合管理平台 - 建图工具界面</div>
+  </div>
+
+  <h4>② 全场环境扫描建图</h4>
+  <p>手动控制机器人匀速遍历竞赛场地，完整覆盖所有区域，做到地图无空洞、无漂移、无重影错位，障碍物边界清晰。</p>
+
+  <div class="img-wrapper">
+    <img src="images/img_08.png" alt="栅格地图建图">
+    <div class="caption">2D 栅格地图建图过程（红线为禁行区域标记）</div>
+  </div>
+
+  <h4>③ 地图保存与校验</h4>
+  <p>建图完成后点击保存→点击结束→刷新页面加载已存地图，检查地图比例、边界、障碍物轮廓与实际场地一致。</p>
+
+  <h4>④ 导出地图</h4>
+  <p>鼠标右键地图 → 点击另存为图像保存到本地 <code>robot_2.1_原始栅格地图导出.png</code></p>
+
+  <div class="img-wrapper">
+    <img src="images/img_06.png" alt="原始栅格地图导出">
+    <div class="caption">原始栅格地图导出</div>
+  </div>
+
+  <h3>2. 栅格地图修剪与优化处理</h3>
+  <h4>① 地图降噪处理</h4>
+  <p>清除原始栅格地图的孤立噪点、零散黑点、无效扫描杂点，避免导航误判障碍物。</p>
+
+  <h4>② 地图边界修剪</h4>
+  <p>裁剪地图多余空白区域，规整场地边界，保证地图有效区域与实际竞赛场地完全匹配。然后就修图。</p>
+
+  <div class="img-wrapper">
+    <img src="images/img_02.png" alt="地图边界修剪">
+    <div class="caption">地图边界修剪 - 点击进入修图工具</div>
+  </div>
+
+  <div class="img-wrapper">
+    <img src="images/img_18.png" alt="修图工具入口">
+    <div class="caption">点击这里进入修图工具</div>
+  </div>
+
+  <h4>③ 障碍物校准修正</h4>
+  <p>修正墙体、固定障碍物轮廓，消除建图产生的虚障碍物、伪墙体，保证可通行区域、禁行区域划分精准。</p>
+
+  <h4>④ 导出优化后地图</h4>
+  <p>点击工具栏区域的导出按钮导出图像 <code>robot_2.2_优化后栅格地图导出.png</code></p>
+
+  <div class="img-wrapper">
+    <img src="images/img_09.png" alt="优化后栅格地图">
+    <div class="caption">优化后栅格地图导出</div>
+  </div>
+
+  <h3>3. 机器人手动定位与校准</h3>
+  <h4>① 导航地图加载</h4>
+  <p>返回"远程部署"界面，刷新页面加载优化完成的栅格地图，确认地图正常渲染、无加载报错。</p>
+
+  <div class="img-wrapper">
+    <img src="images/img_04.png" alt="导航地图加载">
+    <div class="caption">远程部署界面 - 加载优化后的栅格地图</div>
+  </div>
+
+  <h4>② 手动初始定位</h4>
+  <p>手动给定机器人初始位姿，微调坐标与角度，使机器人定位坐标与实际物理位置完全匹配，定位误差控制在规范范围内。</p>
+
+  <h4>③ 精准定位校验</h4>
+  <p>控制机器人小幅转动、平移，观察雷达匹配、坐标变化、里程计收敛情况，无定位漂移、无位置跳变。</p>
+
+  <h4>④ 标记任务点位</h4>
+  <p>结合实际竞赛场地的标识和任务道具摆放方向，在栅格地图上标记出任务点位，确保点位命名与标识名称一致、机器人朝向对着任务道具。</p>
+
+  <h4>⑤ 标记禁行区域</h4>
+  <p>使用禁行线把中间区域围起来变成一个禁行区域，确保机器人无法通行。留存标记后的地图截图 <code>robot_2.3_远程部署最终界面.png</code></p>
+
+  <div class="img-wrapper">
+    <img src="images/img_22.png" alt="标记点位和禁行线">
+    <div class="caption">标记任务点位和禁行线后的远程部署界面</div>
+  </div>
+
+  <h3>4. 机器全局路径规划与巡航</h3>
+  <h4>单点定点导航测试</h4>
+  <p>在地图中设置任意目标点，机器人自主规划最优路径，平稳行驶至目标位置，停车精度符合竞赛标准。</p>
+
+  <div class="img-wrapper">
+    <img src="images/img_15.png" alt="远程部署最终界面参考">
+    <div class="caption">远程部署最终界面（参考）：1需要2张，第2张是修完图弄完全部障碍的全部样子</div>
+  </div>
+
+  <h3>5. 动态避障与安全控制</h3>
+  <h4>① 行进间动态避障测试</h4>
+  <p>机器人正常巡航行驶过程中，赛场工作人员随机摆放临时动态障碍物，机器人需实时识别前方障碍。</p>
+
+  <h4>② 安全控制响应</h4>
+  <p>机器人根据距离自动完成 <strong>减速→停车→绕行避障</strong> 三种策略，禁止直接碰撞障碍物；无路径可行时自动原地待机。</p>
+
+  <h4>③ 障碍移除恢复导航</h4>
+  <p>动态障碍物撤离后，机器人自动重新规划全局路径，继续完成剩余巡航任务，导航恢复稳定无异常。</p>
+
+  <div class="callout callout-danger">
+    <div class="callout-title">提交物</div>
+    <ol class="submit-list">
+      <li>建图成果：<code>robot_2.1_原始栅格地图导出.png</code>、<code>robot_2.2_优化后栅格地图导出.png</code></li>
+      <li>功能验收截图：<code>robot_2.3_远程部署最终界面.png</code>（修完图弄完全部障碍的全部样子）</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ==================== 任务三 ==================== -->
+<div class="section" id="task3">
+  <div class="section-title"><span class="num">3</span>任务三：提示词工程设计与优化</div>
+  <div class="task-header">
+    <span class="task-badge badge-time">⏱ 半小时</span>
+    <span class="task-badge badge-score">📋 20 分</span>
+  </div>
+  <div class="bg-info">
+    <strong>任务背景：</strong>提示工程是释放大模型能力、实现任务精准输出、对接系统接口的核心手段。本模块考核选手面向工业巡检场景，设计专业、高效、可复用的提示词体系的能力。
+  </div>
+
+  <div class="callout callout-info">
+    <div class="callout-title">写入位置</div>
+    将提示词写入到 <code>robot</code> 文件夹的 <code>vl_prompt.md</code> 文件中。
+  </div>
+
+  <h3>提示词示例结构（供参考）</h3>
+  <div class="prompt-example">你是巡检机器人视觉识别助手，需要帮助巡检机器人识别图片中的元素。
+
+## 识别场景
+（列出要识别的场景）
+- 穿着红色上衣
+- 穿着蓝色上衣
+- 穿着黄色上衣
+
+## 识别规则
+（说明如何去判断图片属于上述哪个场景）
+- 判断人物穿着哪种颜色的衣物：当图片中出现人物时，分析人物躯干部分的衣物颜色，若颜色为红色，则判断为穿着红色上衣，若颜色为蓝色，则判断为穿着蓝色上衣，若颜色为黄色，则判断为穿着黄色</div>
+
+  <div class="img-wrapper">
+    <img src="images/img_12.png" alt="提示词参考结构">
+    <div class="caption">可以参照一个整体的结构</div>
+  </div>
+
+  <div class="callout callout-warn">
+    <strong>注意：</strong>考核选手全程独立完成场景分析、提示词设计、测试迭代、效果优化、成果归档全流程。所有提示词为赛场现场原创，禁止直接套用网络成品提示词，违者酌情扣分或本项零分。
+  </div>
+
+  <h3>1. 机器人巡检图像采集与场景分析</h3>
+  <h4>① 图像采集</h4>
+  <p>操控巡检机器人依次完成 A点、B点、C点 三大区域图像采集，图片清晰、无严重模糊、无刻意遮挡：</p>
+  <ul>
+    <li><code>robot_3.1_机器人采集的A点原始巡检图像.png</code></li>
+    <li><code>robot_3.2_机器人采集的B点原始巡检图像.png</code></li>
+    <li><code>robot_3.3_机器人采集的C点原始巡检图像.png</code></li>
+  </ul>
+
+  <h4>② 人工逐图分析</h4>
+  <p>精准判别场景类型，梳理各区域巡检识别重点、模型易出错点、漏检误检高发项。</p>
+
+  <h4>③ 汇总特征</h4>
+  <p>汇总三类场景图像特征与识别需求，为专属提示词的精准设计、场景适配优化提供完整依据。</p>
+
+  <h3>2. 多模态模型初始巡检提示词设计</h3>
+  <h4>① 设计结构化提示词</h4>
+  <p>自主设计结构化、专业化、场景化的多模态提示词，适配 A点、B点、C点 的图像分析。</p>
+
+  <h4>② 必须包含完整核心要素</h4>
+  <ul>
+    <li>专业角色定义</li>
+    <li>清晰场景指令</li>
+    <li>巡检场景约束</li>
+    <li>标准化识别要素</li>
+    <li>统一输出格式</li>
+  </ul>
+
+  <h4>③ 明确模型分析维度</h4>
+  <p>实现图片自动识别：场景类型、场景判断规则、环境整洁与异常情况、现场安全违规与隐患排除、整体巡检结果总结。</p>
+
+  <h4>④ 正确输出</h4>
+  <p>通过调用编写的提示词，使多模态模型能够正确输出，并且<strong>只输出图片中的场景名称</strong>。</p>
+
+  <h3>3. 提示词测试、问题排查与迭代优化</h3>
+  <div class="callout callout-info">
+    <div class="callout-title">vl_model_test.py 参数说明</div>
+    修改该文件中的以下参数：<br>
+    <strong>(1) OLLAMA_API_URL：</strong>把 IP 修改为实际多模态模型的 IP 地址，其他不做修改。<br>
+    <strong>(2) TEST_IMAGE：</strong>配置要测试的图片名称，将测试图片放置在与 py 文件同一文件夹的 <code>img</code> 文件夹中。<br>
+    <strong>(3) STANDARD_ANSWERS：</strong>在 <code>["场景名称"]</code> 中输入正确的场景，模型输出匹配则判断为正确。
+  </div>
+
+  <div class="img-wrapper">
+    <img src="images/img_07.png" alt="vl_model_test参考">
+    <div class="caption">vl_model_test.py 参数修改参考</div>
+  </div>
+
+  <h4>启动测试</h4>
+  <p>在 py 所在文件夹中，鼠标右键空白区域 → 在终端打开 → 进入之前创建的虚拟环境：</p>
+  <div class="code-block"><span class="cmd">python3</span> vl_model_test.py</div>
+
+  <div class="img-wrapper">
+    <img src="images/img_03.png" alt="终端启动测试">
+    <div class="caption">在终端中运行 vl_model_test.py</div>
+  </div>
+
+  <h4>① 初始提示词批量测试</h4>
+  <p>使用初始提示词对三类区域所有巡检图像进行批量测试，完整记录模型存在的漏检、误检、虚假识别、输出冗余、答非所问、格式混乱等各类问题。</p>
+
+  <h4>② 迭代优化</h4>
+  <p>针对测试暴露的缺陷逐轮迭代优化，通过细化识别标准、强化场景约束、增加防错规则、规范输出逻辑等方式，持续优化提示词精度与稳定性。</p>
+
+  <h4>③ 多轮调试</h4>
+  <p>完成多轮迭代调试，彻底改善模型识别缺陷，大幅提升多模态模型巡检图像识别准确率，有效抑制模型幻觉，保障识别结果稳定可靠。</p>
+
+  <div class="callout callout-danger">
+    <div class="callout-title">提交物</div>
+    <ol class="submit-list">
+      <li>原始素材：<code>robot_3.1_机器人采集的A点原始巡检图像.png</code>、<code>robot_3.2_...B点...</code>、<code>robot_3.3_...C点...</code></li>
+      <li>过程资料：<code>robot_3.4_v1_prompt.md</code>（最终版本 vl_prompt.md 文件）</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ==================== 任务四 ==================== -->
+<div class="section" id="task4">
+  <div class="section-title"><span class="num">4</span>任务四：大模型训练与微调</div>
+  <div class="task-header">
+    <span class="task-badge badge-time">⏱ 1 小时</span>
+    <span class="task-badge badge-score">📋 20 分</span>
+  </div>
+  <div class="bg-info">
+    <strong>任务背景：</strong>通用大模型需针对行业场景定制才能落地。本模块考核选手使用轻量化微调技术，在本地 GPU 上快速定制工业巡检专用大模型的能力。
+  </div>
+
+  <h3>1. 数据集制作与预处理</h3>
+  <div class="callout callout-warn">
+    <div class="callout-title">关键注意</div>
+    数据集中的 <code>instruction</code> 参数内容应与任务三中提示词中的场景名称相匹配，因为提示词中的场景名称是多模态模型需要输出的内容，而在最终巡检过程中，我们训练的模型会收到多模态模型输出的内容，然后根据该内容输出对应的内容。
+  </div>
+
+  <h4>数据集结构（供参考）</h4>
+  <div class="config-json">{"instruction": "问题", "input": "", "output": "答案"}
+
+<span class="comment">// 示例</span>
+{"instruction": "穿着红色上衣", "input": "", "output": "播报：穿着红色上衣"}
+{"instruction": "总结本次mission：点位1拍照识别"穿着红色上衣"，播报"穿着红色上衣"", "input": "", "output": "..."}</div>
+
+  <h4>① 数据集采集与整理</h4>
+  <p>根据赛场指定巡检场景，收集/整理巡检对话数据集（问答、指令、异常描述），数据内容必须覆盖：A点巡检、B点巡检、C点巡检。</p>
+
+  <h4>② 数据标准化处理</h4>
+  <p>全部样本统一采用 <strong>Instruction-Input-Output</strong>（标准 SFT 微调格式）结构。指令规范、输入简洁、输出专业结构化。字段统一、格式统一、无格式错乱，完全适配大模型微调训练要求。</p>
+  <div class="callout callout-danger"><strong>注意格式！</strong>否则白搭。</div>
+
+  <h4>③ 数据集质量核验</h4>
+  <ul>
+    <li>样本总量 ≥ <strong>30</strong></li>
+    <li>每个场景有效样本占比 ≥ <strong>5</strong></li>
+    <li>每个巡检点包含巡检点指令和异常执行指令</li>
+    <li>数据合规率达标</li>
+  </ul>
+
+  <h4>④ 汇报总结格式</h4>
+  <p>输入内容格式：<code>【总结本次mission：点位1拍照识别xx场景，播报xx内容；点位2拍照...】</code></p>
+  <p>输出内容格式：<code>【本次巡检完成3个点位的巡检，在点位1发现xx场景，已做xx动作，在点位2发现...】</code></p>
+
+  <h4>⑤ 备份数据集</h4>
+  <p>备份好最终版的数据集文件 <code>robot_4.1_处理后的完整数据集.txt</code>（应该用数据集的原文件名）</p>
+
+  <div class="img-wrapper">
+    <img src="images/img_23.png" alt="数据集制作">
+    <div class="caption">数据集制作参考</div>
+  </div>
+
+  <h3>2. 模型训练参数配置与微调策略设置</h3>
+  <p>进入 AI 大模型训练与精调实训软件的大模型训练界面。</p>
+
+  <h4>① 基础模型加载与校验</h4>
+  <p>正确加载预训练基础大模型，核查模型权重、参数完整性，排查模型加载报错、权重缺失、版本不匹配问题。</p>
+
+  <h4>② 微调方案选择</h4>
+  <p>选用 <strong>LoRA/QLoRA</strong> 参数高效微调，合理配置微调层级、权重更新范围，兼顾训练效率与模型效果。</p>
+
+  <h4>③ 核心超参数设置</h4>
+
+  <div class="img-wrapper">
+    <img src="images/img_16.png" alt="LoRA参数区">
+    <div class="caption">LoRA 参数区</div>
+  </div>
+
+  <div class="img-wrapper">
+    <img src="images/img_10.png" alt="超参数区">
+    <div class="caption">超参数区</div>
+  </div>
+
+  <div class="img-wrapper">
+    <img src="images/img_24.png" alt="运行和储存">
+    <div class="caption">运行和储存参数区</div>
+  </div>
+
+  <h4>基础参数配置</h4>
+  <table class="param-table">
+    <tr><th>参数</th><th>默认值</th><th>应改为</th><th>原因</th></tr>
+    <tr><td>system 字段</td><td class="default">You are a helpful assistant.</td><td class="change">你是一个工业机器人巡检助手，根据巡检信息生成专业播报和总结。播报必须使用完整句式，禁止简略输出。</td><td class="reason">让模型明确角色，输出更贴合场景</td></tr>
+    <tr><td>数据集名称</td><td class="default">空</td><td class="change">勾选你的 robot_inspect.jsonl</td><td class="reason">必须选对数据集</td></tr>
+    <tr><td>训练集采样数量</td><td class="default">20000</td><td class="change">留空（或填 0）</td><td class="reason">你只有30条数据，填20000会截断或重复，留空=用全部</td></tr>
+    <tr><td>验证集采样数量</td><td class="default">空</td><td class="change">留空</td><td class="reason">用验证集拆分比例自动分</td></tr>
+    <tr><td>数据集超长策略</td><td class="default">delete</td><td class="change">delete</td><td class="reason">文本很短，不会超长</td></tr>
+    <tr><td>验证集拆分比例</td><td class="default">0.01</td><td class="change">0.1</td><td class="reason">30条数据的1%只有0.3条；10%=3条，刚好</td></tr>
+    <tr><td>句子最大长度</td><td class="default">2048</td><td class="change">1024</td><td class="reason">巡检文本最长200字，1024足够，省显存提速</td></tr>
+    <tr><td>训练方式</td><td class="default">lora</td><td class="change">lora</td><td class="reason">正确，小模型小数据集用LoRA</td></tr>
+    <tr><td>随机数种子</td><td class="default">42</td><td class="change">42</td><td class="reason">保持默认，可复现</td></tr>
+    <tr><td>训练精度</td><td class="default">AUTO</td><td class="change">AUTO</td><td class="reason">自动选fp16/bf16，NVIDIA GPU自动选最优</td></tr>
+  </table>
+
+  <h4>LoRA 参数配置</h4>
+  <table class="param-table">
+    <tr><th>参数</th><th>默认值</th><th>应改为</th><th>原因</th></tr>
+    <tr><td>LoRA 目标模块</td><td class="default">q_proj k_proj v_proj</td><td class="change">ALL</td><td class="reason">小模型参数量少，训练全部线性层效果更好</td></tr>
+    <tr><td>LoRA 的秩</td><td class="default">8</td><td class="change">16</td><td class="reason">秩越大拟合能力越强，30条小数据集16刚好</td></tr>
+    <tr><td>LoRA 的 alpha</td><td class="default">32</td><td class="change">32</td><td class="reason">alpha 一般是 rank 的 2 倍，16×2=32</td></tr>
+    <tr><td>LoRA 的 dropout</td><td class="default">0.05</td><td class="change">0.05</td><td class="reason">小数据集防过拟合，0.05 刚好</td></tr>
+  </table>
+
+  <h4>训练超参数配置</h4>
+  <table class="param-table">
+    <tr><th>参数</th><th>默认值</th><th>应改为</th><th>原因</th></tr>
+    <tr><td>训练 batch size</td><td class="default">1</td><td class="change">4</td><td class="reason">GPU显存够，4比1稳，梯度更准</td></tr>
+    <tr><td>学习率</td><td class="default">1e-4</td><td class="change">1e-4</td><td class="reason">LoRA专用学习率，小模型甜点值</td></tr>
+    <tr><td>数据集迭代轮次</td><td class="default">1</td><td class="change">15</td><td class="reason">30条数据只训1轮学不会，15轮充分拟合</td></tr>
+    <tr><td>验证 batch size</td><td class="default">1</td><td class="change">4</td><td class="reason">和训练batch一致</td></tr>
+    <tr><td>交叉验证步数</td><td class="default">50</td><td class="change">5</td><td class="reason">30条数据batch=4，每轮约2步，5步=2.5轮验证一次</td></tr>
+    <tr><td>最大迭代步数</td><td class="default">-1</td><td class="change">-1</td><td class="reason">-1表示不限制，由epoch控制</td></tr>
+    <tr><td>梯度累计步数</td><td class="default">16</td><td class="change">4</td><td class="reason">batch=4×累积4=等效16；默认16太大</td></tr>
+    <tr><td>梯度裁剪</td><td class="default">0.5</td><td class="change">1.0</td><td class="reason">防梯度爆炸，1.0比0.5宽松</td></tr>
+    <tr><td>验证时使用 generate/Rouge</td><td class="default">不勾</td><td class="change">不勾</td><td class="reason">用loss验证更快更稳</td></tr>
+    <tr><td>使用 Flash Attention</td><td class="default">不勾</td><td class="change">勾选</td><td class="reason">省显存+提速30%，必开</td></tr>
+  </table>
+
+  <h4>运行和储存配置</h4>
+  <table class="param-table">
+    <tr><th>参数</th><th>默认值</th><th>应改为</th><th>原因</th></tr>
+    <tr><td>使用 DDP</td><td class="default">不勾</td><td class="change">不勾</td><td class="reason">单卡训练，不需要多卡并行</td></tr>
+    <tr><td>neftune_noise_alpha</td><td class="default">0</td><td class="change">5</td><td class="reason">给训练数据加噪声，提升泛化能力</td></tr>
+    <tr><td>选择可用 GPU</td><td class="default">0</td><td class="change">0</td><td class="reason">用第0号卡</td></tr>
+    <tr><td>GPU 显存限制</td><td class="default">空</td><td class="change">留空</td><td class="reason">不限制，用满显存</td></tr>
+    <tr><td>仅生成运行命令</td><td class="default">不勾</td><td class="change">不勾</td><td class="reason">要真正开始训练</td></tr>
+    <tr><td>存储步数</td><td class="default">500</td><td class="change">10</td><td class="reason">30条数据总共约30步，500步存不到；10步存一次</td></tr>
+    <tr><td>存储目录</td><td class="default">output</td><td class="change">保持默认</td><td class="reason">训练完从这里找 best_model_checkpoint</td></tr>
+  </table>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">参数速查</div>
+    <strong>system 字段：</strong>你是一个工业机器人巡检助手，根据巡检信息生成专业播报和总结。<br>
+    <strong>验证集拆分比例：</strong>0.1 ｜ <strong>句子最大长度：</strong>1024 ｜ <strong>训练方式：</strong>lora ｜ <strong>训练精度：</strong>AUTO<br>
+    <strong>LoRA目标模块：</strong>ALL ｜ <strong>秩：</strong>16 ｜ <strong>alpha：</strong>32 ｜ <strong>dropout：</strong>0.05<br>
+    <strong>batch size：</strong>4 ｜ <strong>学习率：</strong>1e-4 ｜ <strong>epoch：</strong>15 ｜ <strong>交叉验证步数：</strong>5<br>
+    <strong>梯度累计：</strong>4 ｜ <strong>梯度裁剪：</strong>1.0 ｜ <strong>Flash Attention：</strong>勾选<br>
+    <strong>neftune_noise_alpha：</strong>5 ｜ <strong>存储步数：</strong>10
+  </div>
+
+  <p>截图留存大模型训练模块界面的参数配置 <code>robot_4.2_模型微调参数配置截图.png</code></p>
+
+  <h3>3. 模型训练与监控</h3>
+  <h4>① 启动模型微调训练</h4>
+  <p>点击开始训练后，可点击"展示运行状态"，全程监控训练状态，实时查看训练损失、验证损失、学习率变化、迭代进度。</p>
+
+  <h4>② 训练异常排查与修复</h4>
+  <p>针对损失不下降、梯度消失、显存溢出、过拟合、训练震荡、迭代卡死等故障，快速定位问题并优化。</p>
+
+  <h4>③ 训练过程记录</h4>
+  <p>全程记录训练日志、参数迭代记录、故障处理过程，留存损失曲线、训练终端日志。</p>
+
+  <h4>④ 备份日志和图表</h4>
+  <p>通过日志路径参数中的路径，查找到本地存储的日志文件 <code>run.log</code>：</p>
+  <ul>
+    <li>备份文件 <code>robot_2.3.run.log</code></li>
+    <li>截取训练后出现的图表信息图片 <code>robot_2.4_loss曲线图.png</code></li>
+    <li>截取日志输出的最后三行内容</li>
+  </ul>
+
+  <div class="callout callout-tip">
+    <strong>训练完日志 eval_token_acc → ≥0.95 就是优秀</strong>
+  </div>
+
+  <h4>⑤ 复制 best_model_checkpoint 路径</h4>
+  <p>复制训练日志中最后几行中的 <code>best_model_checkpoint</code> 后的路径，用于后续模型的部署。</p>
+
+  <h3>4. 模型训练结果评估与优化</h3>
+  <p>进入 AI 大模型训练与精调实训软件的<strong>大模型部署界面</strong>，将复制的路径粘贴到"模型id或路径"参数中并点击部署模型。</p>
+  <div class="callout callout-warn">
+    <strong>注意：</strong>若想要外部设备能够调用部署的模型，需要在部署前，在更多参数中输入：<code>{"host":"0.0.0.0"}</code> 内容后再部署。
+  </div>
+
+  <h4>① 实际推理效果测试</h4>
+  <p>在界面最下方输入场景测试样本，对比微调前后模型输出效果，检测是否存在幻觉、答非所问、逻辑错误等问题。</p>
+
+  <div class="img-wrapper">
+    <img src="images/img_19.png" alt="推理效果测试">
+    <div class="caption">模型推理效果测试 - 需要像这样</div>
+  </div>
+
+  <h4>② 性能效率评估</h4>
+  <p>测试模型推理速度、显存占用、资源消耗，评估微调后模型轻量化效果与工程落地实用性。</p>
+
+  <h4>③ 问题复盘与迭代优化</h4>
+  <p>分析模型存在的过拟合、泛化能力弱、精度不足等问题，总结数据、参数、训练策略的缺陷，优化数据集和参数。</p>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">简约提示词参考</div>
+    提示词加上：<em>你是一个工业机器人巡检助手，根据巡检信息生成专业播报和总结，播报必须使用完整句式，禁止简略输出</em>
+  </div>
+
+  <p>部署参数也可以默认，主要看测试的效果。</p>
+
+  <div class="img-wrapper">
+    <img src="images/img_13.png" alt="模型权重上传">
+    <div class="caption">模型权重和文件的上传</div>
+  </div>
+
+  <h4>部署参数推荐</h4>
+  <table class="param-table">
+    <tr><th>参数</th><th>默认值</th><th>应改为</th><th>原因</th></tr>
+    <tr><td>生成序列最大长度</td><td class="default">2048</td><td class="change">512</td><td class="reason">巡检播报/总结最长200字，512足够</td></tr>
+    <tr><td>采样温度</td><td class="default">0.3</td><td class="change">0.1</td><td class="reason">巡检需固定话术，温度越低越稳定</td></tr>
+    <tr><td>Top-k</td><td class="default">20</td><td class="change">10</td><td class="reason">缩小候选词范围，输出更固定</td></tr>
+    <tr><td>Top-p</td><td class="default">0.7</td><td class="change">0.4</td><td class="reason">进一步约束采样，杜绝自由发挥</td></tr>
+    <tr><td>重复惩罚</td><td class="default">1.05</td><td class="change">1.05</td><td class="reason">防止播报文字循环重复</td></tr>
+  </table>
+
+  <div class="callout callout-danger">
+    <div class="callout-title">提交物</div>
+    <ol class="submit-list">
+      <li>数据成果：<code>robot_4.1_处理后的完整数据集.txt</code></li>
+      <li>配置成果：<code>robot_4.2_模型微调参数配置截图.png</code></li>
+      <li>训练日志：<code>robot_2.3.run.log</code> 与 <code>robot_2.4_loss曲线图.png</code></li>
+      <li>模型权重：微调后模型权重（或 LoRA 权重）</li>
+      <li>模型文件：通过 best_model_checkpoint 路径查找，上传 <code>v*-*-*</code> 文件夹（如 <code>v18-20260527-161410</code>）</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ==================== 任务五 ==================== -->
+<div class="section" id="task5">
+  <div class="section-title"><span class="num">5</span>任务五：具身智能融合应用</div>
+  <div class="task-header">
+    <span class="task-badge badge-time">⏱ 1 小时</span>
+    <span class="task-badge badge-score">📋 40 分</span>
+  </div>
+  <div class="bg-info">
+    <strong>任务背景：</strong>具身智能是大模型认知+机器人感知+物理执行的闭环系统，是AI落地工业场景的关键形态。本模块考核选手构建具身智能一体化融合系统，完成工厂巡检全流程自主任务的综合能力。
+  </div>
+
+  <p>选手需在规定时间内，独立完成具身智能融合系统全流程开发。基于模拟工厂巡检场景，完成融合系统环境集成、视觉感知与场景理解，最终实现"模型智能分析—机器人自主执行—结果反馈输出"的端到端闭环智能应用，并完成现场演示。</p>
+
+  <div class="flow">
+    <div class="flow-step">程序启动</div><span class="flow-arrow">→</span>
+    <div class="flow-step">意图解析</div><span class="flow-arrow">→</span>
+    <div class="flow-step">自主导航</div><span class="flow-arrow">→</span>
+    <div class="flow-step">图像采集</div><span class="flow-arrow">→</span>
+    <div class="flow-step">多模态分析</div><span class="flow-arrow">→</span>
+    <div class="flow-step">结果输出</div><span class="flow-arrow">→</span>
+    <div class="flow-step">情况执行</div><span class="flow-arrow">→</span>
+    <div class="flow-step">巡检总结</div>
+  </div>
+
+  <h3>1. 修改配置文件参数</h3>
+  <h4>① 修改 zcbot_config.json</h4>
+  <p>修改 <code>robot</code> 文件夹下的 <code>zcbot_config.json</code> 文件中，各参数中的 IP 地址和 mission 中关于机器人的行动路线。备份好最终文件 <code>robot_5.1_zcbot_config.json</code></p>
+
+  <div class="config-json"><span class="comment"># 将其中的 IP 改为机器人下装 IP</span>
+<span class="key">"rosbridge"</span>: { <span class="key">"url"</span>: <span class="str">"ws://192.168.0.x:8080"</span> }
+
+<span class="comment"># 设置机器人巡检路径</span>
+<span class="key">"mission"</span>: [
+    <span class="str">"点位：起点"</span>,
+    <span class="str">"点位：点位1"</span>,
+    <span class="str">"识别"</span>,
+    <span class="str">"点位：点位2"</span>,
+    <span class="str">"识别"</span>,
+    <span class="str">"点位：点位3"</span>,
+    <span class="str">"识别"</span>,
+    <span class="str">"点位：起点"</span>
+]
+
+<span class="comment"># 调用本地视觉</span></div>
+
+  <h3>2. 融合系统环境集成</h3>
+  <h4>① 机器人运行环境集成</h4>
+  <p>完成机器人地图重建、定位校准、路径规划、避障参数调试，保证机器人在 A点、B点、C点 三区域稳定自主巡航、避障行驶。</p>
+
+  <h4>② 视觉提示词体系集成</h4>
+  <p>部署赛前优化完成的巡检多模态提示词，适配三类巡检场景图像分析，保证各任务可正常调用、输出结构化巡检结果。</p>
+
+  <h4>③ 微调模型部署集成</h4>
+  <p>将现场微调后的最优模型部署至本地推理环境，完成模型加载、推理测试、接口调试，确保模型推理稳定、无报错。</p>
+
+  <h4>④ 跨模块联调</h4>
+  <p>打通机器人图像采集、多模态大模型分析、自然语言模型推理、指令交互全链路，实现软硬件、模型、控制端的协同联动，系统整体环境无报错、可稳定运行。</p>
+
+  <h3>3. 环境感知与场景理解</h3>
+  <h4>① 实景图像自主采集</h4>
+  <p>机器人根据巡航点位自主采集 A点、B点、C点 现场图像，画面清晰、视角合规、覆盖关键巡检点位。</p>
+
+  <h4>② 场景精准理解与感知</h4>
+  <p>模型自动识别并判定当前所属场景，区分 A点、B点、C点 三类区域，实现场景精准分类。</p>
+
+  <h4>③ 安全隐患智能研判</h4>
+  <p>精准识别现场安全违规、作业不规范等隐患，抑制模型幻觉，无漏检、无错检。</p>
+
+  <h4>④ 结构化感知输出</h4>
+  <p>所有识别结果统一结构化输出，可被后端任务调度模块识别与解析，为后续指令执行、任务决策提供数据支撑。</p>
+
+  <h3>4. 全流程闭环演示</h3>
+  <div class="callout callout-info">
+    <div class="callout-title">启动顺序</div>
+    选手依次启动 <code>photo-broker</code>、<code>zcbot</code> 程序命令，机器人完成所有任务后回到起始点，并总结播报巡检情况。
+  </div>
+
+  <h4>① 全流程闭环功能演示</h4>
+  <div class="callout callout-tip">
+    <div class="callout-title">演示流程</div>
+    程序启动 → 意图解析 → 机器人自主导航 → 图像采集 → 多模态大模型分析 → 结果输出 → 情况执行处理 → 巡检总结，全程流畅、稳定、无故障。
+  </div>
+  <ul>
+    <li>机器人巡检到 <strong>A点</strong> 时，检测图片中人物穿着上衣的颜色，最后播报识别结果。</li>
+    <li>机器人巡检到 <strong>B点</strong> 时，检测图片中人物穿着上衣的颜色，最后播报识别结果。</li>
+    <li>机器人巡检到 <strong>C点</strong> 时，检测图片中人物穿着上衣的颜色，最后播报识别结果。</li>
+  </ul>
+
+  <h4>② 系统效果验证</h4>
+  <p>演示场景覆盖 A点、B点、C点 三区域巡检任务，识别准确、执行有序、反馈及时，达到工厂巡检应用标准。</p>
+
+  <h4>③ 成果归档</h4>
+  <p>截取终端中 zcbot 运行日志 <code>robot_5.2_终端中zcbot命令执行输出内容.png</code></p>
+
+  <div class="callout callout-danger">
+    <div class="callout-title">提交物</div>
+    <ol class="submit-list">
+      <li>项目配置文件：<code>robot_5.1_zcbot_config.json</code></li>
+      <li>演示成果：<code>robot_5.2_终端中zcbot命令执行输出内容.png</code></li>
+    </ol>
+  </div>
+</div>
+
+<!-- 通用要求 -->
+<div class="section">
+  <div class="section-title"><span class="num">✅</span>通用要求</div>
+  <ul>
+    <li>所有配置可复用、文档化、可复现。</li>
+    <li>系统稳定、低时延、无安全风险。</li>
+    <li>所有任务结果可现场演示、可验收。</li>
+    <li>禁止使用外部联网资源，全部本地离线完成。</li>
+  </ul>
+</div>
+
+<!-- 提交物汇总 -->
+<div class="section">
+  <div class="section-title"><span class="num">📦</span>全部提交物汇总</div>
+  <table class="overview-table">
+    <tr><th>任务</th><th>提交物</th><th>文件名</th></tr>
+    <tr><td>任务一</td><td>环境激活截图</td><td><code>robot_1.1_环境激活.png</code></td></tr>
+    <tr><td>任务一</td><td>依赖文件</td><td><code>robot_1.2_requirements.txt</code></td></tr>
+    <tr><td>任务一</td><td>photo-broker截图</td><td><code>robot_1.3_photo-broker监听服务运行.png</code></td></tr>
+    <tr><td>任务一</td><td>ping测试截图</td><td><code>robot_1.4_网络ping机器人下装测试.png</code></td></tr>
+    <tr><td>任务二</td><td>原始地图</td><td><code>robot_2.1_原始栅格地图导出.png</code></td></tr>
+    <tr><td>任务二</td><td>优化地图</td><td><code>robot_2.2_优化后栅格地图导出.png</code></td></tr>
+    <tr><td>任务二</td><td>远程部署截图</td><td><code>robot_2.3_远程部署最终界面.png</code></td></tr>
+    <tr><td>任务三</td><td>A/B/C点巡检图像</td><td><code>robot_3.1~3.3_...png</code></td></tr>
+    <tr><td>任务三</td><td>提示词文件</td><td><code>robot_3.4_v1_prompt.md</code></td></tr>
+    <tr><td>任务四</td><td>数据集</td><td><code>robot_4.1_处理后的完整数据集.txt</code></td></tr>
+    <tr><td>任务四</td><td>参数配置截图</td><td><code>robot_4.2_模型微调参数配置截图.png</code></td></tr>
+    <tr><td>任务四</td><td>训练日志</td><td><code>robot_2.3.run.log</code></td></tr>
+    <tr><td>任务四</td><td>loss曲线</td><td><code>robot_2.4_loss曲线图.png</code></td></tr>
+    <tr><td>任务四</td><td>模型权重</td><td>LoRA 权重文件</td></tr>
+    <tr><td>任务四</td><td>模型文件</td><td><code>v*-*-*</code> 文件夹</td></tr>
+    <tr><td>任务五</td><td>配置文件</td><td><code>robot_5.1_zcbot_config.json</code></td></tr>
+    <tr><td>任务五</td><td>zcbot输出截图</td><td><code>robot_5.2_终端中zcbot命令执行输出内容.png</code></td></tr>
+  </table>
+</div>
+
+</div>
+
+<footer>
+  <p>第四届全国人工智能应用技术技能大赛 - 广东选拔赛 · 生成式人工智能系统应用员赛项（学生组）实操试题</p>
+  <p>广东省选拔赛组委会技术工作组 · 2026年7月</p>
+</footer>
 
 <script>
-// ====== DATA ======
-var ALL_QUESTIONS = [];
-var wrongSet = new Set();
-var errorHistory = [];
-var isErrorPractice = false;
-var currentQuestions = [];
-var currentIndex = 0;
-var userAnswers = {};
-var isAnswered = {};
-
-function init() {
-  fetch('questions.json')
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      ALL_QUESTIONS = data;
-      document.getElementById('singleCount').textContent = ALL_QUESTIONS.filter(function(q) { return q.type === 'single'; }).length;
-      document.getElementById('judgeCount').textContent = ALL_QUESTIONS.filter(function(q) { return q.type === 'judge'; }).length;
-      document.getElementById('mixedCount').textContent = ALL_QUESTIONS.length;
-      loadWrongSet();
-      loadErrorHistory();
-      loadOptionShuffleMode();
-      startClock();
-      fetchIP();
-      var restored = restoreProgress();
-      var targetTab = (restored && restored.ok && restored.tab) ? restored.tab : 'single';
-      switchTab(targetTab);
-    })
-    .catch(function(e) {
-      console.error('Failed to load questions:', e);
-      document.getElementById('singleCount').textContent = '失败';
-      document.getElementById('judgeCount').textContent = '失败';
+  // Nav active state on scroll
+  const sections = document.querySelectorAll('.section[id]');
+  const navLinks = document.querySelectorAll('.nav a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(sec => {
+      const top = sec.offsetTop - 100;
+      if (window.scrollY >= top) current = sec.id;
     });
-}
-
-function fetchIP() {
-  // Get IP and location
-  fetch('https://ipapi.co/json/')
-    .then(function(r) { return r.json(); })
-    .then(function(d) {
-      document.getElementById('ipDisplay').textContent = d.ip || '未知';
-      var loc = [];
-      if (d.country_name) loc.push(d.country_name);
-      if (d.region) loc.push(d.region);
-      if (d.city) loc.push(d.city);
-      document.getElementById('locationInfo').textContent = loc.length > 0 ? loc.join(' ') : '未知';
-    })
-    .catch(function() {
-      // Fallback 1: ipify for IP
-      fetch('https://api.ipify.org?format=json')
-        .then(function(r) { return r.json(); })
-        .then(function(d) { document.getElementById('ipDisplay').textContent = d.ip; })
-        .catch(function() { document.getElementById('ipDisplay').textContent = '未知'; });
-      document.getElementById('locationInfo').textContent = '获取失败';
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) link.classList.add('active');
     });
-  // Device info
-  var ua = navigator.userAgent;
-  var device = '';
-  if (/Windows/.test(ua)) {
-    device = 'Windows';
-    if (/NT 10/.test(ua)) device += ' 10/11';
-    else if (/NT 6/.test(ua)) device += ' 7/8';
-  } else if (/Mac OS/.test(ua)) {
-    device = 'macOS';
-    var m = ua.match(/Mac OS X ([0-9_]+)/);
-    if (m) device += ' ' + m[1].replace(/_/g, '.');
-  } else if (/Linux/.test(ua) && !/Android/.test(ua)) {
-    device = 'Linux';
-  } else if (/Android/.test(ua)) {
-    device = 'Android';
-    var m = ua.match(/Android ([0-9.]+)/);
-    if (m) device += ' ' + m[1];
-  } else if (/iPhone|iPad|iPod/.test(ua)) {
-    device = 'iOS';
-    var m = ua.match(/OS ([0-9_]+)/);
-    if (m) device += ' ' + m[1].replace(/_/g, '.');
-  }
-  if (/Chrome/.test(ua) && !/Edge/.test(ua) && !/OPR/.test(ua)) {
-    device += ' / Chrome';
-  } else if (/Firefox/.test(ua)) {
-    device += ' / Firefox';
-  } else if (/Safari/.test(ua) && !/Chrome/.test(ua)) {
-    device += ' / Safari';
-  } else if (/Edge/.test(ua)) {
-    device += ' / Edge';
-  }
-  document.getElementById('deviceInfo').textContent = device || '未知设备';
-}
-
-// ====== LOCAL STORAGE ======
-function loadWrongSet() {
-  try {
-    var saved = localStorage.getItem('ai_exam_wrong_set_v2');
-    if (saved) { wrongSet = new Set(JSON.parse(saved)); }
-  } catch(e) {}
-  updateErrorCount();
-}
-
-function saveWrongSet() {
-  localStorage.setItem('ai_exam_wrong_set_v2', JSON.stringify(Array.from(wrongSet)));
-  updateErrorCount();
-}
-
-function updateErrorCount() {
-  document.getElementById('errorCount').textContent = wrongSet.size;
-}
-
-// ====== TABS ======
-var currentTab = '';
-var tabStates = {};
-var shuffleMode = false;
-var originalOrder = null;
-var pendingSeqJump = false;
-// 选项随机模式（仅影响单选题A/B/C/D显示顺序，不影响正确答案判断）
-var optionShuffleMode = false;
-// 当前题目选项显示顺序（如 ['C','A','D','B']），用于键盘1-4和selectAnswer按显示位置选择
-var currentOptionOrder = [];
-var OPTION_SHUFFLE_KEY = 'ai_exam_option_shuffle_v1';
-// 刷题进度持久化（刷新后恢复）
-var PROGRESS_KEY = 'ai_exam_progress_v1';
-function resetAllProgress() {
-  // 避免原生confirm被浏览器抑制：使用自定义overlay
-  var ov = document.getElementById('resetConfirmOverlay');
-  if (ov) ov.style.display = 'flex';
-}
-function closeResetConfirm() {
-  var ov = document.getElementById('resetConfirmOverlay');
-  if (ov) ov.style.display = 'none';
-}
-function confirmResetAllProgress() {
-  closeResetConfirm();
-  try {
-    // 不清空：wrongSet / ai_exam_wrong_set_v2 / ai_exam_total_study_ms / ai_exam_error_history
-    localStorage.removeItem(PROGRESS_KEY);
-  } catch (e) {}
-  // 重置内存状态
-  tabStates = {};
-  userAnswers = {};
-  isAnswered = {};
-  shuffleMode = false;
-  originalOrder = null;
-  pendingSeqJump = false;
-  renderQuestion._lastKey = '';
-  // 同步UI：顺序按钮
-  try {
-    var toggle = document.getElementById('shuffleToggle');
-    var label = document.getElementById('shuffleLabel');
-    if (toggle) toggle.classList.remove('active');
-    if (label) label.textContent = '顺序';
-  } catch (e) {}
-  // 注意：选项随机模式（optionShuffleMode）在此不重置，保持用户设置
-  // 跳到单选Tab第1题（相当于从头开始）
-  currentTab = 'single';
-  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
-  var singleTabBtn = document.querySelector('[data-tab="single"]');
-  if (singleTabBtn) singleTabBtn.classList.add('active');
-  document.getElementById('mainCard').style.display = 'block';
-  document.getElementById('errorPanel').style.display = 'none';
-  document.getElementById('customPanel').style.display = 'none';
-  // 按原生题型过滤
-  currentQuestions = ALL_QUESTIONS.filter(function(q) { return q.type === 'single'; });
-  currentIndex = 0;
-  resetQTimer();
-  renderQuestion();
-  updateStats();
-  showToastMsg('✅ 刷题进度已重置（错题本 / 学习时长 / 选项随机设置均保留）');
-}
-function persistProgress() {
-  try {
-    var payload = {
-      currentTab: currentTab,
-      shuffleMode: !!shuffleMode,
-      updatedAt: Date.now()
-    };
-    // 保存各Tab状态（题目顺序只存gid列表，避免重复存整题题干占空间）
-    payload.states = {};
-    var tabs = Object.keys(tabStates);
-    for (var i = 0; i < tabs.length; i++) {
-      var t = tabs[i];
-      var s = tabStates[t];
-      if (!s) continue;
-      payload.states[t] = {
-        index: s.index || 0,
-        answers: s.answers || {},
-        answered: s.answered || {},
-        // 只存gid顺序数组（刷新后根据gid回填原题）
-        gids: (s.questions || []).map(function(q) { return q.gid; })
-      };
-    }
-    // 把当前正在显示、但还没saveTabState的题也保存一下（避免只在切Tab时才写）
-    if (currentTab && currentTab !== 'error') {
-      payload.states[currentTab] = payload.states[currentTab] || {};
-      payload.states[currentTab].index = currentIndex;
-      payload.states[currentTab].answers = JSON.parse(JSON.stringify(userAnswers));
-      payload.states[currentTab].answered = JSON.parse(JSON.stringify(isAnswered));
-      payload.states[currentTab].gids = currentQuestions.map(function(q) { return q.gid; });
-      payload.currentTab = currentTab;
-    }
-    localStorage.setItem(PROGRESS_KEY, JSON.stringify(payload));
-  } catch (e) { /* 忽略写localStorage失败（隐私模式等）*/ }
-}
-function restoreProgress() {
-  var result = { ok: false, tab: null };
-  if (!ALL_QUESTIONS || ALL_QUESTIONS.length === 0) return result;
-  try {
-    var raw = localStorage.getItem(PROGRESS_KEY);
-    if (!raw) return result;
-    var payload = JSON.parse(raw);
-    if (!payload || !payload.states) return result;
-    // 重建gid到题目的快速映射
-    var byGid = {};
-    for (var i = 0; i < ALL_QUESTIONS.length; i++) byGid[ALL_QUESTIONS[i].gid] = ALL_QUESTIONS[i];
-    // 恢复 tabStates
-    Object.keys(payload.states).forEach(function(tab) {
-      var s = payload.states[tab];
-      if (!s || !s.gids || !Array.isArray(s.gids)) return;
-      var qs = [];
-      for (var j = 0; j < s.gids.length; j++) {
-        var q = byGid[s.gids[j]];
-        if (q) qs.push(q);
-      }
-      if (qs.length === 0) return;
-      tabStates[tab] = {
-        questions: qs,
-        index: Math.min(Math.max(0, s.index || 0), qs.length - 1),
-        answers: s.answers || {},
-        answered: s.answered || {}
-      };
-    });
-    shuffleMode = !!payload.shuffleMode;
-    // 同步UI：toggle按钮
-    try {
-      var toggle = document.getElementById('shuffleToggle');
-      var label = document.getElementById('shuffleLabel');
-      if (shuffleMode) { if (toggle) toggle.classList.add('active'); if (label) label.textContent = '随机'; }
-      else { if (toggle) toggle.classList.remove('active'); if (label) label.textContent = '顺序'; }
-    } catch(e){}
-    result.ok = true;
-    result.tab = payload.currentTab || 'single';
-  } catch (e) { /* ignore */ }
-  return result;
-}
-// ====== OPTION SHUFFLE ======
-// 加载选项随机设置（独立key，重置刷题进度不清除）
-function loadOptionShuffleMode() {
-  try {
-    var v = localStorage.getItem(OPTION_SHUFFLE_KEY);
-    optionShuffleMode = (v === '1' || v === 'true');
-  } catch(e) { optionShuffleMode = false; }
-  try {
-    var cb = document.getElementById('optionShuffleToggle');
-    if (cb) cb.checked = !!optionShuffleMode;
-  } catch(e) {}
-}
-function saveOptionShuffleMode() {
-  try { localStorage.setItem(OPTION_SHUFFLE_KEY, optionShuffleMode ? '1' : '0'); }
-  catch(e) {}
-}
-function toggleOptionShuffle(checked) {
-  optionShuffleMode = !!checked;
-  saveOptionShuffleMode();
-  // 重渲染当前题目以反映变化：若开启则重新打乱选项；关闭则恢复原生顺序
-  currentOptionOrder = [];
-  renderQuestion._lastKey = ''; // 触发计时重置逻辑可跳过（保持当前题，不重置计时）→ 但renderQuestion已用key缓存。这里打破缓存使用新key：
-  // 给 lastKey 加后缀使同一题在切换开关时被视为「新渲染」不合适，改为仅重新渲染选项（直接改renderQuestion缓存逻辑：新增 _optionShuffleSalt）
-  renderQuestion._optionShuffleSalt = (renderQuestion._optionShuffleSalt || 0) + 1;
-  renderQuestion();
-  showToastMsg(optionShuffleMode ? '🔀 选项随机已开启' : '↩️ 选项随机已关闭，恢复原顺序');
-}
-function shuffleArrayInPlace(arr) {
-  for (var i = arr.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
-  }
-  return arr;
-}
-
-// ====== TIMER ======
-var studyStartTs = Date.now();   // 学习总时长起点（可从localStorage续接）
-var currentQStartTs = Date.now();// 当前题目开始时间
-var STORED_TOTAL_KEY = 'ai_exam_total_study_ms';
-// 续接上一次的累计学习时长（跨刷新保留）
-var lastTotalMs = 0;
-try {
-  var v = parseInt(localStorage.getItem(STORED_TOTAL_KEY) || '0', 10);
-  if (!isNaN(v)) lastTotalMs = v;
-} catch (e) {}
-
-function pad2(n){ return n<10?'0'+n:''+n; }
-function fmtClockShort(totalSec){
-  if (totalSec < 0) totalSec = 0;
-  var s = totalSec % 60;
-  var m = Math.floor(totalSec / 60) % 60;
-  var h = Math.floor(totalSec / 3600);
-  if (h > 0) return pad2(h)+':'+pad2(m)+':'+pad2(s);
-  return pad2(m)+':'+pad2(s);
-}
-function updateClockDisplay() {
-  var now = new Date();
-  var clock = pad2(now.getHours())+':'+pad2(now.getMinutes())+':'+pad2(now.getSeconds());
-  var el = document.getElementById('clockDisplay');
-  if (el) el.textContent = '🕐 ' + now.getFullYear()+'/'+pad2(now.getMonth()+1)+'/'+pad2(now.getDate())+' '+clock;
-
-  // 学习总时长 = 本次打开累计 + 上次累计
-  var sessionMs = Date.now() - studyStartTs;
-  var totalMs = sessionMs + lastTotalMs;
-  // 5秒写回一次localStorage
-  if (Math.floor(sessionMs / 5000) !== updateClockDisplay._lastWroteBucket) {
-    updateClockDisplay._lastWroteBucket = Math.floor(sessionMs / 5000);
-    try { localStorage.setItem(STORED_TOTAL_KEY, String(totalMs)); } catch(e){}
-  }
-  var studyEl = document.getElementById('sStudyTime');
-  if (studyEl) studyEl.textContent = fmtClockShort(Math.floor(totalMs/1000));
-
-  // 单题用时
-  var qEl = document.getElementById('sQTime');
-  if (qEl) qEl.textContent = fmtClockShort(Math.floor((Date.now()-currentQStartTs)/1000));
-}
-function resetQTimer() { currentQStartTs = Date.now(); }
-function startClock() {
-  updateClockDisplay();
-  setInterval(updateClockDisplay, 1000);
-}
-
-function shuffleArray(arr) {
-  var a = arr.slice();
-  for (var i = a.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
-  }
-  return a;
-}
-
-function toggleShuffle() {
-  shuffleMode = !shuffleMode;
-  var toggle = document.getElementById('shuffleToggle');
-  var label = document.getElementById('shuffleLabel');
-  if (shuffleMode) {
-    toggle.classList.add('active');
-    label.textContent = '随机';
-  } else {
-    toggle.classList.remove('active');
-    label.textContent = '顺序';
-  }
-  if (currentQuestions.length === 0) return;
-
-  var curQ = currentQuestions[currentIndex];
-  if (shuffleMode) {
-    // 保存原始顺序，只打乱当前题之后的题目
-    originalOrder = currentQuestions.slice();
-    var head = currentQuestions.slice(0, currentIndex + 1);
-    var tail = currentQuestions.slice(currentIndex + 1);
-    tail = shuffleArray(tail);
-    currentQuestions = head.concat(tail);
-  } else {
-    // 恢复原始顺序，定位当前题
-    pendingSeqJump = true;
-    if (originalOrder && originalOrder.length > 0) {
-      currentQuestions = originalOrder;
-      originalOrder = null;
-    } else {
-      currentQuestions.sort(function(a, b) { return a.gid - b.gid; });
-    }
-    for (var i = 0; i < currentQuestions.length; i++) {
-      if (currentQuestions[i].id === curQ.id) {
-        currentIndex = i;
-        break;
-      }
-    }
-  }
-  renderQuestion();
-  updateStats();
-  persistProgress();
-}
-
-function saveTabState() {
-  if (currentTab && currentTab !== 'error') {
-    tabStates[currentTab] = {
-      questions: currentQuestions,
-      index: currentIndex,
-      answers: JSON.parse(JSON.stringify(userAnswers)),
-      answered: JSON.parse(JSON.stringify(isAnswered))
-    };
-  }
-  persistProgress();
-}
-
-function restoreTabState(tab) {
-  var state = tabStates[tab];
-  if (state) {
-    currentQuestions = state.questions;
-    currentIndex = state.index;
-    userAnswers = state.answers;
-    isAnswered = state.answered;
-  } else if (tab === 'mixed') {
-    // 混合练习：单选题 + 判断题 全部 620 题（按gid升序）
-    currentQuestions = ALL_QUESTIONS.slice().sort(function(a,b){ return a.gid - b.gid; });
-    currentIndex = 0;
-    userAnswers = {};
-    isAnswered = {};
-    if (shuffleMode) { currentQuestions = shuffleArray(currentQuestions); }
-  } else if (tab !== 'custom') {
-    currentQuestions = ALL_QUESTIONS.filter(function(q) { return q.type === tab; });
-    currentIndex = 0;
-    userAnswers = {};
-    isAnswered = {};
-    if (shuffleMode) { currentQuestions = shuffleArray(currentQuestions); }
-  }
-}
-
-function setupTabClicks() {
-  document.querySelectorAll('.tab').forEach(function(tab) {
-    tab.addEventListener('click', function() { switchTab(tab.dataset.tab); });
   });
-}
-
-function switchTab(tab) {
-  saveTabState();
-  currentTab = tab;
-  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
-  document.querySelector('[data-tab="' + tab + '"]').classList.add('active');
-  document.getElementById('mainCard').style.display = 'none';
-  document.getElementById('errorPanel').style.display = 'none';
-  document.getElementById('customPanel').style.display = 'none';
-
-  if (tab === 'error') {
-    document.getElementById('errorPanel').style.display = 'block';
-    renderErrorList();
-    renderErrorHistory();
-  } else if (tab === 'custom') {
-    document.getElementById('customPanel').style.display = 'block';
-    document.getElementById('mainCard').style.display = 'block';
-    restoreTabState(tab);
-    if (currentQuestions.length === 0) {
-      document.getElementById('qText').textContent = '请在上方输入题号后开始练习';
-      document.getElementById('options').innerHTML = '';
-      document.getElementById('qNum').textContent = '';
-    } else {
-      renderQuestion();
-      updateStats();
-    }
-  } else {
-    document.getElementById('mainCard').style.display = 'block';
-    restoreTabState(tab);
-    renderQuestion();
-    updateStats();
-  }
-}
-
-// ====== CUSTOM ======
-function startCustom() {
-  var input = document.getElementById('customInput').value.trim();
-  if (!input) return;
-  var ids = new Set();
-  // 先提取所有数字（支持从混合文本中提取题号）
-  var numMatches = input.match(/\d+/g);
-  if (!numMatches) {
-    showToastMsg('未找到有效的题号');
-    return;
-  }
-  // 按逗号分段，支持范围如 189-197
-  var parts = input.split(',');
-  for (var p = 0; p < parts.length; p++) {
-    var trimmed = parts[p].trim();
-    if (trimmed.indexOf('-') !== -1) {
-      var range = trimmed.split('-');
-      var start = Number(range[0]), end = Number(range[1]);
-      if (start && end) {
-        for (var i = Math.min(start, end); i <= Math.max(start, end); i++) ids.add(i);
-      }
-    } else {
-      var num = Number(trimmed);
-      if (num) ids.add(num);
-    }
-  }
-  // 如果逗号分段没提取到，就用正则提取的全部数字
-  if (ids.size === 0) {
-    for (var n = 0; n < numMatches.length; n++) {
-      ids.add(Number(numMatches[n]));
-    }
-  }
-  var questions = ALL_QUESTIONS.filter(function(q) { return ids.has(q.gid); });
-  if (questions.length === 0) {
-    showToastMsg('未找到匹配的题目，请检查题号');
-    return;
-  }
-  currentQuestions = questions;
-  if (shuffleMode) { currentQuestions = shuffleArray(currentQuestions); }
-  currentIndex = 0;
-  userAnswers = {};
-  isAnswered = {};
-  tabStates.custom = null;
-  switchTab('custom');
-  document.getElementById('customPanel').style.display = 'block';
-  document.getElementById('mainCard').style.display = 'block';
-  renderQuestion();
-  updateStats();
-}
-
-// ====== RENDER ======
-function renderQuestion() {
-  if (currentQuestions.length === 0) {
-    document.getElementById('qText').textContent = '暂无题目';
-    document.getElementById('options').innerHTML = '';
-    return;
-  }
-  // 每次渲染新题（切换题 / 切Tab首次展示）→ 重置单题计时
-  // 用_gidLastRendered缓存，避免同一题重复触发（比如resetCurrentQuestion也调renderQuestion）
-  var q = currentQuestions[currentIndex];
-  var key = q.gid + '_' + currentIndex + '_' + currentTab + '_' + (renderQuestion._optionShuffleSalt || 0);
-  if (renderQuestion._lastKey !== key) {
-    renderQuestion._lastKey = key;
-    resetQTimer();
-  }
-  var total = currentQuestions.length;
-  document.getElementById('qNum').textContent = '#' + q.gid + '  第 ' + (currentIndex + 1) + ' / ' + total + ' 题';
-  var typeEl = document.getElementById('qType');
-  if (q.type === 'single') {
-    typeEl.textContent = '单选题';
-    typeEl.className = 'q-type q-type-single';
-  } else {
-    typeEl.textContent = '判断题';
-    typeEl.className = 'q-type q-type-judge';
-  }
-  document.getElementById('qText').innerHTML = q.question.replace(/（\s*）/g, '<span class="answer-placeholder">（ ）</span>');
-  document.getElementById('progressBar').style.width = ((currentIndex + 1) / total * 100) + '%';
-
-  var optionsDiv = document.getElementById('options');
-  var html = '';
-  var answered = isAnswered[q.id];
-  var userAns = userAnswers[q.id];
-
-  if (q.type === 'single') {
-    var keys = ['A', 'B', 'C', 'D'];
-    // 选项随机模式：打乱 A/B/C/D 显示顺序，但标签与正确答案仍匹配原题
-    var orderCacheKey = q.gid + '_' + (optionShuffleMode ? 'S' : 'N') + '_' + (renderQuestion._optionShuffleSalt || 0);
-    if (optionShuffleMode) {
-      if (!renderQuestion._orderCache || renderQuestion._orderCache.key !== orderCacheKey) {
-        renderQuestion._orderCache = {
-          key: orderCacheKey,
-          order: shuffleArrayInPlace(['A', 'B', 'C', 'D'])
-        };
-      }
-      keys = renderQuestion._orderCache.order.slice();
-    } else {
-      // 关闭后：使用原生顺序，并清除缓存避免干扰
-      renderQuestion._orderCache = null;
-    }
-    currentOptionOrder = keys.slice(); // 给键盘和「按显示序号选择」使用
-    for (var k = 0; k < keys.length; k++) {
-      var key = keys[k];
-      var optText = q.options[key] || '';
-      var cls = '';
-      if (answered) {
-        if (key === q.answer) cls = 'correct';
-        else if (key === userAns && userAns !== q.answer) cls = 'wrong';
-      } else if (key === userAns) {
-        cls = 'selected';
-      }
-      var mark = '';
-      if (answered && key === q.answer) mark = '✓';
-      else if (answered && key === userAns && userAns !== q.answer) mark = '✗';
-      html += '<div class="option ' + cls + '" onclick="selectAnswer(\'' + key + '\')">';
-      html += '<span class="option-key">' + (k + 1) + '</span>';
-      html += '<span class="option-text"><b>' + key + '.</b> ' + optText + '</span>';
-      if (mark) html += '<span class="option-mark">' + mark + '</span>';
-      html += '</div>';
-    }
-  } else {
-    currentOptionOrder = ['T', 'F']; // 判断题保持固定：1=正确 2=错误
-    var opts = [
-      {key: 'T', label: '正确 (√)', idx: 1},
-      {key: 'F', label: '错误 (×)', idx: 2}
-    ];
-    for (var o = 0; o < opts.length; o++) {
-      var opt = opts[o];
-      var cls = '';
-      if (answered) {
-        if (opt.key === q.answer) cls = 'correct';
-        else if (opt.key === userAns && userAns !== q.answer) cls = 'wrong';
-      } else if (opt.key === userAns) {
-        cls = 'selected';
-      }
-      var mark = '';
-      if (answered && opt.key === q.answer) mark = '✓';
-      else if (answered && opt.key === userAns && userAns !== q.answer) mark = '✗';
-      html += '<div class="option ' + cls + '" onclick="selectAnswer(\'' + opt.key + '\')">';
-      html += '<span class="option-key">' + opt.idx + '</span>';
-      html += '<span class="option-text">' + opt.label + '</span>';
-      if (mark) html += '<span class="option-mark">' + mark + '</span>';
-      html += '</div>';
-    }
-  }
-  optionsDiv.innerHTML = html;
-
-  document.getElementById('prevBtn').disabled = currentIndex === 0;
-  document.getElementById('nextBtn').disabled = currentIndex === total - 1;
-
-  // 显示/隐藏重置本题按钮：仅当用户答错时可见
-  var resetBtn = document.getElementById('resetBtn');
-  if (resetBtn) {
-    var answered = !!q && !!isAnswered[q.id];
-    var isWrong = answered && userAnswers[q.id] !== q.answer;
-    resetBtn.style.display = (answered && isWrong) ? '' : 'none';
-  }
-}
-
-// ====== JUMP TO QUESTION ======
-function jumpToQuestion() {
-  var inputEl = document.getElementById('jumpInput');
-  if (!inputEl) return;
-  var input = inputEl.value.trim();
-  if (!input) return;
-  if (!currentQuestions || currentQuestions.length === 0) {
-    showToastMsg('当前没有题目可跳转');
-    return;
-  }
-  var targetGid = Number(input);
-  if (!targetGid || targetGid < 1 || targetGid > 620) {
-    showToastMsg('请输入有效题号（1-620）');
-    return;
-  }
-  for (var i = 0; i < currentQuestions.length; i++) {
-    if (currentQuestions[i].gid === targetGid) {
-      currentIndex = i;
-      renderQuestion();
-      updateStats();
-      persistProgress();
-      inputEl.value = '';
-      return;
-    }
-  }
-  showToastMsg('当前列表中未找到 #' + targetGid);
-}
-
-function showToastMsg(msg) {
-  var old = document.querySelector('.msg-toast');
-  if (old) old.remove();
-  var toast = document.createElement('div');
-  toast.className = 'msg-toast';
-  toast.textContent = msg;
-  document.body.appendChild(toast);
-  setTimeout(function() { if (toast.parentNode) toast.remove(); }, 2000);
-}
-
-// ====== ANSWER ======
-function selectAnswer(key) {
-  var q = currentQuestions[currentIndex];
-  if (isAnswered[q.id]) return;
-  userAnswers[q.id] = key;
-  isAnswered[q.id] = true;
-
-  var isCorrect = key === q.answer;
-  if (!isCorrect) {
-    wrongSet.add(q.id);
-  } else {
-    wrongSet.delete(q.id);
-  }
-  saveWrongSet();
-  renderQuestion();
-  updateStats();
-  persistProgress();
-  showToast(isCorrect);
-
-  if (isCorrect) {
-    var tabAtAnswer = currentTab;
-    setTimeout(function() {
-      if (currentTab !== tabAtAnswer) return;
-      var jumped = false;
-      if (pendingSeqJump) {
-        pendingSeqJump = false;
-        // 跳转到未答题中最小的题号
-        var minIdx = -1, minGid = Infinity;
-        for (var i = 0; i < currentQuestions.length; i++) {
-          if (!isAnswered[currentQuestions[i].id] && currentQuestions[i].gid < minGid) {
-            minGid = currentQuestions[i].gid;
-            minIdx = i;
-          }
-        }
-        if (minIdx >= 0) {
-          currentIndex = minIdx;
-          jumped = true;
-        }
-      }
-      if (!jumped) {
-        var maxIter2 = currentQuestions.length;
-        do {
-          currentIndex++;
-          if (currentIndex >= currentQuestions.length) break;
-          maxIter2--;
-        } while (maxIter2 > 0 && isAnswered[currentQuestions[currentIndex].id]);
-      }
-      if (currentIndex < currentQuestions.length) {
-        renderQuestion();
-        updateStats();
-        persistProgress();
-      } else if (Object.keys(isAnswered).length === currentQuestions.length) {
-        showResult();
-      }
-    }, 600);
-  }
-  // Check if all done
-  if (Object.keys(isAnswered).length === currentQuestions.length) {
-    setTimeout(showResult, 800);
-  }
-}
-
-// ====== RESET CURRENT QUESTION ======
-function resetCurrentQuestion() {
-  var q = currentQuestions[currentIndex];
-  if (!q || !isAnswered[q.id]) return;
-  // 仅在答错的情况下允许重置
-  var wasCorrect = userAnswers[q.id] === q.answer;
-  if (wasCorrect) {
-    showToastMsg('答对的题目无需重置');
-    return;
-  }
-  // 清除本题的答题记录，并同步错题本
-  delete isAnswered[q.id];
-  delete userAnswers[q.id];
-  wrongSet.delete(q.id);
-  saveWrongSet();
-  // 去除当前页面可能残留的答对/答错toast
-  var oldToast = document.querySelector('.result-toast');
-  if (oldToast) oldToast.remove();
-  // 重新渲染+更新统计
-  renderQuestion();
-  updateStats();
-  persistProgress();
-  showToastMsg('本题已重置，可重新作答');
-}
-
-function showToast(isCorrect) {
-  var old = document.querySelector('.result-toast');
-  if (old) old.remove();
-  var toast = document.createElement('div');
-  toast.className = 'result-toast ' + (isCorrect ? 'correct' : 'wrong');
-  toast.innerHTML = isCorrect ? '✓ 回答正确！' : '✗ 回答错误';
-  document.body.appendChild(toast);
-  setTimeout(function() { if (toast.parentNode) toast.remove(); }, 2000);
-}
-
-// ====== STATS ======
-function updateStats() {
-  var correct = 0, wrong = 0, remain = 0;
-  for (var i = 0; i < currentQuestions.length; i++) {
-    var q = currentQuestions[i];
-    if (isAnswered[q.id]) {
-      if (userAnswers[q.id] === q.answer) correct++;
-      else wrong++;
-    } else {
-      remain++;
-    }
-  }
-  document.getElementById('sCorrect').textContent = correct;
-  document.getElementById('sWrong').textContent = wrong;
-  document.getElementById('sRemain').textContent = remain;
-  var answered = correct + wrong;
-  var rate = answered > 0 ? Math.round(correct / answered * 100) : 0;
-  document.getElementById('sRate').textContent = rate + '%';
-  document.getElementById('sTotal').textContent = currentQuestions.length;
-}
-
-// ====== RESULT ======
-function showResult() {
-  var correct = 0;
-  for (var i = 0; i < currentQuestions.length; i++) {
-    if (userAnswers[currentQuestions[i].id] === currentQuestions[i].answer) correct++;
-  }
-  var pct = currentQuestions.length > 0 ? Math.round(correct / currentQuestions.length * 100) : 0;
-  document.getElementById('finalScore').textContent = pct + '%';
-  document.getElementById('finalDetail').textContent = '答对 ' + correct + ' 题 / 共 ' + currentQuestions.length + ' 题';
-  document.getElementById('resultOverlay').style.display = 'flex';
-
-  if (isErrorPractice) {
-    saveErrorHistory(correct, currentQuestions.length);
-  }
-}
-
-function closeResult() {
-  document.getElementById('resultOverlay').style.display = 'none';
-  isErrorPractice = false;
-}
-
-// ====== NAVIGATION ======
-function nextQuestion() {
-  pendingSeqJump = false;
-  if (!currentQuestions || currentQuestions.length === 0) return;
-  var start = currentIndex;
-  var maxIter = currentQuestions.length;
-  do {
-    currentIndex++;
-    if (currentIndex >= currentQuestions.length) {
-      currentIndex = start;
-      break;
-    }
-    maxIter--;
-  } while (maxIter > 0 && isAnswered[currentQuestions[currentIndex].id]);
-  if (currentIndex !== start) { renderQuestion(); updateStats(); persistProgress(); }
-}
-
-function prevQuestion() {
-  if (currentIndex > 0) { currentIndex--; renderQuestion(); updateStats(); persistProgress(); }
-}
-
-// ====== ERROR LIST ======
-function renderErrorList() {
-  var listDiv = document.getElementById('errorList');
-  var emptyDiv = document.getElementById('errorEmpty');
-  var btn = document.getElementById('errorPracticeBtn');
-  if (wrongSet.size === 0) {
-    listDiv.innerHTML = '';
-    emptyDiv.style.display = 'block';
-    if (btn) btn.style.display = 'none';
-    return;
-  }
-  emptyDiv.style.display = 'none';
-  if (btn) btn.style.display = 'inline-block';
-  var errorQuestions = ALL_QUESTIONS.filter(function(q) { return wrongSet.has(q.id); });
-  var html = '';
-  for (var i = 0; i < errorQuestions.length; i++) {
-    var q = errorQuestions[i];
-    var typeTag = q.type === 'single' ? 'q-type-single-sm' : 'q-type-judge-sm';
-    var typeLabel = q.type === 'single' ? '单选' : '判断';
-    html += '<div class="error-item" onclick="gotoQuestion(' + q.id + ')">';
-    html += '<span class="q-no">#' + q.gid + '</span>';
-    html += '<span class="q-text">' + q.question + '</span>';
-    html += '<div class="q-meta">';
-    html += '<span class="q-type-tag ' + typeTag + '">' + typeLabel + '</span>';
-    html += '<button class="remove-btn" onclick="event.stopPropagation();removeError(' + q.id + ')" title="移出错题本">x</button>';
-    html += '</div></div>';
-  }
-  listDiv.innerHTML = html;
-}
-
-function startErrorPractice() {
-  if (wrongSet.size === 0) return;
-  currentQuestions = ALL_QUESTIONS.filter(function(q) { return wrongSet.has(q.id); });
-  if (currentQuestions.length === 0) return;
-  if (shuffleMode) { currentQuestions = shuffleArray(currentQuestions); }
-  currentIndex = 0;
-  userAnswers = {};
-  isAnswered = {};
-  isErrorPractice = true;
-  document.getElementById('mainCard').style.display = 'block';
-  document.getElementById('errorPracticeInfo').style.display = 'inline';
-  document.getElementById('errorPracticeInfo').textContent = '正在练习 ' + currentQuestions.length + ' 道错题';
-  renderQuestion();
-  updateStats();
-}
-
-function gotoQuestion(qid) {
-  var q = ALL_QUESTIONS.find(function(q) { return q.id === qid; });
-  if (!q) return;
-  saveTabState();
-  var targetTab = q.type;
-  if (!tabStates[targetTab]) {
-    var questions = ALL_QUESTIONS.filter(function(qq) { return qq.type === targetTab; });
-    if (shuffleMode) { questions = shuffleArray(questions); }
-    tabStates[targetTab] = {
-      questions: questions,
-      index: 0,
-      answers: {},
-      answered: {}
-    };
-  }
-  var idx = tabStates[targetTab].questions.findIndex(function(qq) { return qq.id === qid; });
-  if (idx >= 0) {
-    tabStates[targetTab].index = idx;
-  }
-  switchTab(targetTab);
-}
-
-function removeError(qid) {
-  wrongSet.delete(qid);
-  saveWrongSet();
-  renderErrorList();
-  updateErrorCount();
-}
-
-// ====== ERROR HISTORY ======
-function saveErrorHistory(correct, total) {
-  var now = new Date();
-  var dateStr = now.getFullYear() + '-' +
-    String(now.getMonth() + 1).padStart(2, '0') + '-' +
-    String(now.getDate()).padStart(2, '0') + ' ' +
-    String(now.getHours()).padStart(2, '0') + ':' +
-    String(now.getMinutes()).padStart(2, '0');
-  var record = {
-    date: dateStr,
-    correct: correct,
-    total: total,
-    questionIds: currentQuestions.map(function(q) { return q.id; })
-  };
-  errorHistory.unshift(record);
-  if (errorHistory.length > 50) { errorHistory = errorHistory.slice(0, 50); }
-  localStorage.setItem('ai_exam_error_history', JSON.stringify(errorHistory));
-  renderErrorHistory();
-}
-
-function loadErrorHistory() {
-  try {
-    var saved = localStorage.getItem('ai_exam_error_history');
-    if (saved) { errorHistory = JSON.parse(saved); }
-  } catch(e) { errorHistory = []; }
-}
-
-function renderErrorHistory() {
-  var listDiv = document.getElementById('historyList');
-  var emptyDiv = document.getElementById('historyEmpty');
-  if (!listDiv) return;
-  if (errorHistory.length === 0) {
-    listDiv.innerHTML = '';
-    if (emptyDiv) emptyDiv.style.display = 'block';
-    return;
-  }
-  if (emptyDiv) emptyDiv.style.display = 'none';
-  var html = '';
-  for (var i = 0; i < errorHistory.length; i++) {
-    var h = errorHistory[i];
-    var pct = h.total > 0 ? Math.round(h.correct / h.total * 100) : 0;
-    var scoreClass = pct >= 60 ? 'good' : 'bad';
-    html += '<div class="history-item" onclick="redoHistory(' + i + ')">';
-    html += '<div class="h-info">';
-    html += '<div class="h-date">' + h.date + '</div>';
-    html += '<div class="h-score ' + scoreClass + '">答对 ' + h.correct + ' / ' + h.total + '（' + pct + '%）</div>';
-    html += '</div>';
-    html += '<span class="h-count">' + h.total + ' 题</span>';
-    html += '<button class="redo-btn" onclick="event.stopPropagation();redoHistory(' + i + ')">重新答题</button>';
-    html += '</div>';
-  }
-  listDiv.innerHTML = html;
-}
-
-function redoHistory(idx) {
-  if (idx < 0 || idx >= errorHistory.length) return;
-  var record = errorHistory[idx];
-  if (!record.questionIds || record.questionIds.length === 0) {
-    showToastMsg('该历史记录没有题目数据');
-    return;
-  }
-  var questions = [];
-  for (var i = 0; i < record.questionIds.length; i++) {
-    var qid = record.questionIds[i];
-    var q = ALL_QUESTIONS.find(function(qq) { return String(qq.id) === String(qid); });
-    if (q) questions.push(q);
-  }
-  if (questions.length === 0) {
-    showToastMsg('未找到对应的题目');
-    return;
-  }
-  currentQuestions = questions;
-  if (shuffleMode) { currentQuestions = shuffleArray(currentQuestions); }
-  currentIndex = 0;
-  userAnswers = {};
-  isAnswered = {};
-  isErrorPractice = true;
-  document.getElementById('mainCard').style.display = 'block';
-  document.getElementById('errorPracticeInfo').style.display = 'inline';
-  document.getElementById('errorPracticeInfo').textContent = '重新练习历史错题（' + questions.length + ' 题）';
-  renderQuestion();
-  updateStats();
-}
-
-// ====== KEYBOARD ======
-function setupKeyboard() {
-  document.addEventListener('keydown', function(e) {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-    if (currentQuestions.length === 0) return;
-    if (document.getElementById('mainCard').style.display === 'none') return;
-    var q = currentQuestions[currentIndex];
-    if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') { e.preventDefault(); nextQuestion(); }
-    else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') { e.preventDefault(); prevQuestion(); }
-    else if (q.type === 'single') {
-      // 按「显示顺序」的序号 1-4 选择，optionShuffleMode 开启时与标签A/B/C/D解耦
-      var keyIdx = -1;
-      if (e.key === '1') keyIdx = 0;
-      else if (e.key === '2') keyIdx = 1;
-      else if (e.key === '3') keyIdx = 2;
-      else if (e.key === '4') keyIdx = 3;
-      if (keyIdx >= 0 && currentOptionOrder && currentOptionOrder[keyIdx]) {
-        selectAnswer(currentOptionOrder[keyIdx]);
-      }
-    } else if (q.type === 'judge') {
-      if (e.key === '1') selectAnswer('T');
-      else if (e.key === '2') selectAnswer('F');
-    }
-  });
-}
-
-setupTabClicks();
-setupKeyboard();
-init();
 </script>
+
 </body>
 </html>
