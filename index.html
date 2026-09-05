@@ -1071,28 +1071,40 @@
   <div class="config-json"><span class="comment"># zcbot_config.json — 完整配置</span>
 {
     <span class="comment"># ====== 1. 机器人通信地址 ======</span>
-    <span class="comment"># 把 IP 改为机器人下装 IP（任务一 ping 测试通过的那个）</span>
+    <span class="comment"># 将其中的 IP 改为机器人下装 IP</span>
     <span class="key">"rosbridge"</span>: {
         <span class="key">"url"</span>: <span class="str">"ws://192.168.0.x:8080"</span>
     },
 
-    <span class="comment"># ====== 2. 多模态视觉模型 API（任务三测试的那个） ======</span>
-    <span class="comment"># 把 IP 改为多模态模型部署的 IP（通常为本机）</span>
-    <span class="key">"vl_model"</span>: {
-        <span class="key">"api_url"</span>: <span class="str">"http://192.168.0.x:11434/api/chat"</span>,
-        <span class="key">"model_name"</span>: <span class="str">"qwen3-vl"</span>,
-        <span class="key">"prompt_file"</span>: <span class="str">"vl_prompt.md"</span>
+    <span class="comment"># ====== 2. 调用本地视觉模型（多模态视觉模型） ======</span>
+    <span class="comment"># base_url 修改为视觉模型所在的 IP 地址</span>
+    <span class="key">"vlm"</span>: {
+        <span class="key">"kind"</span>: <span class="str">"ollama"</span>,
+        <span class="key">"base_url"</span>: <span class="str">"http://192.168.0.x:11434"</span>,
+        <span class="key">"model"</span>: <span class="str">"qwen3-vl:32b-instruct"</span>,
+        <span class="key">"prompt_file"</span>: <span class="str">"./vl_prompt.md"</span>
     },
 
-    <span class="comment"># ====== 3. 微调大模型 API（任务四部署的那个） ======</span>
-    <span class="comment"># 把 IP 改为微调模型部署的 IP</span>
-    <span class="comment"># 把 model_path 改为 best_model_checkpoint 的路径</span>
-    <span class="key">"llm_model"</span>: {
-        <span class="key">"api_url"</span>: <span class="str">"http://192.168.0.x:8000/v1/chat/completions"</span>,
-        <span class="key">"model_path"</span>: <span class="str">"/mnt/workspace/output/.../checkpoint-15"</span>
+    <span class="comment"># ====== 3. 调用本地文本模型（任务四微调部署的模型） ======</span>
+    <span class="comment"># base_url 修改为训练后部署的模型所在的 IP 地址</span>
+    <span class="key">"small_model"</span>: {
+        <span class="key">"kind"</span>: <span class="str">"openai"</span>,
+        <span class="key">"base_url"</span>: <span class="str">"http://192.168.0.x:8000/v1"</span>,
+        <span class="key">"model"</span>: <span class="str">"qwen1half-4b-chat"</span>,
+        <span class="key">"prompt_file"</span>: <span class="str">"./prompt.md"</span>
     },
 
-    <span class="comment"># ====== 4. 巡检路径（mission） ======</span>
+    <span class="comment"># ====== 4. 调用本地模型做总结汇报 ======</span>
+    <span class="comment"># base_url 修改为训练后部署的模型所在的 IP 地址</span>
+    <span class="key">"summary"</span>: {
+        <span class="key">"enabled"</span>: true,
+        <span class="key">"kind"</span>: <span class="str">"openai"</span>,
+        <span class="key">"base_url"</span>: <span class="str">"http://192.168.0.x:8000/v1"</span>,
+        <span class="key">"model"</span>: <span class="str">"qwen1half-4b-chat"</span>,
+        <span class="key">"prompt_file"</span>: <span class="str">"./summary_prompt.md"</span>
+    },
+
+    <span class="comment"># ====== 5. 巡检路径（mission） ======</span>
     <span class="comment"># 点位名称必须和建图时标记的完全一致</span>
     <span class="comment"># "识别" 表示到达点位后拍照并调用多模态模型</span>
     <span class="key">"mission"</span>: [
@@ -1106,11 +1118,11 @@
         <span class="str">"点位：起点"</span>
     ],
 
-    <span class="comment"># ====== 5. 图片保存路径 ======</span>
+    <span class="comment"># ====== 6. 图片保存路径 ======</span>
     <span class="comment"># 和 broker_config.json 的 save_dir 对应</span>
     <span class="key">"image_dir"</span>: <span class="str">"./images"</span>,
 
-    <span class="comment"># ====== 6. 语音播报配置 ======</span>
+    <span class="comment"># ====== 7. 语音播报配置 ======</span>
     <span class="key">"tts"</span>: {
         <span class="key">"enabled"</span>: true,
         <span class="key">"lang"</span>: <span class="str">"zh-CN"</span>
@@ -1122,8 +1134,8 @@
     <p><strong>1. 冒号必须中文：</strong>mission 中 <code>点位：</code> 的冒号必须是<strong>中文冒号（：）</strong>，不能用英文冒号（:）。</p>
     <p><strong>2. 点位命名必须与地图一致：</strong>mission 中写 <code>点位：点位1</code>，你在任务二建图时标记的点位名也必须叫 <code>点位1</code>，名字必须完全一致。</p>
     <p><strong>3. 建议直接用数字命名：</strong>建图时点位命名直接用 <code>点位1</code>、<code>点位2</code>、<code>点位3</code>（阿拉伯数字1/2/3），不要用中文"一/二/三"或其他写法。</p>
-    <p><strong>4. 三个 IP 必须改对：</strong>rosbridge（机器人下装IP）、vl_model API（多模态模型IP）、llm_model API（微调模型IP），三个IP不能搞混。</p>
-    <p><strong>5. model_path 路径：</strong>填任务四训练日志中 <code>best_model_checkpoint</code> 后的完整路径。</p>
+    <p><strong>4. 三个 IP 必须改对：</strong>rosbridge（机器人下装IP）、vlm base_url（视觉模型IP）、small_model/summary base_url（微调模型IP），三个IP不能搞混。</p>
+    <p><strong>5. small_model 和 summary 共用同一个微调模型：</strong>两者的 base_url 和 model 都指向任务四训练后部署的模型（qwen1half-4b-chat）。</p>
   </div>
 
   <h4>③ 确认 vl_prompt.md（多模态提示词）</h4>
@@ -1274,27 +1286,39 @@
 }
 
 <span class="comment"># ====== 2. zcbot_config.json 完整 ======</span>
-<span class="comment"># 最重要的配置文件，六个模块全部要配置</span>
+<span class="comment"># 最重要的配置文件，全部模块都要配置</span>
 {
     <span class="comment"># 1. 机器人通信地址（IP改为机器人下装IP）</span>
     "rosbridge": {
         "url": "ws://192.168.0.x:8080"
     },
 
-    <span class="comment"># 2. 多模态视觉模型 API（IP改为多模态模型IP）</span>
-    "vl_model": {
-        "api_url": "http://192.168.0.x:11434/api/chat",
-        "model_name": "qwen3-vl",
-        "prompt_file": "vl_prompt.md"
+    <span class="comment"># 2. 调用本地视觉模型（base_url改为视觉模型IP）</span>
+    "vlm": {
+        "kind": "ollama",
+        "base_url": "http://192.168.0.x:11434",
+        "model": "qwen3-vl:32b-instruct",
+        "prompt_file": "./vl_prompt.md"
     },
 
-    <span class="comment"># 3. 微调大模型 API（IP改为微调模型IP，model_path填best_model_checkpoint路径）</span>
-    "llm_model": {
-        "api_url": "http://192.168.0.x:8000/v1/chat/completions",
-        "model_path": "/mnt/workspace/output/.../checkpoint-15"
+    <span class="comment"># 3. 调用本地文本模型（base_url改为微调模型IP）</span>
+    "small_model": {
+        "kind": "openai",
+        "base_url": "http://192.168.0.x:8000/v1",
+        "model": "qwen1half-4b-chat",
+        "prompt_file": "./prompt.md"
     },
 
-    <span class="comment"># 4. 巡检路径（点位名称必须和建图标记完全一致）</span>
+    <span class="comment"># 4. 调用本地模型做总结汇报（base_url改为微调模型IP）</span>
+    "summary": {
+        "enabled": true,
+        "kind": "openai",
+        "base_url": "http://192.168.0.x:8000/v1",
+        "model": "qwen1half-4b-chat",
+        "prompt_file": "./summary_prompt.md"
+    },
+
+    <span class="comment"># 5. 巡检路径（点位名称必须和建图标记完全一致）</span>
     "mission": [
         "点位：起点",
         "点位：点位1",
@@ -1306,10 +1330,10 @@
         "点位：起点"
     ],
 
-    <span class="comment"># 5. 图片保存路径（和 broker_config.json 的 save_dir 对应）</span>
+    <span class="comment"># 6. 图片保存路径（和 broker_config.json 的 save_dir 对应）</span>
     "image_dir": "./images",
 
-    <span class="comment"># 6. 语音播报配置</span>
+    <span class="comment"># 7. 语音播报配置</span>
     "tts": {
         "enabled": true,
         "lang": "zh-CN"
