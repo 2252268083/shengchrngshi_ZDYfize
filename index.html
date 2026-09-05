@@ -935,6 +935,11 @@
     <p>同时在该路径下可以找到 TensorBoard 图表，截图保存为 <code>robot_2.4_loss曲线图.png</code>。</p>
   </div>
 
+  <div class="img-wrapper">
+    <img src="images/img_log_path.png" alt="日志路径参数栏">
+    <div class="caption">训练界面「日志路径（--logging_dir）」参数栏 — 这就是日志文件的存储路径</div>
+  </div>
+
   <div class="callout callout-tip">
     <strong>训练完日志 eval_token_acc → ≥0.95 就是优秀</strong>
   </div>
@@ -1002,6 +1007,11 @@
       <p><strong>1. 必须截取完整的命令：</strong>运行中任务里的 <code>cmd:</code> 那一整行命令必须完整截取，不能截断。</p>
       <p><strong>2. 生成的图也要截全：</strong>训练完成后出现的五张指标图（train/loss、train/acc、learning_rate、eval/loss、eval/acc）必须全部截取完整，不能只截一部分。</p>
       <p><strong>3. checkpoint 文件夹：</strong>就是日志中 <code>checkpoint-15</code> 这种 C 开头带数字的文件夹，整个文件夹上传。</p>
+    </div>
+
+    <div class="img-wrapper">
+      <img src="images/img_train_dashboard.png" alt="模型权重截图示例">
+      <div class="caption">模型权重截图示例 — 必须包含：完整 cmd 命令 + 五张指标图全截 + checkpoint 信息</div>
     </div>
   </div>
 </div>
