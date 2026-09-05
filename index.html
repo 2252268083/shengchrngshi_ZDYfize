@@ -927,6 +927,13 @@
     <li>截取训练后出现的图表信息图片 <code>robot_2.4_loss曲线图.png</code></li>
     <li>截取日志输出的最后三行内容</li>
   </ul>
+  <div class="callout callout-danger">
+    <div class="callout-title">⚠ 日志文件在哪找</div>
+    <p>在训练界面的 <strong>「日志路径（--logging_dir）」</strong> 参数栏中，就是训练日志的存储路径。</p>
+    <p>路径格式类似：<code>.../ace/output/Qwen1.5-0.5B-Chat/v8-20260905-225926/runs</code></p>
+    <p><strong>具体操作：</strong>复制这个路径 → 在文件管理器中打开 → 找到 <code>run.log</code> 文件 → 备份重命名为 <code>robot_2.3.run.log</code>。</p>
+    <p>同时在该路径下可以找到 TensorBoard 图表，截图保存为 <code>robot_2.4_loss曲线图.png</code>。</p>
+  </div>
 
   <div class="callout callout-tip">
     <strong>训练完日志 eval_token_acc → ≥0.95 就是优秀</strong>
