@@ -1162,6 +1162,14 @@
     选手依次启动 <code>photo-broker</code>、<code>zcbot</code> 程序命令，机器人完成所有任务后回到起始点，并总结播报巡检情况。
   </div>
 
+  <div class="code-block"><span class="comment"># 终端1：激活虚拟环境后启动 photo-broker</span>
+<span class="cmd">conda activate</span> 环境名称
+<span class="cmd">photo-broker</span> <span class="flag">--config</span> broker_config.json
+
+<span class="comment"># 终端2：激活虚拟环境后启动 zcbot（等 photo-broker 先启动好）</span>
+<span class="cmd">conda activate</span> 环境名称
+<span class="cmd">zcbot</span> <span class="flag">--config</span> zcbot_config.json</div>
+
   <h4>① 全流程闭环功能演示</h4>
   <div class="callout callout-tip">
     <div class="callout-title">演示流程</div>
@@ -1228,6 +1236,23 @@
   <h3>任务三：提示词测试</h3>
   <div class="code-block"><span class="comment"># 运行多模态模型测试</span>
 <span class="cmd">python3</span> vl_model_test.py</div>
+
+  <h4>vl_model_test.py 三个参数（必须改）</h4>
+  <table class="param-table">
+    <tr><th>参数</th><th>改什么</th></tr>
+    <tr><td>OLLAMA_API_URL</td><td>IP 改为多模态模型的实际 IP</td></tr>
+    <tr><td>TEST_IMAGE</td><td>测试图片名称，放在同目录 img 文件夹中</td></tr>
+    <tr><td>STANDARD_ANSWERS</td><td>["场景名称"] 填正确答案，模型输出匹配则对</td></tr>
+  </table>
+
+  <h4>任务五启动命令（两个终端）</h4>
+  <div class="code-block"><span class="comment"># 终端1：photo-broker 先启动</span>
+<span class="cmd">conda activate</span> 环境名称
+<span class="cmd">photo-broker</span> <span class="flag">--config</span> broker_config.json
+
+<span class="comment"># 终端2：zcbot 后启动</span>
+<span class="cmd">conda activate</span> 环境名称
+<span class="cmd">zcbot</span> <span class="flag">--config</span> zcbot_config.json</div>
 
   <h3>任务四：数据集格式（SFT）</h3>
   <div class="code-block">{"instruction": "穿着红色上衣", "input": "", "output": "播报：穿着红色上衣"}
