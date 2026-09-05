@@ -614,6 +614,10 @@
 
   <h4>⑤ 标记禁行区域</h4>
   <p>使用禁行线把中间区域围起来变成一个禁行区域，确保机器人无法通行。留存标记后的地图截图 <code>robot_2.3_远程部署最终界面.png</code></p>
+  <div class="callout callout-danger">
+    <div class="callout-title">⚠ 警戒区规则</div>
+    禁行区域（警戒区）的范围<strong>只能扩大、不能缩小</strong>。标记时宁可多围一圈，也绝不能少围。如果范围不够大导致机器人闯入，将被扣分。
+  </div>
 
   <div class="img-wrapper">
     <img src="images/img_22.png" alt="标记点位和禁行线">
@@ -974,8 +978,8 @@
       <li>数据成果：<code>robot_4.1_处理后的完整数据集.txt</code></li>
       <li>配置成果：<code>robot_4.2_模型微调参数配置截图.png</code></li>
       <li>训练日志：<code>robot_2.3.run.log</code> 与 <code>robot_2.4_loss曲线图.png</code></li>
-      <li>模型权重：微调后模型权重（或 LoRA 权重）</li>
-      <li>模型文件：通过 best_model_checkpoint 路径查找，上传 <code>v*-*-*</code> 文件夹（如 <code>v18-20260527-161410</code>）</li>
+      <li>模型权重：上传训练完成后日志截图，需包含最后三条训练的评价测评内容（eval指标）</li>
+      <li>模型文件：通过 best_model_checkpoint 路径找到对应文件夹，直接把整个文件夹上传上去</li>
     </ol>
   </div>
 </div>
@@ -1262,8 +1266,8 @@
     <tr><td>任务四</td><td>参数配置截图</td><td><code>robot_4.2_模型微调参数配置截图.png</code></td></tr>
     <tr><td>任务四</td><td>训练日志</td><td><code>robot_2.3.run.log</code></td></tr>
     <tr><td>任务四</td><td>loss曲线</td><td><code>robot_2.4_loss曲线图.png</code></td></tr>
-    <tr><td>任务四</td><td>模型权重</td><td>LoRA 权重文件</td></tr>
-    <tr><td>任务四</td><td>模型文件</td><td><code>v*-*-*</code> 文件夹</td></tr>
+    <tr><td>任务四</td><td>训练eval截图</td><td>日志最后三条评价测评内容</td></tr>
+    <tr><td>任务四</td><td>模型文件</td><td>整个文件夹直接上传</td></tr>
     <tr><td>任务五</td><td>配置文件</td><td><code>robot_5.1_zcbot_config.json</code></td></tr>
     <tr><td>任务五</td><td>zcbot输出截图</td><td><code>robot_5.2_终端中zcbot命令执行输出内容.png</code></td></tr>
   </table>
