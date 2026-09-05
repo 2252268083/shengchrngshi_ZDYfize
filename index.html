@@ -356,6 +356,11 @@
       <li><code>点位：上一个拍照点位</code> → 返回上一次拍照的位置</li>
     </ul>
   </div>
+  <div class="callout callout-danger">
+    <div class="callout-title">⚠ 关键警示</div>
+    <strong>「播报：」和「点位：」后面的冒号必须是中文冒号（：），不能用英文冒号（:）！</strong><br>
+    给机器人发指令时，<code>播报：</code> 和 <code>点位：</code> 全部使用<strong>中文冒号</strong>，写错一个字机器人就无法识别指令。
+  </div>
   <div class="flow">
     <div class="flow-step">环境搭建</div><span class="flow-arrow">→</span>
     <div class="flow-step">建图导航</div><span class="flow-arrow">→</span>
@@ -1029,6 +1034,13 @@
 
 <span class="comment"># 调用本地视觉</span></div>
 
+  <div class="callout callout-danger">
+    <div class="callout-title">⚠ 警示</div>
+    <p><strong>1. 冒号必须中文：</strong>mission 中 <code>点位：</code> 的冒号必须是<strong>中文冒号（：）</strong>，不能用英文冒号（:）。</p>
+    <p><strong>2. 点位命名必须与地图一致：</strong>mission 中写 <code>点位：点位1</code>，你在任务二建图时标记的点位名也必须叫 <code>点位1</code>，名字必须完全一致。</p>
+    <p><strong>3. 建议直接用数字命名：</strong>建图时点位命名直接用 <code>点位1</code>、<code>点位2</code>、<code>点位3</code>（阿拉伯数字1/2/3），不要用中文"一/二/三"或其他写法。</p>
+  </div>
+
   <h3>2. 融合系统环境集成</h3>
   <h4>① 机器人运行环境集成</h4>
   <p>完成机器人地图重建、定位校准、路径规划、避障参数调试，保证机器人在 A点、B点、C点 三区域稳定自主巡航、避障行驶。</p>
@@ -1149,6 +1161,13 @@
     "识别",
     "点位：起点"
 ]</div>
+
+  <div class="callout callout-danger">
+    <div class="callout-title">⚠ 必须注意</div>
+    <p><strong>1. 冒号中文：</strong><code>播报：</code> <code>点位：</code> 全部用<strong>中文冒号（：）</strong>，不是英文（:）。</p>
+    <p><strong>2. 命名一致：</strong>mission 里的点位名必须和建图时标记的<strong>完全一致</strong>。</p>
+    <p><strong>3. 直接用数字：</strong>建图标记点位时直接命名 <code>点位1</code>、<code>点位2</code>、<code>点位3</code>（阿拉伯数字）。</p>
+  </div>
 
   <h3>任务四：核心参数速记</h3>
   <table class="param-table">
