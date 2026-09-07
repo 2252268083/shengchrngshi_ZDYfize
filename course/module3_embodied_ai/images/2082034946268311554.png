@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 460" font-family="Arial, sans-serif">
+  <defs>
+    <linearGradient id="vmApp" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ef5350"/><stop offset="100%" stop-color="#e53935"/></linearGradient>
+    <linearGradient id="vmOS" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff7043"/><stop offset="100%" stop-color="#f4511e"/></linearGradient>
+    <linearGradient id="ctApp" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#42a5f5"/><stop offset="100%" stop-color="#1e88e5"/></linearGradient>
+    <linearGradient id="ctEng" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#26c6da"/><stop offset="100%" stop-color="#00acc1"/></linearGradient>
+  </defs>
+  <rect width="800" height="460" fill="#f8f9fa" rx="8"/>
+  <text x="400" y="30" text-anchor="middle" font-size="20" font-weight="bold" fill="#333">Docker 容器 vs 虚拟机</text>
+  <!-- VM Side -->
+  <text x="200" y="58" text-anchor="middle" font-size="14" font-weight="bold" fill="#e53935">虚拟机 (VM)</text>
+  <rect x="40" y="72" width="320" height="56" rx="6" fill="url(#vmApp)"/>
+  <text x="200" y="97" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">App A  │  App B</text>
+  <text x="200" y="116" text-anchor="middle" font-size="10" fill="#fff">各自独立运行</text>
+  <rect x="40" y="132" width="320" height="56" rx="6" fill="url(#vmOS)"/>
+  <text x="200" y="157" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">Guest OS (Ubuntu)</text>
+  <text x="200" y="176" text-anchor="middle" font-size="10" fill="#fff">每个 VM 一个完整 OS</text>
+  <rect x="40" y="192" width="320" height="40" rx="6" fill="#ffccbc"/>
+  <text x="200" y="216" text-anchor="middle" font-size="12" fill="#d84315">Hypervisor（虚拟化层）</text>
+  <rect x="40" y="236" width="320" height="40" rx="6" fill="#ffab91"/>
+  <text x="200" y="260" text-anchor="middle" font-size="12" fill="#bf360c">Host OS</text>
+  <rect x="40" y="280" width="320" height="40" rx="6" fill="#8d6e63"/>
+  <text x="200" y="304" text-anchor="middle" font-size="12" fill="#fff">Hardware（物理硬件）</text>
+  <!-- VM stats -->
+  <rect x="40" y="335" width="320" height="110" rx="6" fill="#ffebee" stroke="#ef5350" stroke-width="1"/>
+  <text x="60" y="355" font-size="11" fill="#c62828">⏱ 启动时间：分钟级</text>
+  <text x="60" y="373" font-size="11" fill="#c62828">💾 资源占用：GB 级</text>
+  <text x="60" y="391" font-size="11" fill="#c62828">🔒 隔离级别：OS 级</text>
+  <text x="60" y="409" font-size="11" fill="#c62828">📦 镜像大小：~GB</text>
+  <text x="60" y="427" font-size="11" fill="#c62828">⚡ 性能：有虚拟化损耗</text>
+  <!-- Container Side -->
+  <text x="600" y="58" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e88e5">Docker 容器</text>
+  <rect x="440" y="72" width="320" height="56" rx="6" fill="url(#ctApp)"/>
+  <text x="600" y="97" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">App A  │  App B</text>
+  <text x="600" y="116" text-anchor="middle" font-size="10" fill="#fff">共享依赖库（分层复用）</text>
+  <rect x="440" y="132" width="320" height="56" rx="6" fill="url(#ctEng)"/>
+  <text x="600" y="157" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">Docker Engine</text>
+  <text x="600" y="176" text-anchor="middle" font-size="10" fill="#fff">轻量级容器运行时</text>
+  <rect x="440" y="192" width="320" height="40" rx="6" fill="#bbdefb"/>
+  <text x="600" y="216" text-anchor="middle" font-size="12" fill="#1565c0">Host OS (Linux) — 共享内核</text>
+  <rect x="440" y="236" width="320" height="84" rx="6" fill="#8d6e63"/>
+  <text x="600" y="282" text-anchor="middle" font-size="12" fill="#fff">Hardware（物理硬件）</text>
+  <!-- Container stats -->
+  <rect x="440" y="335" width="320" height="110" rx="6" fill="#e3f2fd" stroke="#42a5f5" stroke-width="1"/>
+  <text x="460" y="355" font-size="11" fill="#0d47a1">⏱ 启动时间：秒级 ✅</text>
+  <text x="460" y="373" font-size="11" fill="#0d47a1">💾 资源占用：MB 级 ✅</text>
+  <text x="460" y="391" font-size="11" fill="#0d47a1">🔒 隔离级别：进程级（共享内核）</text>
+  <text x="460" y="409" font-size="11" fill="#0d47a1">📦 镜像大小：~MB ✅</text>
+  <text x="460" y="427" font-size="11" fill="#0d47a1">⚡ 性能：接近原生 ✅</text>
+  <!-- VS arrow -->
+  <rect x="358" y="220" width="84" height="36" rx="18" fill="#7c4dff"/>
+  <text x="400" y="243" text-anchor="middle" font-size="16" font-weight="bold" fill="#fff">VS</text>
+</svg>

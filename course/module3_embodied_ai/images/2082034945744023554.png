@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" font-family="Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#555"/></marker>
+    <linearGradient id="pub" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4facfe"/><stop offset="100%" stop-color="#00f2fe"/></linearGradient>
+    <linearGradient id="sub" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#43e97b"/><stop offset="100%" stop-color="#38f9d7"/></linearGradient>
+    <linearGradient id="topic" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f093fb"/><stop offset="100%" stop-color="#f5576c"/></linearGradient>
+  </defs>
+  <rect width="800" height="420" fill="#f8f9fa" rx="8"/>
+  <text x="400" y="32" text-anchor="middle" font-size="20" font-weight="bold" fill="#333">ROS2 话题通信 — 发布/订阅模式</text>
+  <!-- Publisher Node -->
+  <rect x="60" y="70" width="220" height="100" rx="12" fill="url(#pub)" opacity="0.9"/>
+  <text x="170" y="100" text-anchor="middle" font-size="16" font-weight="bold" fill="#fff">📡 发布者 Publisher</text>
+  <text x="170" y="125" text-anchor="middle" font-size="12" fill="#fff">控制节点 / 遥操作</text>
+  <text x="170" y="148" text-anchor="middle" font-size="11" fill="#fff">publish("/cmd_vel", msg)</text>
+  <!-- Topic -->
+  <rect x="320" y="85" width="160" height="70" rx="10" fill="url(#topic)" opacity="0.9"/>
+  <text x="400" y="110" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">🗂 话题 Topic</text>
+  <text x="400" y="132" text-anchor="middle" font-size="12" fill="#fff">/bcr_bot/cmd_vel</text>
+  <!-- Subscriber Node -->
+  <rect x="520" y="70" width="220" height="100" rx="12" fill="url(#sub)" opacity="0.9"/>
+  <text x="630" y="100" text-anchor="middle" font-size="16" font-weight="bold" fill="#fff">🛞 订阅者 Subscriber</text>
+  <text x="630" y="125" text-anchor="middle" font-size="12" fill="#fff">底盘驱动节点</text>
+  <text x="630" y="148" text-anchor="middle" font-size="11" fill="#fff">callback(msg)</text>
+  <!-- Arrows -->
+  <line x1="280" y1="120" x2="318" y2="120" stroke="#555" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <line x1="482" y1="120" x2="518" y2="120" stroke="#555" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <!-- Key topics table -->
+  <text x="400" y="210" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">本模块关键话题</text>
+  <rect x="40" y="228" width="720" height="28" rx="4" fill="#e3f2fd"/>
+  <text x="70" y="247" font-size="12" font-weight="bold" fill="#1565c0">话题名称</text>
+  <text x="280" y="247" font-size="12" font-weight="bold" fill="#1565c0">消息类型</text>
+  <text x="520" y="247" font-size="12" font-weight="bold" fill="#1565c0">说明</text>
+  <rect x="40" y="258" width="720" height="24" rx="2" fill="#fff"/>
+  <text x="70" y="275" font-size="11" fill="#555">/bcr_bot/cmd_vel</text>
+  <text x="280" y="275" font-size="11" fill="#555">geometry_msgs/Twist</text>
+  <text x="520" y="275" font-size="11" fill="#555">速度控制指令：线速度 + 角速度</text>
+  <rect x="40" y="284" width="720" height="24" rx="2" fill="#f5f5f5"/>
+  <text x="70" y="301" font-size="11" fill="#555">/bcr_bot/scan</text>
+  <text x="280" y="301" font-size="11" fill="#555">sensor_msgs/LaserScan</text>
+  <text x="520" y="301" font-size="11" fill="#555">激光雷达数据：障碍物距离信息</text>
+  <rect x="40" y="310" width="720" height="24" rx="2" fill="#fff"/>
+  <text x="70" y="327" font-size="11" fill="#555">/bcr_bot/odom</text>
+  <text x="280" y="327" font-size="11" fill="#555">nav_msgs/Odometry</text>
+  <text x="520" y="327" font-size="11" fill="#555">里程计：机器人位置和速度估计</text>
+  <!-- DDS note -->
+  <rect x="40" y="350" width="720" height="50" rx="6" fill="#fff3e0" stroke="#ff9800" stroke-width="1"/>
+  <text x="80" y="374" font-size="12" font-weight="bold" fill="#e65100">底层通信：</text>
+  <text x="180" y="374" font-size="12" fill="#555">DDS (Data Distribution Service) — 自动发现 · QoS 策略 · 实时传输 · 去中心化</text>
+  <text x="80" y="394" font-size="11" fill="#888">ROS2 使用 DDS 替代 ROS1 的自定义协议，支持实时控制、多机器人、跨平台</text>
+</svg>

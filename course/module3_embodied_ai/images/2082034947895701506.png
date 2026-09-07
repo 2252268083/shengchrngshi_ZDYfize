@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 290" font-family="'Microsoft YaHei', 'SimHei', Arial, sans-serif">
+  <defs>
+    <linearGradient id="step" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#e53e3e"/><stop offset="100%" style="stop-color:#c53030"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.2"/></filter>
+  </defs>
+
+  <rect width="720" height="290" rx="12" fill="#f8f9fc"/>
+  <text x="360" y="28" text-anchor="middle" font-size="18" font-weight="bold" fill="#2d3748">Ubuntu 22.04 系统安装与部署流程</text>
+
+  <!-- Step 1 -->
+  <rect x="25" y="50" width="120" height="90" rx="8" fill="url(#step)" filter="url(#shadow)"/>
+  <text x="85" y="82" text-anchor="middle" font-size="30">💿</text>
+  <text x="85" y="110" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">下载 ISO</text>
+  <text x="85" y="128" text-anchor="middle" font-size="10" fill="#feb2b2">Ubuntu 22.04</text>
+
+  <!-- Arrow -->
+  <line x1="145" y1="95" x2="175" y2="95" stroke="#c53030" stroke-width="2"/>
+  <polygon points="170,90 180,95 170,100" fill="#c53030"/>
+
+  <!-- Step 2 -->
+  <rect x="185" y="50" width="120" height="90" rx="8" fill="#dd6b20" filter="url(#shadow)"/>
+  <text x="245" y="82" text-anchor="middle" font-size="30">🖊️</text>
+  <text x="245" y="110" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">写入 U 盘</text>
+  <text x="245" y="128" text-anchor="middle" font-size="10" fill="#fbd38d">Rufus/Ventoy</text>
+
+  <!-- Arrow -->
+  <line x1="305" y1="95" x2="335" y2="95" stroke="#dd6b20" stroke-width="2"/>
+  <polygon points="330,90 340,95 330,100" fill="#dd6b20"/>
+
+  <!-- Step 3 -->
+  <rect x="345" y="50" width="120" height="90" rx="8" fill="#d69e2e" filter="url(#shadow)"/>
+  <text x="405" y="82" text-anchor="middle" font-size="30">🚀</text>
+  <text x="405" y="110" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">U 盘启动</text>
+  <text x="405" y="128" text-anchor="middle" font-size="10" fill="#fefcbf">BIOS 设置</text>
+
+  <!-- Arrow -->
+  <line x1="465" y1="95" x2="495" y2="95" stroke="#d69e2e" stroke-width="2"/>
+  <polygon points="490,90 500,95 490,100" fill="#d69e2e"/>
+
+  <!-- Step 4 -->
+  <rect x="505" y="50" width="120" height="90" rx="8" fill="#38a169" filter="url(#shadow)"/>
+  <text x="565" y="82" text-anchor="middle" font-size="30">🖥️</text>
+  <text x="565" y="110" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">安装系统</text>
+  <text x="565" y="128" text-anchor="middle" font-size="10" fill="#c6f6d5">分区/用户设置</text>
+
+  <!-- Hardware requirements -->
+  <rect x="25" y="160" width="660" height="55" rx="6" fill="#e8eaf6" stroke="#667eea" stroke-width="1"/>
+  <text x="50" y="183" font-size="12" font-weight="bold" fill="#667eea">⚙️ 硬件要求：</text>
+  <text x="170" y="183" font-size="11" fill="#4a5568">CPU ≥ 4 核</text>
+  <text x="310" y="183" font-size="11" fill="#4a5568">内存 ≥ 8 GB</text>
+  <text x="450" y="183" font-size="11" fill="#4a5568">磁盘 ≥ 50 GB</text>
+  <text x="590" y="183" font-size="11" fill="#4a5568">VT-x/AMD-V ✓</text>
+
+  <!-- Virtualization warning -->
+  <rect x="25" y="228" width="310" height="45" rx="6" fill="#fff5f5" stroke="#fc8181" stroke-width="1"/>
+  <text x="180" y="248" text-anchor="middle" font-size="11" fill="#c53030">⚠ 虚拟机需在 BIOS 中启用 VT-x/AMD-V</text>
+  <text x="180" y="264" text-anchor="middle" font-size="10" fill="#e53e3e">VirtualBox 设置 → 系统 → 处理器 → 启用 VT-x</text>
+
+  <!-- Docker note -->
+  <rect x="350" y="228" width="335" height="45" rx="6" fill="#f0fff4" stroke="#68d391" stroke-width="1"/>
+  <text x="517" y="248" text-anchor="middle" font-size="11" fill="#276749">✅ 安装后：sudo usermod -aG docker $USER</text>
+  <text x="517" y="264" text-anchor="middle" font-size="10" fill="#38a169">将当前用户加入 docker 组，免 sudo 运行容器</text>
+</svg>

@@ -82,7 +82,7 @@ HAR 属于以下领域的交叉：
 | **医疗康复** | 患者运动功能评估、康复训练进度监测 |
 | **自动驾驶** | 行人意图预测（是否要过马路、奔跑等） |
 
-![人体行为识别 (HAR) 基本流程](/resource/oss/download/2082034938915696641)
+![人体行为识别 (HAR) 基本流程](images/2082034938915696641.png)
 
 *图：人体行为识别完整流水线。从输入视频/图像开始，经 YOLO 人体检测 → ByteTrack 多目标跟踪 → 根据场景分两路（室内：姿态规则引擎 6 类行为；室外：MMAction2 TSN 400 类行为），最终输出标注视频和 JSON 结果。*
 
@@ -118,7 +118,7 @@ HAR 属于以下领域的交叉：
 
 > 本课程使用 **YOLOv8n**（nano 版本），参数量仅 ~3.2M，在 CPU 上即可实时运行。
 
-![YOLOv8 网络架构](/resource/oss/download/2082034939226075137)
+![YOLOv8 网络架构](images/2082034939226075137.png)
 
 *图：YOLOv8 整体网络架构，展示了 Backbone → Neck → Head 三阶段设计。图片来源：Ultralytics 官方文档*
 
@@ -219,7 +219,7 @@ ByteTrack (BYTE 策略)：
 ⑤ 连续 N 帧未匹配的 track → 删除（已离开画面）
 ```
 
-![ByteTrack 多目标跟踪可视化](/resource/oss/download/2082034939599368194)
+![ByteTrack 多目标跟踪可视化](images/2082034939599368194.png)
 
 *图：ByteTrack 在 MOT17 数据集上的跟踪效果。不同颜色代表不同 ID，通过 BYTE 策略在遮挡和快速移动场景下保持稳定的身份标识。图片来源：ByteTrack 论文 (Zhang et al., ECCV 2022)*
 
@@ -307,7 +307,7 @@ SKELETON = [
        15 16 (踝)
 ```
 
-![COCO 17 关键点人体骨架图](/resource/oss/download/2082034939871997954)
+![COCO 17 关键点人体骨架图](images/2082034939871997954.png)
 
 *图：COCO 格式定义的 17 个人体关键点及骨架连接。0-鼻子、1-左眼、2-右眼、3-左耳、4-右耳、5-左肩、6-右肩、7-左肘、8-右肘、9-左腕、10-右腕、11-左髋、12-右髋、13-左膝、14-右膝、15-左踝、16-右踝。*
 
@@ -391,7 +391,7 @@ SKELETON = [
 > - 低头通过鼻子-肩膀的 Y 轴偏移判断
 > - 如果前四个条件都不满足，默认为"坐着听课"
 
-![室内课堂六类行为规则引擎](/resource/oss/download/2082034940144627713)
+![室内课堂六类行为规则引擎](images/2082034940144627713.png)
 
 *图：基于人体关键点几何关系的室内行为规则引擎示意图。通过手腕-肩膀高度差判举手，躯干长度判坐/站，鼻子-肩膀偏移判低头，其余姿态默认为听讲。*
 
@@ -473,7 +473,7 @@ Segment 4: write       (帧 6→7,  0.2~0.27s)
     融合（平均/投票）→ 最终预测
 ```
 
-![TSN 时序分段网络架构](/resource/oss/download/2082034940446617602)
+![TSN 时序分段网络架构](images/2082034940446617602.png)
 
 *图：Temporal Segment Networks (TSN) 架构图。将视频均匀分为多个片段，每段稀疏采样极少量帧，经共享 CNN 分别提取特征后融合输出。图片来源：TSN 论文 (Wang et al., ECCV 2016)*
 
@@ -609,7 +609,7 @@ Kinetics-400 覆盖了广泛的人类行为：
 | **手工制作** | `knitting`, `painting`, `woodworking`, `sewing` |
 | **竞技格斗** | `boxing`, `wrestling`, `judo`, `fencing` |
 
-![Kinetics-400 数据集概览](/resource/oss/download/2082034940710858754)
+![Kinetics-400 数据集概览](images/2082034940710858754.png)
 
 *图：Kinetics-400 数据集概况。覆盖 400 类人类行为，包含 ~306,000 段约 10 秒的 YouTube 视频片段，涵盖体育、乐器、日常活动、舞蹈、社交等广泛类别。*
 
@@ -695,7 +695,7 @@ Kinetics-400 覆盖了广泛的人类行为：
 └──────────────────────────────────────────────────────────┘
 ```
 
-![HAR 行为识别 RESTful API 架构](/resource/oss/download/2082034940975099906)
+![HAR 行为识别 RESTful API 架构](images/2082034940975099906.png)
 
 *图：HAR 系统的 API 架构总览。Web 前端/外部客户端通过 HTTP 请求调用 FastAPI 服务器，后者调度推理引擎（YOLOv8 + ByteTrack + Pose + MMAction2）并将结果以 JSON 格式返回。*
 
@@ -754,7 +754,7 @@ Kinetics-400 覆盖了广泛的人类行为：
 - **类型安全**：基于 Python 类型提示，IDE 自动补全和类型检查
 - **简洁**：代码量少，直观易用
 
-![FastAPI 官方 Logo](/resource/oss/download/2082034941239341058)
+![FastAPI 官方 Logo](images/2082034941239341058.png)
 
 *图：FastAPI 框架官方标志。FastAPI 是基于 Starlette 和 Pydantic 的现代 Python Web 框架，以高性能、自动 API 文档和类型安全为设计理念。图片来源：fastapi.tiangolo.com*
 
@@ -900,7 +900,7 @@ if WEB_DIR.exists():
 └──────────────────────────────────────────┘
 ```
 
-![HAR Web 前端界面](/resource/oss/download/2082034941600051201)
+![HAR Web 前端界面](images/2082034941600051201.png)
 
 *图：HAR 行为识别系统 Web 前端界面截图。包含 Demo 快速试用、文件上传、场景选择和结果展示等核心功能模块。*
 

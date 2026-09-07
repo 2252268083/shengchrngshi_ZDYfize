@@ -501,8 +501,11 @@ async function loadChapter(modId, chIndex) {
   try {
     const resp = await fetch(ch.file);
     const text = await resp.text();
-    // 去掉BOM
-    const clean = text.replace(/^\uFEFF/, '');
+    // 去掉BOM，并把相对图片路径改为绝对路径
+    let clean = text.replace(/^\uFEFF/, '');
+    // 提取文件所在目录作为base路径
+    const baseDir = ch.file.substring(0, ch.file.lastIndexOf('/'));
+    clean = clean.replace(/(\!\[[^\]]*\]\()images\//g, '$1' + baseDir + '/images/');
     mdEl.innerHTML = marked.parse(clean);
     // 滚动到顶部
     document.querySelector('.content-area').scrollTo(0, 0);

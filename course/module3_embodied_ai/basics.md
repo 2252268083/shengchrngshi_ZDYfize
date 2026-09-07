@@ -57,7 +57,7 @@
 
 本模块构建的"仓库小车仿真平台"是一个典型的具身智能系统，包含以下层次：
 
-![具身智能五层架构](/resource/oss/download/2082034945467199490)
+![具身智能五层架构](images/2082034945467199490.png)
 
 ### 1.4 具身智能的核心挑战
 
@@ -166,7 +166,7 @@
 动作 (Action)：  客户端 ──→←── 服务端 + 反馈   （长任务，如"导航到(x,y)"）
 ```
 
-![ROS2 话题通信架构](/resource/oss/download/2082034945744023554)
+![ROS2 话题通信架构](images/2082034945744023554.png)
 
 ### 2.4 DDS 通信协议
 
@@ -250,7 +250,7 @@ ros2 node info /bcr_bot_controller
 └─────────────────────────────────────────────┘
 ```
 
-![Gazebo 仿真世界](/resource/oss/download/2082034946008264706)
+![Gazebo 仿真世界](images/2082034946008264706.png)
 
 ### 3.3 Gazebo 与本模块的关系
 
@@ -332,7 +332,7 @@ ROS2/Gazebo 使用两种格式描述机器人模型：
 
 ### 4.2 容器 vs 虚拟机
 
-![容器 vs 虚拟机](/resource/oss/download/2082034946268311554)
+![容器 vs 虚拟机](images/2082034946268311554.png)
 
 | 特性 | 虚拟机（VM） | Docker 容器 |
 |:---|:---|:---|
@@ -521,7 +521,7 @@ docker compose logs -f <service># 查看指定服务日志
 docker compose restart          # 重启所有服务
 ```
 
-![Docker Compose 多容器架构](/resource/oss/download/2082034946532552705)
+![Docker Compose 多容器架构](images/2082034946532552705.png)
 
 ### 5.4 环境变量配置（`.env` 文件）
 
@@ -557,7 +557,7 @@ ports:
 
 ### 6.2 code-server 架构
 
-![code-server 架构图](/resource/oss/download/2082034946796793857)
+![code-server 架构图](images/2082034946796793857.png)
 
 ### 6.3 关键特性
 
@@ -579,7 +579,7 @@ ports:
 
 ### 7.2 为什么需要 rosbridge
 
-![rosbridge WebSocket 通信](/resource/oss/download/2082034947065229314)
+![rosbridge WebSocket 通信](images/2082034947065229314.png)
 
 ### 7.3 rosbridge 通信流程
 
@@ -697,7 +697,7 @@ def avoid_obstacle(scan_data):
 
 **OpenClaw** 是一个开源的**智能体网关框架**，它在 LLM（大语言模型）和机器人系统之间充当"翻译层"，使得用户可以通过自然语言指令控制机器人。
 
-![OpenClaw 智能体网关](/resource/oss/download/2082034947325276161)
+![OpenClaw 智能体网关](images/2082034947325276161.png)
 
 ### 9.2 离线 vs 在线模式
 
@@ -720,7 +720,7 @@ def avoid_obstacle(scan_data):
 
 在本模块中，Dify 作为可选的 LLM 编排层，可以帮助学生构建更复杂的自然语言控车逻辑：
 
-![Dify LLM 应用平台](/resource/oss/download/2082034947585323009)
+![Dify LLM 应用平台](images/2082034947585323009.png)
 
 <img src="images/dify-simple.svg" width="80" alt="Dify"/>
 
@@ -767,7 +767,7 @@ VT-x (Intel) / AMD-V (AMD)      ← CPU 虚拟化扩展
 
 ### 11.3 U 盘启动安装流程
 
-![Ubuntu 部署流程](/resource/oss/download/2082034947895701506)
+![Ubuntu 部署流程](images/2082034947895701506.png)
 
 ### 11.4 常用 Linux 命令速查
 
@@ -805,7 +805,7 @@ netstat -tlnp           # 查看所有监听端口
 
 ### 12.2 离线部署四阶段
 
-![离线部署四阶段](/resource/oss/download/2082034948155748353)
+![离线部署四阶段](images/2082034948155748353.png)
 
 ### 12.3 镜像导出/导入完整流程
 

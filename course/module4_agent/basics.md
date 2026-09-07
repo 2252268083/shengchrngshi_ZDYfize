@@ -54,7 +54,7 @@ OpenClaw 启动时会自动扫描 `skills/` 目录，加载全部 SKILL.md 文�
 
 整个链路分为三层——**理解层**（自然语言→命令）→**封装层**（Shell 初始化环境）→**执行层**（Python 业务逻辑），各层职责清晰分离。
 
-![OpenClaw Skill 三层架构](/resource/oss/download/2082034950332592130)
+![OpenClaw Skill 三层架构](images/2082034950332592130.png)
 
 ### 1.3 文件结构
 
@@ -167,7 +167,7 @@ metadata:
 
 OpenClaw 从多个来源加载 Skills（**高优先级同名覆盖低优先级**），经门控过滤和 Allowlist 控制后注入运行时环境。
 
-![OpenClaw Skill 加载流程](/resource/oss/download/2082034950601027585)
+![OpenClaw Skill 加载流程](images/2082034950601027585.png)
 
 > **安全提醒**：将第三方 Skill 视为不受信任的代码。frontmatter 中声明的 `requires` 会被安全扫描校验——代码中引用的环境变量必须在 frontmatter 中声明，否则会标记为元数据不匹配。
 
@@ -393,7 +393,7 @@ if __name__ == "__main__":
 
 ### 3.2 Dify 工作流架构
 
-![Dify Chatflow 工作流架构](/resource/oss/download/2082034950869463041)
+![Dify Chatflow 工作流架构](images/2082034950869463041.png)
 
 ### 3.3 关键组件
 
@@ -493,7 +493,7 @@ def main(text: str, target_lang: str) -> dict:
 
 智能体的核心是 **思考→行动→观察** 循环（ReAct 模式）：
 
-![LangGraph StateGraph 架构](/resource/oss/download/2082034951133704194)
+![LangGraph StateGraph 架构](images/2082034951133704194.png)
 
 选择 LangGraph 的理由：
 

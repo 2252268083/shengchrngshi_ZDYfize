@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" font-family="Arial, sans-serif">
+  <defs>
+    <marker id="arrow5" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#666"/></marker>
+    <linearGradient id="svc1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#667eea"/><stop offset="100%" stop-color="#5a6fd6"/></linearGradient>
+    <linearGradient id="svc2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#43e97b"/><stop offset="100%" stop-color="#38d9a9"/></linearGradient>
+  </defs>
+  <rect width="800" height="420" fill="#f8f9fa" rx="8"/>
+  <text x="400" y="30" text-anchor="middle" font-size="20" font-weight="bold" fill="#333">Docker Compose 多容器编排架构</text>
+  <!-- Compose File -->
+  <rect x="50" y="55" width="180" height="310" rx="6" fill="#263238"/>
+  <text x="70" y="78" font-size="11" font-weight="bold" fill="#aed581">docker-compose.yml</text>
+  <text x="70" y="100" font-size="10" fill="#82b1ff">services:</text>
+  <text x="75" y="118" font-size="10" fill="#f78c6c">vehicle-dev:</text>
+  <text x="85" y="136" font-size="10" fill="#c792ea">ports:</text>
+  <text x="100" y="152" font-size="9" fill="#89ddff">- "18080:18080"</text>
+  <text x="100" y="168" font-size="9" fill="#89ddff">- "19090:19090"</text>
+  <text x="85" y="188" font-size="10" fill="#c792ea">volumes:</text>
+  <text x="100" y="204" font-size="9" fill="#89ddff">- robot-code:/workspace</text>
+  <text x="75" y="228" font-size="10" fill="#f78c6c">sim-web:</text>
+  <text x="85" y="246" font-size="10" fill="#c792ea">ports:</text>
+  <text x="100" y="262" font-size="9" fill="#89ddff">- "8888:8888"</text>
+  <text x="85" y="282" font-size="10" fill="#c792ea">network_mode:</text>
+  <text x="100" y="298" font-size="9" fill="#89ddff">host</text>
+  <text x="70" y="330" font-size="10" fill="#82b1ff">.env 配置:</text>
+  <text x="75" y="348" font-size="9" fill="#89ddff">CODE_SERVER_PORT=18080</text>
+  <!-- Container 1 -->
+  <rect x="300" y="65" width="210" height="120" rx="10" fill="url(#svc1)" opacity="0.92"/>
+  <text x="405" y="92" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">🔧 主开发容器</text>
+  <text x="405" y="112" text-anchor="middle" font-size="11" fill="#fff">vehicle-dev</text>
+  <text x="315" y="134" font-size="10" fill="#fff">📝 code-server :18080</text>
+  <text x="315" y="152" font-size="10" fill="#fff">🌐 rosbridge :19090</text>
+  <text x="315" y="170" font-size="10" fill="#fff">🤖 OpenClaw :28789</text>
+  <!-- Container 2 -->
+  <rect x="540" y="65" width="210" height="120" rx="10" fill="url(#svc2)" opacity="0.92"/>
+  <text x="645" y="92" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">🌐 仿真 Web 容器</text>
+  <text x="645" y="112" text-anchor="middle" font-size="11" fill="#fff">sim-web</text>
+  <text x="555" y="134" font-size="10" fill="#fff">🖥 仿真仪表盘</text>
+  <text x="555" y="152" font-size="10" fill="#fff">📊 可视化面板 :8888</text>
+  <text x="555" y="170" font-size="10" fill="#fff">📡 传感器实时数据</text>
+  <!-- Network -->
+  <rect x="300" y="210" width="450" height="40" rx="6" fill="#eceff1" stroke="#90a4ae" stroke-width="1"/>
+  <text x="525" y="235" text-anchor="middle" font-size="13" fill="#546e7a">🔗 host 网络模式 — 容器共享宿主机网络栈</text>
+  <!-- Browser access -->
+  <rect x="300" y="275" width="450" height="30" rx="15" fill="#fff3e0" stroke="#ff9800" stroke-width="1"/>
+  <text x="525" y="295" text-anchor="middle" font-size="12" fill="#e65100">🖥 学生浏览器访问 → localhost:18080 / :8888 / :28789</text>
+  <!-- Commands -->
+  <text x="400" y="335" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">常用命令</text>
+  <rect x="50" y="348" width="220" height="28" rx="4" fill="#263238"/>
+  <text x="70" y="367" font-size="10" fill="#aed581">$ docker compose up -d</text>
+  <rect x="290" y="348" width="220" height="28" rx="4" fill="#263238"/>
+  <text x="310" y="367" font-size="10" fill="#aed581">$ docker compose down</text>
+  <rect x="530" y="348" width="220" height="28" rx="4" fill="#263238"/>
+  <text x="550" y="367" font-size="10" fill="#aed581">$ docker compose ps</text>
+  <text x="160" y="398" text-anchor="middle" font-size="10" fill="#888">后台启动所有服务</text>
+  <text x="400" y="398" text-anchor="middle" font-size="10" fill="#888">停止并移除所有服务</text>
+  <text x="640" y="398" text-anchor="middle" font-size="10" fill="#888">查看服务状态</text>
+</svg>

@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 280" font-family="'Microsoft YaHei', 'SimHei', Arial, sans-serif">
+  <defs>
+    <linearGradient id="head" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#1a1a2e"/><stop offset="100%" style="stop-color:#16213e"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.2"/></filter>
+  </defs>
+
+  <rect width="720" height="280" rx="12" fill="#f8f9fc"/>
+  <text x="360" y="28" text-anchor="middle" font-size="18" font-weight="bold" fill="#2d3748">Dify — 开源 LLM 应用开发平台</text>
+
+  <!-- Dify Platform Box -->
+  <rect x="30" y="45" width="440" height="220" rx="10" fill="url(#head)" filter="url(#shadow)"/>
+  <text x="250" y="72" text-anchor="middle" font-size="15" font-weight="bold" fill="#f0f0ff">⚡ Dify 平台</text>
+
+  <!-- Workflow pipelines -->
+  <!-- Pipeline 1 -->
+  <rect x="50" y="90" width="180" height="50" rx="6" fill="#2d3748"/>
+  <text x="140" y="112" text-anchor="middle" font-size="11" fill="#e2e8f0">📝 用户输入</text>
+  <text x="140" y="130" text-anchor="middle" font-size="10" fill="#a0aec0">"分析仓库布局"</text>
+
+  <line x1="230" y1="115" x2="255" y2="115" stroke="#667eea" stroke-width="1.5"/>
+  <polygon points="250,111 256,115 250,119" fill="#667eea"/>
+
+  <!-- Pipeline 2 -->
+  <rect x="260" y="90" width="180" height="50" rx="6" fill="#2d3748"/>
+  <text x="350" y="112" text-anchor="middle" font-size="11" fill="#e2e8f0">🧠 LLM 推理</text>
+  <text x="350" y="130" text-anchor="middle" font-size="10" fill="#a0aec0">DeepSeek / 本地模型</text>
+
+  <!-- Pipeline 3 -->
+  <rect x="50" y="155" width="180" height="50" rx="6" fill="#2d3748"/>
+  <text x="140" y="177" text-anchor="middle" font-size="11" fill="#e2e8f0">🔧 工具调用</text>
+  <text x="140" y="195" text-anchor="middle" font-size="10" fill="#a0aec0">drive.sh / API</text>
+
+  <line x1="230" y1="180" x2="255" y2="180" stroke="#667eea" stroke-width="1.5"/>
+  <polygon points="250,176 256,180 250,184" fill="#667eea"/>
+
+  <rect x="260" y="155" width="180" height="50" rx="6" fill="#2d3748"/>
+  <text x="350" y="177" text-anchor="middle" font-size="11" fill="#e2e8f0">📤 结果输出</text>
+  <text x="350" y="195" text-anchor="middle" font-size="10" fill="#a0aec0">结构化响应</text>
+
+  <!-- Bottom features -->
+  <rect x="50" y="220" width="120" height="30" rx="5" fill="#553c9a" opacity="0.8"/>
+  <text x="110" y="240" text-anchor="middle" font-size="10" fill="#fff">可视化编排</text>
+
+  <rect x="180" y="220" width="120" height="30" rx="5" fill="#553c9a" opacity="0.8"/>
+  <text x="240" y="240" text-anchor="middle" font-size="10" fill="#fff">RAG 检索增强</text>
+
+  <rect x="310" y="220" width="140" height="30" rx="5" fill="#553c9a" opacity="0.8"/>
+  <text x="380" y="240" text-anchor="middle" font-size="10" fill="#fff">Agent 智能体</text>
+
+  <!-- Right side: Deployment -->
+  <rect x="500" y="50" width="195" height="135" rx="8" fill="#e8eaf6" stroke="#667eea" stroke-width="1"/>
+  <text x="597" y="75" text-anchor="middle" font-size="13" font-weight="bold" fill="#667eea">📦 部署方式</text>
+
+  <rect x="515" y="90" width="165" height="25" rx="4" fill="#38a169"/>
+  <text x="597" y="108" text-anchor="middle" font-size="10" fill="#fff">在线：访问 dify.ai 云端</text>
+
+  <rect x="515" y="122" width="165" height="25" rx="4" fill="#dd6b20"/>
+  <text x="597" y="140" text-anchor="middle" font-size="10" fill="#fff">离线：Docker 本地部署</text>
+
+  <rect x="515" y="155" width="165" height="25" rx="4" fill="#805ad5"/>
+  <text x="597" y="173" text-anchor="middle" font-size="10" fill="#fff">dify/images/dify-images.tar</text>
+
+  <!-- Integration with robot -->
+  <rect x="500" y="205" width="195" height="55" rx="8" fill="#fefcbf" stroke="#d69e2e" stroke-width="1"/>
+  <text x="597" y="225" text-anchor="middle" font-size="11" font-weight="bold" fill="#744210">与机器人集成</text>
+  <text x="597" y="242" text-anchor="middle" font-size="10" fill="#744210">LLM 决策 → 调用 drive.sh</text>
+  <text x="597" y="255" text-anchor="middle" font-size="9" fill="#975a16">→ ros2 topic pub /cmd_vel</text>
+</svg>

@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 720" font-family="Microsoft YaHei, sans-serif">
+  <defs>
+    <style>.kp{fill:#ff6b6b;stroke:#fff;stroke-width:1.5}.line{stroke:#4ecdc4;stroke-width:2.5;fill:none;stroke-linecap:round}
+          .lbl{font-size:11px;fill:#555;text-anchor:middle}.title{font-size:16px;font-weight:bold;fill:#333;text-anchor:middle}
+          .desc{font-size:11px;fill:#888;text-anchor:middle}
+    </style>
+  </defs>
+  <rect width="600" height="720" fill="#fff" rx="8"/>
+  <text x="300" y="30" class="title">COCO 17 关键点人体骨架</text>
+  <text x="300" y="50" class="desc">Common Objects in Context — 人体姿态估计标准关键点体系</text>
+
+  <!-- Head -->
+  <circle cx="300" cy="85" r="6" class="kp"/><text x="320" y="83" class="lbl" font-size="10">0·鼻</text>
+  <circle cx="280" cy="105" r="5" class="kp"/><text x="265" y="118" class="lbl">1·左眼</text>
+  <circle cx="320" cy="105" r="5" class="kp"/><text x="340" y="118" class="lbl">2·右眼</text>
+  <circle cx="260" cy="115" r="5" class="kp"/><text x="240" y="128" class="lbl">3·左耳</text>
+  <circle cx="340" cy="115" r="5" class="kp"/><text x="365" y="128" class="lbl">4·右耳</text>
+  <!-- Face connections -->
+  <path d="M300 85 L280 105 M300 85 L320 105 M280 105 L260 115 M320 105 L340 115" class="line" stroke="#aaa"/>
+  <!-- Nose to shoulders -->
+  <path d="M300 91 L270 145 M300 91 L330 145" class="line" stroke="#aaa" stroke-dasharray="4,3"/>
+
+  <!-- Shoulders -->
+  <circle cx="270" cy="145" r="7" class="kp"/><text x="250" y="162" class="lbl" font-weight="bold">5·左肩</text>
+  <circle cx="330" cy="145" r="7" class="kp"/><text x="360" y="162" class="lbl" font-weight="bold">6·右肩</text>
+  <path d="M270 145 L330 145" class="line" stroke-width="3"/>
+
+  <!-- Left arm -->
+  <circle cx="235" cy="220" r="6" class="kp"/><text x="212" y="237" class="lbl">7·左肘</text>
+  <circle cx="215" cy="295" r="5" class="kp"/><text x="190" y="312" class="lbl">9·左腕</text>
+  <path d="M270 145 L235 220 M235 220 L215 295" class="line"/>
+
+  <!-- Right arm -->
+  <circle cx="365" cy="220" r="6" class="kp"/><text x="395" y="237" class="lbl">8·右肘</text>
+  <circle cx="385" cy="295" r="5" class="kp"/><text x="415" y="312" class="lbl">10·右腕</text>
+  <path d="M330 145 L365 220 M365 220 L385 295" class="line"/>
+
+  <!-- Hips -->
+  <circle cx="275" cy="350" r="7" class="kp"/><text x="252" y="367" class="lbl" font-weight="bold">11·左髋</text>
+  <circle cx="325" cy="350" r="7" class="kp"/><text x="350" y="367" class="lbl" font-weight="bold">12·右髋</text>
+  <path d="M275 350 L325 350" class="line" stroke-width="3"/>
+
+  <!-- Torso connections -->
+  <path d="M270 145 L275 350 M330 145 L325 350" class="line"/>
+
+  <!-- Left leg -->
+  <circle cx="265" cy="465" r="6" class="kp"/><text x="242" y="482" class="lbl">13·左膝</text>
+  <circle cx="260" cy="580" r="5" class="kp"/><text x="232" y="597" class="lbl">15·左踝</text>
+  <path d="M275 350 L265 465 M265 465 L260 580" class="line"/>
+
+  <!-- Right leg -->
+  <circle cx="335" cy="465" r="6" class="kp"/><text x="365" y="482" class="lbl">14·右膝</text>
+  <circle cx="340" cy="580" r="5" class="kp"/><text x="368" y="597" class="lbl">16·右踝</text>
+  <path d="M325 350 L335 465 M335 465 L340 580" class="line"/>
+
+  <!-- Legend -->
+  <rect x="60" y="640" width="480" height="65" rx="6" fill="#f8f8f8" stroke="#ddd"/>
+  <text x="300" y="660" class="desc" font-size="12">每个关键点格式：[x, y, confidence] </text>
+  <text x="300" y="678" class="desc" font-size="12">红色圆点 = 关键点 | 青色连线 = 骨架连接 | 置信度 &gt; 0.3 视为可见</text>
+  <text x="300" y="696" class="desc" font-size="12">共 17 个关键点 × 3 维 = 51 个值（YOLOv8n-pose 输出）</text>
+</svg>

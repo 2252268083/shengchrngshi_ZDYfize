@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 440" font-family="Arial, sans-serif">
+  <defs>
+    <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e8e8e8"/><stop offset="100%" stop-color="#d0d0d0"/></linearGradient>
+    <linearGradient id="shelf" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8d6e63"/><stop offset="100%" stop-color="#6d4c41"/></linearGradient>
+    <linearGradient id="robot" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#42a5f5"/><stop offset="100%" stop-color="#1e88e5"/></linearGradient>
+    <linearGradient id="lidar" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#66bb6a"/><stop offset="100%" stop-color="#43a047"/></linearGradient>
+  </defs>
+  <rect width="800" height="440" fill="#f8f9fa" rx="8"/>
+  <text x="400" y="30" text-anchor="middle" font-size="20" font-weight="bold" fill="#333">Gazebo 仓库仿真场景 + 核心能力</text>
+  <!-- Warehouse floor -->
+  <rect x="30" y="50" width="420" height="380" fill="url(#floor)" rx="6" stroke="#bbb" stroke-width="1"/>
+  <text x="240" y="70" text-anchor="middle" font-size="11" fill="#999">仓库场景俯视图</text>
+  <!-- Shelves -->
+  <rect x="50" y="85" width="70" height="18" rx="3" fill="url(#shelf)"/>
+  <text x="85" y="98" text-anchor="middle" font-size="9" fill="#fff">货架 A</text>
+  <rect x="180" y="85" width="70" height="18" rx="3" fill="url(#shelf)"/>
+  <text x="215" y="98" text-anchor="middle" font-size="9" fill="#fff">货架 B</text>
+  <rect x="310" y="85" width="70" height="18" rx="3" fill="url(#shelf)"/>
+  <text x="345" y="98" text-anchor="middle" font-size="9" fill="#fff">货架 C</text>
+  <rect x="50" y="360" width="70" height="18" rx="3" fill="url(#shelf)"/>
+  <text x="85" y="373" text-anchor="middle" font-size="9" fill="#fff">货架 D</text>
+  <rect x="180" y="360" width="70" height="18" rx="3" fill="url(#shelf)"/>
+  <text x="215" y="373" text-anchor="middle" font-size="9" fill="#fff">货架 E</text>
+  <rect x="310" y="360" width="70" height="18" rx="3" fill="url(#shelf)"/>
+  <text x="345" y="373" text-anchor="middle" font-size="9" fill="#fff">货架 F</text>
+  <!-- Robot -->
+  <rect x="195" y="205" width="90" height="55" rx="10" fill="url(#robot)"/>
+  <text x="240" y="228" text-anchor="middle" font-size="20" fill="#fff">🤖</text>
+  <text x="240" y="250" text-anchor="middle" font-size="9" fill="#fff">仓库小车</text>
+  <!-- Lidar scan circle -->
+  <circle cx="240" cy="232" r="70" fill="none" stroke="#66bb6a" stroke-width="1.5" stroke-dasharray="6,3" opacity="0.5"/>
+  <text x="240" y="316" text-anchor="middle" font-size="9" fill="#66bb6a">360° 激光雷达</text>
+  <text x="240" y="328" text-anchor="middle" font-size="9" fill="#66bb6a">扫描范围</text>
+  <!-- Wheels -->
+  <circle cx="210" cy="260" r="8" fill="#333"/>
+  <circle cx="270" cy="260" r="8" fill="#333"/>
+  <circle cx="240" cy="242" r="6" fill="#333" opacity="0.5"/>
+  <!-- Right side: Gazebo capabilities -->
+  <text x="590" y="70" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Gazebo 核心能力</text>
+  <!-- Capability boxes -->
+  <rect x="480" y="90" width="290" height="40" rx="6" fill="#e8f5e9" stroke="#66bb6a" stroke-width="1"/>
+  <text x="495" y="107" font-size="13" font-weight="bold" fill="#2e7d32">⚡ 物理引擎</text>
+  <text x="495" y="125" font-size="11" fill="#555">ODE / Bullet — 重力、碰撞、摩擦力</text>
+  <rect x="480" y="140" width="290" height="40" rx="6" fill="#e3f2fd" stroke="#42a5f5" stroke-width="1"/>
+  <text x="495" y="157" font-size="13" font-weight="bold" fill="#1565c0">🎨 渲染引擎</text>
+  <text x="495" y="175" font-size="11" fill="#555">OGRE2 — 逼真三维场景可视化</text>
+  <rect x="480" y="190" width="290" height="40" rx="6" fill="#fff3e0" stroke="#ff9800" stroke-width="1"/>
+  <text x="495" y="207" font-size="13" font-weight="bold" fill="#e65100">📷 传感器模拟</text>
+  <text x="495" y="225" font-size="11" fill="#555">激光雷达 · 相机 · IMU · GPS</text>
+  <rect x="480" y="240" width="290" height="40" rx="6" fill="#f3e5f5" stroke="#ab47bc" stroke-width="1"/>
+  <text x="495" y="257" font-size="13" font-weight="bold" fill="#7b1fa2">🤖 机器人模型</text>
+  <text x="495" y="275" font-size="11" fill="#555">SDF/URDF — 轮式 · 四足 · 机械臂</text>
+  <!-- Simulation note -->
+  <rect x="480" y="300" width="290" height="130" rx="6" fill="#fce4ec" stroke="#e91e63" stroke-width="1"/>
+  <text x="495" y="320" font-size="12" font-weight="bold" fill="#c62828">本模块仿真元素</text>
+  <text x="495" y="340" font-size="11" fill="#555">🏭 仓库环境（墙壁、货架、障碍物）</text>
+  <text x="495" y="358" font-size="11" fill="#555">🔧 差分驱动机器人（两轮+万向轮）</text>
+  <text x="495" y="376" font-size="11" fill="#555">📡 激光雷达 360° 扫描</text>
+  <text x="495" y="394" font-size="11" fill="#555">🎥 RGB 相机视觉感知</text>
+  <text x="495" y="412" font-size="11" fill="#555">⚙️ 真实物理效果模拟</text>
+</svg>

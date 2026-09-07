@@ -82,7 +82,7 @@ module_b_behavior/
 
 用VSCode打开项目，进行开发：
 
-![vscode.png](/resource/oss/download/2082034943168720898)
+![vscode.png](images/2082034943168720898.png)
 
 ### 1.3 创建 Python 虚拟环境
 
@@ -1707,10 +1707,10 @@ INFO:     Uvicorn running on http://0.0.0.0:8082 (Press CTRL+C to quit)
 
 **运行效果**（室内场景标注结果示例）：
 
-![image-1.png](/resource/oss/download/2082034943533625346)
+![image-1.png](images/2082034943533625346.png)
 
-![image-3.png](/resource/oss/download/2082034944015970306)
+![image-3.png](images/2082034944015970306.png)
 
-![image-2.png](/resource/oss/download/2082034944733196290)
+![image-2.png](images/2082034944733196290.png)
 
 <!-- edu-oss-embedded:2082034943168720898,2082034943533625346,2082034944015970306,2082034944733196290 -->

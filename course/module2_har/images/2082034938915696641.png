@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" font-family="Segoe UI, Microsoft YaHei, sans-serif">
+  <defs>
+    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2563eb"/><stop offset="100%" stop-color="#1d4ed8"/></linearGradient>
+    <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#059669"/><stop offset="100%" stop-color="#047857"/></linearGradient>
+    <linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ea580c"/><stop offset="100%" stop-color="#c2410c"/></linearGradient>
+    <linearGradient id="g4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#6d28d9"/></linearGradient>
+    <linearGradient id="g5" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0891b2"/><stop offset="100%" stop-color="#0e7490"/></linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#666"/></marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="380" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#111">人体行为识别 (HAR) 基本流程</text>
+
+  <!-- Input -->
+  <rect x="240" y="48" width="280" height="36" rx="18" fill="url(#g1)" opacity="0.9"/>
+  <text x="380" y="72" text-anchor="middle" font-size="14" fill="#fff" font-weight="bold">📹 输入视频 / 图像</text>
+
+  <!-- Arrow 1 -->
+  <line x1="380" y1="84" x2="380" y2="102" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- YOLO Detection -->
+  <rect x="210" y="108" width="340" height="44" rx="8" fill="url(#g2)" opacity="0.88"/>
+  <text x="380" y="126" text-anchor="middle" font-size="13" fill="#fff" font-weight="bold">① 人体检测 (YOLOv8)</text>
+  <text x="380" y="143" text-anchor="middle" font-size="11" fill="#d1fae5">检测画面中所有人体的位置和检测框</text>
+
+  <!-- Arrow 2 -->
+  <line x1="380" y1="152" x2="380" y2="170" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ByteTrack -->
+  <rect x="210" y="176" width="340" height="44" rx="8" fill="url(#g3)" opacity="0.88"/>
+  <text x="380" y="194" text-anchor="middle" font-size="13" fill="#fff" font-weight="bold">② 多目标跟踪 (ByteTrack)</text>
+  <text x="380" y="211" text-anchor="middle" font-size="11" fill="#ffedd5">为每个人分配唯一 ID，跨帧保持身份</text>
+
+  <!-- Arrow 3 -->
+  <line x1="380" y1="220" x2="380" y2="238" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Branch -->
+  <rect x="210" y="244" width="340" height="44" rx="8" fill="url(#g4)" opacity="0.85"/>
+  <text x="380" y="262" text-anchor="middle" font-size="13" fill="#fff" font-weight="bold">③ 双路径行为识别</text>
+  <text x="380" y="279" text-anchor="middle" font-size="11" fill="#e9d5ff">根据场景选择不同的识别策略</text>
+
+  <!-- Branches -->
+  <line x1="300" y1="288" x2="300" y2="300" stroke="#666" stroke-width="1.5"/>
+  <line x1="460" y1="288" x2="460" y2="300" stroke="#666" stroke-width="1.5"/>
+  <line x1="300" y1="300" x2="460" y2="300" stroke="#666" stroke-width="1.5"/>
+
+  <line x1="300" y1="300" x2="300" y2="314" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="460" y1="300" x2="460" y2="314" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Indoor -->
+  <rect x="148" y="320" width="304" height="44" rx="8" fill="#f0fdf4" stroke="#059669" stroke-width="1.5"/>
+  <text x="300" y="338" text-anchor="middle" font-size="13" fill="#064e3b" font-weight="bold">🏫 室内场景：姿态规则引擎</text>
+  <text x="300" y="355" text-anchor="middle" font-size="11" fill="#065f46">YOLO-Pose → 17 关键点 → 几何规则 → 6 类行为</text>
+
+  <!-- Outdoor -->
+  <rect x="308" y="320" width="304" height="44" rx="8" fill="#fefce8" stroke="#ca8a04" stroke-width="1.5"/>
+  <text x="460" y="338" text-anchor="middle" font-size="13" fill="#713f12" font-weight="bold">🌳 室外场景：深度学习模型</text>
+  <text x="460" y="355" text-anchor="middle" font-size="11" fill="#854d0e">MMAction2 TSN → 时序采样 → 400 类行为</text>
+
+  <!-- Result -->
+  <line x1="300" y1="364" x2="300" y2="380" stroke="#666" stroke-width="1.5"/>
+  <line x1="460" y1="364" x2="460" y2="380" stroke="#666" stroke-width="1.5"/>
+  <line x1="300" y1="380" x2="460" y2="380" stroke="#666" stroke-width="1.5"/>
+
+  <line x1="380" y1="380" x2="380" y2="394" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="240" y="398" width="280" height="36" rx="18" fill="url(#g5)" opacity="0.9"/>
+  <text x="380" y="422" text-anchor="middle" font-size="14" fill="#fff" font-weight="bold">📊 输出：标注视频 + JSON + 行为统计</text>
+</svg>

@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 380" font-family="Arial, sans-serif">
+  <defs>
+    <marker id="arr7" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#555"/></marker>
+    <linearGradient id="gradW" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff9800"/><stop offset="100%" stop-color="#f57c00"/></linearGradient>
+    <linearGradient id="gradR" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4caf50"/><stop offset="100%" stop-color="#388e3c"/></linearGradient>
+  </defs>
+  <rect width="800" height="380" fill="#f8f9fa" rx="8"/>
+  <text x="400" y="30" text-anchor="middle" font-size="20" font-weight="bold" fill="#333">rosbridge + WebSocket 通信桥接</text>
+  <!-- Left: Without rosbridge -->
+  <rect x="20" y="55" width="370" height="40" rx="6" fill="#ffcdd2"/>
+  <text x="205" y="80" text-anchor="middle" font-size="13" font-weight="bold" fill="#c62828">❌ 无 rosbridge</text>
+  <rect x="55" y="105" width="120" height="50" rx="8" fill="#fff3e0" stroke="#ff9800" stroke-width="1.5"/>
+  <text x="115" y="128" text-anchor="middle" font-size="12" fill="#e65100">🖥 浏览器 JS</text>
+  <text x="115" y="146" text-anchor="middle" font-size="9" fill="#f57c00">无法直接访问 ROS2</text>
+  <text x="205" y="135" text-anchor="middle" font-size="28" fill="#c62828">✗</text>
+  <rect x="240" y="105" width="120" height="50" rx="8" fill="#e8f5e9" stroke="#66bb6a" stroke-width="1.5"/>
+  <text x="300" y="128" text-anchor="middle" font-size="12" fill="#2e7d32">🤖 ROS2 系统</text>
+  <text x="300" y="146" text-anchor="middle" font-size="9" fill="#43a047">节点/话题/服务</text>
+  <rect x="55" y="170" width="305" height="20" rx="4" fill="#ffcdd2"/>
+  <text x="207" y="184" text-anchor="middle" font-size="10" fill="#c62828">浏览器 JavaScript 无法直接订阅 ROS2 话题</text>
+  <!-- Right: With rosbridge -->
+  <rect x="420" y="55" width="360" height="40" rx="6" fill="#c8e6c9"/>
+  <text x="600" y="80" text-anchor="middle" font-size="13" font-weight="bold" fill="#2e7d32">✅ 有 rosbridge</text>
+  <!-- Browser -->
+  <rect x="440" y="105" width="130" height="60" rx="8" fill="url(#gradW)" opacity="0.9"/>
+  <text x="505" y="128" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">🖥 浏览器 JS</text>
+  <text x="505" y="148" text-anchor="middle" font-size="10" fill="#fff">WebSocket 客户端</text>
+  <!-- WebSocket arrow -->
+  <line x1="570" y1="135" x2="610" y2="135" stroke="#555" stroke-width="2"/>
+  <rect x="585" y="118" width="80" height="16" rx="8" fill="#fff"/>
+  <text x="610" y="130" text-anchor="middle" font-size="9" fill="#e65100">ws://:19090</text>
+  <!-- rosbridge -->
+  <rect x="610" y="105" width="150" height="60" rx="8" fill="url(#gradR)" opacity="0.9"/>
+  <text x="685" y="128" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">🌉 rosbridge</text>
+  <text x="685" y="148" text-anchor="middle" font-size="10" fill="#fff">Server</text>
+  <!-- ROS2 -->
+  <line x1="685" y1="165" x2="685" y2="195" stroke="#555" stroke-width="2"/>
+  <rect x="610" y="195" width="150" height="50" rx="8" fill="#e8f5e9" stroke="#66bb6a" stroke-width="1.5"/>
+  <text x="685" y="218" text-anchor="middle" font-size="12" fill="#2e7d32">🤖 ROS2 系统</text>
+  <text x="685" y="236" text-anchor="middle" font-size="10" fill="#43a047">节点/话题/服务</text>
+  <!-- Communication flow -->
+  <rect x="420" y="260" width="360" height="100" rx="6" fill="#f3e5f5" stroke="#ab47bc" stroke-width="1"/>
+  <text x="600" y="282" text-anchor="middle" font-size="13" font-weight="bold" fill="#7b1fa2">通信流程（JSON 协议）</text>
+  <text x="435" y="304" font-size="10" fill="#555">① 建立 WebSocket: new WebSocket('ws://localhost:19090')</text>
+  <text x="435" y="322" font-size="10" fill="#555">② 订阅话题: → {"op":"subscribe","topic":"/bcr_bot/scan"}</text>
+  <text x="435" y="340" font-size="10" fill="#555">③ 接收数据: ← {"topic":"/bcr_bot/scan","msg":{...}}</text>
+  <text x="435" y="358" font-size="10" fill="#555">④ 发布指令: → {"op":"publish","topic":"/bcr_bot/cmd_vel",...}</text>
+</svg>

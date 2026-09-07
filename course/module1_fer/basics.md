@@ -156,7 +156,7 @@ FER 属于以下领域的交叉：
 
 > **提示**：基本情绪理论（离散类别）是 FER 分类任务的理论基础，也是 FER-2013 数据集标注的依据。
 
-![Russell 环形情感模型（Circumplex Model of Affect）](/resource/oss/download/2082034934532648962)
+![Russell 环形情感模型（Circumplex Model of Affect）](images/2082034934532648962.png)
 
 *图：Russell (1980) 的环形情感模型（Circumplex Model of Affect）。横轴为效价（Valence：不愉快↔愉快），纵轴为唤醒度（Arousal：低激活↔高激活），所有情绪分布在二维环形空间中。图片来源：Psychology of Human Emotion (CC BY-NC-SA 4.0)*
 
@@ -426,11 +426,11 @@ VGG 思路（3个3×3）：   3×3 → 3×3 → 3×3 Conv            → 感受�
 | **VGG-16** | 16 | **~138M** |
 | VGG-19 | 19 | ~144M |
 
-![VGG-16 整体架构图](/resource/oss/download/2082034934809473026)
+![VGG-16 整体架构图](images/2082034934809473026.png)
 
 *图：VGG-16 整体架构。输入为 224×224×3 的 RGB 图像，经 5 组卷积块（蓝色）与最大池化（红色）逐步提取特征，最后经 3 层全连接（绿色）输出 1000 类分类（FER 任务中替换为 7 类）。图片来源：OpenGenus IQ*
 
-![VGG-16 各层详细结构](/resource/oss/download/2082034935086297089)
+![VGG-16 各层详细结构](images/2082034935086297089.png)
 
 *图：VGG-16 逐层结构图，展示了每层的输入/输出尺寸、卷积核大小和通道数变化。图片来源：OpenGenus IQ*
 
@@ -511,11 +511,11 @@ H(x) ← 直接学习目标映射           H(x) = F(x) + x ← 学习残差映�
 - 梯度可以通过跳跃连接直接传回浅层，缓解梯度消失
 - 实现了隐式的"深层监督"
 
-![残差块对比：普通块 vs 残差块](/resource/oss/download/2082034935371509761)
+![残差块对比：普通块 vs 残差块](images/2082034935371509761.png)
 
 *图：左为普通卷积块（无跳跃连接），信息逐层传递，深层梯度容易消失；右为残差块，通过跳跃连接（Shortcut/Skip Connection）将输入 x 直连到输出，只需学习残差 F(x) = H(x) - x。图片来源：Dive into Deep Learning (d2l.ai)*
 
-![带 1×1 卷积的 ResNet 残差块](/resource/oss/download/2082034935660916738)
+![带 1×1 卷积的 ResNet 残差块](images/2082034935660916738.png)
 
 *图：ResNet-50 中使用的 Bottleneck 残差块。左为常规残差块（两个 3×3 卷积），右为 Bottleneck 设计（1×1 降维 → 3×3 卷积 → 1×1 升维），大幅减少参数量。图片来源：Dive into Deep Learning (d2l.ai)*
 
@@ -769,15 +769,15 @@ MobileViT（混合架构）：
 - CNN 层负责提取局部特征，Transformer 负责全局上下文交互
 - 参数量仅 ~2.3M，却能在 ImageNet 上达到 74.8% Top-1
 
-![MobileViT 整体架构](/resource/oss/download/2082034935983878145)
+![MobileViT 整体架构](images/2082034935983878145.png)
 
 *图：MobileViT 整体架构，从输入图像经过多层 CNN 和 MobileViT Block 交替处理，最终输出分类结果。*
 
-![MobileViT Block 结构：MV2 与 MobileViT Block](/resource/oss/download/2082034936302645249)
+![MobileViT Block 结构：MV2 与 MobileViT Block](images/2082034936302645249.png)
 
 *图：MobileViT Block 内部结构。MobileNetV2 (MV2) 块负责下采样与局部特征提取，MobileViT Block 结合 CNN 局部编码与 Transformer 全局编码，实现局部+全局信息融合。*
 
-![MobileViT 全局表征中的 Transformer 处理](/resource/oss/download/2082034936604635137)
+![MobileViT 全局表征中的 Transformer 处理](images/2082034936604635137.png)
 
 *图：MobileViT 全局表征（Global Representations）模块详解。通过 Unfold 将特征图展开为 Patch 序列 → Transformer Encoder 跨 Patch 全局注意力 → Fold 还原为空间特征图。*
 

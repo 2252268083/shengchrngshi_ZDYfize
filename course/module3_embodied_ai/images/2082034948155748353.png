@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" font-family="'Microsoft YaHei', 'SimHei', Arial, sans-serif">
+  <defs>
+    <linearGradient id="s1" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#667eea"/><stop offset="100%" style="stop-color:#5a67d8"/></linearGradient>
+    <linearGradient id="s2" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#f093fb"/><stop offset="100%" style="stop-color:#ed64a6"/></linearGradient>
+    <linearGradient id="s3" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#4facfe"/><stop offset="100%" style="stop-color:#3182ce"/></linearGradient>
+    <linearGradient id="s4" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#43e97b"/><stop offset="100%" style="stop-color:#38a169"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.2"/></filter>
+  </defs>
+
+  <rect width="720" height="420" rx="12" fill="#f8f9fc"/>
+  <text x="360" y="28" text-anchor="middle" font-size="18" font-weight="bold" fill="#2d3748">离线部署四阶段策略</text>
+
+  <!-- Phase 1 -->
+  <rect x="30" y="45" width="320" height="80" rx="8" fill="url(#s1)" filter="url(#shadow)"/>
+  <text x="190" y="70" text-anchor="middle" font-size="15" font-weight="bold" fill="#fff">阶段 1 · 资源准备（有网环境）</text>
+  <text x="50" y="92" font-size="11" fill="#e8e8ff">• 下载 Ubuntu 22.04 ISO</text>
+  <text x="50" y="108" font-size="11" fill="#e8e8ff">• docker build → docker save → .tar</text>
+  <text x="190" y="118" text-anchor="middle" font-size="10" fill="#c3dafe">产出：module_c + module_d + 项目代码</text>
+
+  <!-- Arrow -->
+  <polygon points="370,85 380,85 375,95" fill="#a0aec0"/>
+  <rect x="373" y="80" width="6" height="1" fill="none"/>
+
+  <!-- Phase 2 -->
+  <rect x="380" y="45" width="310" height="80" rx="8" fill="url(#s2)" filter="url(#shadow)"/>
+  <text x="535" y="70" text-anchor="middle" font-size="15" font-weight="bold" fill="#fff">阶段 2 · 介质分发</text>
+  <text x="400" y="92" font-size="11" fill="#fff">• U 盘 / 移动硬盘拷贝</text>
+  <text x="400" y="108" font-size="11" fill="#fff">• 校验文件完整性 (MANIFEST.txt)</text>
+  <text x="535" y="118" text-anchor="middle" font-size="10" fill="#fed7e2">交叉验证 MD5/SHA256</text>
+
+  <!-- Down arrow -->
+  <line x1="80" y1="125" x2="80" y2="155" stroke="#667eea" stroke-width="2"/>
+  <polygon points="75,150 80,158 85,150" fill="#667eea"/>
+
+  <!-- Phase 3 -->
+  <rect x="30" y="160" width="320" height="110" rx="8" fill="url(#s3)" filter="url(#shadow)"/>
+  <text x="190" y="185" text-anchor="middle" font-size="15" font-weight="bold" fill="#fff">阶段 3 · 离线安装（考场环境）</text>
+  <text x="50" y="208" font-size="11" fill="#fff">① 安装 Ubuntu 22.04 系统</text>
+  <text x="50" y="226" font-size="11" fill="#fff">② 安装 Docker（预装 deb 包）</text>
+  <text x="50" y="244" font-size="11" fill="#fff">③ docker load -i *.tar 导入镜像</text>
+  <text x="50" y="262" font-size="11" fill="#fff">④ 解压项目 → 配置 .env → ./up.sh</text>
+
+  <!-- Down arrow 2 -->
+  <line x1="190" y1="270" x2="190" y2="305" stroke="#4facfe" stroke-width="2"/>
+  <polygon points="185,300 190,308 195,300" fill="#4facfe"/>
+
+  <!-- Phase 4 -->
+  <rect x="30" y="310" width="660" height="95" rx="8" fill="url(#s4)" filter="url(#shadow)"/>
+  <text x="360" y="338" text-anchor="middle" font-size="15" font-weight="bold" fill="#fff">阶段 4 · 验证就绪 ✅</text>
+
+  <rect x="50" y="355" width="145" height="35" rx="5" fill="rgba(255,255,255,0.2)"/>
+  <text x="122" y="370" text-anchor="middle" font-size="10" fill="#fff">🔍 docker ps</text>
+  <text x="122" y="384" text-anchor="middle" font-size="9" fill="#c6f6d5">容器状态检查</text>
+
+  <rect x="210" y="355" width="145" height="35" rx="5" fill="rgba(255,255,255,0.2)"/>
+  <text x="282" y="370" text-anchor="middle" font-size="10" fill="#fff">🌐 浏览器访问</text>
+  <text x="282" y="384" text-anchor="middle" font-size="9" fill="#c6f6d5">:18080 / :8888</text>
+
+  <rect x="370" y="355" width="145" height="35" rx="5" fill="rgba(255,255,255,0.2)"/>
+  <text x="442" y="370" text-anchor="middle" font-size="10" fill="#fff">📡 ros2 topic list</text>
+  <text x="442" y="384" text-anchor="middle" font-size="9" fill="#c6f6d5">ROS 节点检查</text>
+
+  <rect x="530" y="355" width="145" height="35" rx="5" fill="rgba(255,255,255,0.2)"/>
+  <text x="602" y="370" text-anchor="middle" font-size="10" fill="#fff">🚗 ./drive.sh</text>
+  <text x="602" y="384" text-anchor="middle" font-size="9" fill="#c6f6d5">仿真功能验证</text>
+
+  <!-- Right side: Online preparation tools -->
+  <rect x="380" y="160" width="310" height="110" rx="8" fill="#e8eaf6" stroke="#667eea" stroke-width="1"/>
+  <text x="535" y="185" text-anchor="middle" font-size="13" font-weight="bold" fill="#667eea">🔧 离线包制作自动化</text>
+  <text x="400" y="210" font-size="11" fill="#4a5568" font-family="'Consolas', monospace">./scripts/package-exam.sh</text>
+  <text x="400" y="228" font-size="10" fill="#718096">  --iso /path/to/ubuntu.iso</text>
+  <text x="400" y="244" font-size="10" fill="#718096">  --skip-build  (仅更新代码)</text>
+  <text x="400" y="260" font-size="10" fill="#718096">  --dify        (同时打包Dify)</text>
+</svg>

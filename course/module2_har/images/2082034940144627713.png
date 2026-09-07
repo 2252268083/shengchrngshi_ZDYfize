@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 650" font-family="Microsoft YaHei, sans-serif">
+  <defs>
+    <style>.box{fill:#fff;stroke:#4ecdc4;stroke-width:2;rx:8}.action{fill:#ffe0e0;stroke:#ff6b6b;stroke-width:2;rx:8}
+          .input{fill:#e0ffe0;stroke:#27ae60;stroke-width:2;rx:8}.lbl{font-size:12px;fill:#333;text-anchor:middle}
+          .title{font-size:15px;font-weight:bold;fill:#333;text-anchor:middle}
+          .arrow{stroke:#555;stroke-width:1.5;fill:none;marker-end:url(#arrowhead);stroke-linecap:round}
+    </style>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#555"/>
+    </marker>
+  </defs>
+  <rect width="800" height="650" fill="#fafafa" rx="8"/>
+  <text x="400" y="28" class="title" font-size="16">室内课堂行为识别 — 规则引擎判断链</text>
+
+  <!-- Input -->
+  <rect x="280" y="45" width="240" height="40" class="input"/>
+  <text x="400" y="70" class="title">输入：关键点 kpts (17, 3)</text>
+  <path d="M400 85 L400 105" class="arrow"/>
+
+  <!-- Step 1 -->
+  <rect x="250" y="105" width="300" height="45" class="box"/>
+  <text x="400" y="125" class="title">步骤1：双肩不可见？</text>
+  <text x="400" y="143" class="lbl" font-size="11">置信度 &lt; 0.3</text>
+  <path d="M400 150 L400 170" class="arrow"/>
+  <text x="320" y="165" class="lbl" font-size="10" fill="#888">Yes ↓</text href="">→
+  <path d="M550 127 L630 127" class="arrow"/>
+  <rect x="630" y="110" width="130" height="35" class="action"/>
+  <text x="695" y="127" class="title" font-size="12">unknown</text>
+  <text x="695" y="141" class="lbl" font-size="10">置信度 0.30</text>
+
+  <!-- Step 2 -->
+  <rect x="250" y="170" width="300" height="45" class="box"/>
+  <text x="400" y="190" class="title">步骤2：手腕高于肩膀 30px？</text>
+  <text x="400" y="208" class="lbl" font-size="11">wrist_y &lt; shoulder_y − 30</text>
+  <path d="M400 215 L400 235" class="arrow"/>
+  <text x="320" y="230" class="lbl" font-size="10" fill="#888">Yes ↓</text>
+  <path d="M550 192 L630 192" class="arrow"/>
+  <rect x="630" y="175" width="130" height="35" class="action"/>
+  <text x="695" y="190" class="title" font-size="12">raise_hand</text>
+  <text x="695" y="204" class="lbl" font-size="10">置信度 0.75</text>
+
+  <!-- Step 3 -->
+  <rect x="250" y="235" width="300" height="50" class="box"/>
+  <text x="400" y="255" class="title">步骤3：躯干长度 &gt; 120px？</text>
+  <text x="400" y="273" class="lbl" font-size="11">站立 / 前倾状态</text>
+  <!-- Sub-branch -->
+  <path d="M400 285 L400 310" class="arrow"/>
+  <path d="M550 260 L590 260 L590 290 L630 290" class="arrow"/>
+  <rect x="630" y="273" width="130" height="35" class="action"/>
+  <text x="695" y="288" class="title" font-size="12">write</text>
+  <text x="695" y="302" class="lbl" font-size="10">置信度 0.65</text>
+  <rect x="630" y="313" width="130" height="35" class="action"/>
+  <text x="695" y="328" class="title" font-size="12">stand</text>
+  <text x="695" y="342" class="lbl" font-size="10">置信度 0.60</text>
+
+  <!-- Step 4 -->
+  <rect x="270" y="310" width="260" height="45" class="box"/>
+  <text x="400" y="330" class="title" font-size="13">步骤4：鼻子低于肩膀 20px？</text>
+  <text x="400" y="348" class="lbl" font-size="11">nose_y &gt; shoulder_y + 20</text>
+  <path d="M400 355 L400 375" class="arrow"/>
+  <text x="320" y="370" class="lbl" font-size="10" fill="#888">Yes ↓</text>
+  <path d="M530 332 L630 332" class="arrow"/>
+  <rect x="630" y="315" width="130" height="35" class="action"/>
+  <text x="695" y="330" class="title" font-size="12">bow_head</text>
+  <text x="695" y="344" class="lbl" font-size="10">置信度 0.60</text>
+
+  <!-- Step 5 -->
+  <rect x="270" y="375" width="260" height="45" class="box"/>
+  <text x="400" y="395" class="title" font-size="13">步骤5：默认</text>
+  <text x="400" y="413" class="lbl" font-size="11">以上条件均不满足</text>
+  <path d="M400 420 L400 445" class="arrow"/>
+  <rect x="320" y="445" width="160" height="35" class="action"/>
+  <text x="400" y="460" class="title" font-size="12">sit_listen</text>
+  <text x="400" y="474" class="lbl" font-size="10">置信度 0.55</text>
+
+  <!-- Summary box -->
+  <rect x="40" y="500" width="720" height="130" rx="8" fill="#f0f7ff" stroke="#4ecdc4" stroke-width="1.5"/>
+  <text x="400" y="525" class="title" font-size="14">设计原则：从特殊 → 一般</text>
+  <text x="400" y="550" class="lbl" font-size="12">◈ 举手信号最强（手腕明显高于肩）→ 优先级最高</text>
+  <text x="400" y="572" class="lbl" font-size="12">◈ 站立/写字通过躯干长度 + 手腕位置区分</text>
+  <text x="400" y="594" class="lbl" font-size="12">◈ 低头通过鼻子-肩膀 Y 轴偏移判断</text>
+  <text x="400" y="616" class="lbl" font-size="12">◈ 以上都不满足 → 默认"坐着听课"（最常见的正常状态）</text>
+</svg>

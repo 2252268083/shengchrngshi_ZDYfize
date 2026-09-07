@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 540" font-family="Microsoft YaHei, sans-serif">
+  <defs>
+    <style>.box{fill:#f0f7ff;stroke:#4ecdc4;stroke-width:1.5;rx:6}.lbl{font-size:12px;fill:#333;text-anchor:middle}
+          .cat{font-size:13px;font-weight:bold;fill:#ff6b6b;text-anchor:middle}.title{font-size:16px;font-weight:bold;fill:#333;text-anchor:middle}
+          .desc{font-size:11px;fill:#888;text-anchor:middle}.emoji{font-size:32px;text-anchor:middle}
+    </style>
+  </defs>
+  <rect width="800" height="540" fill="#fff" rx="8"/>
+  <text x="400" y="30" class="title">Kinetics-400 数据集 — 行为类别概览</text>
+  <text x="400" y="52" class="desc">DeepMind (2017) — 400 类人类行为，约 30.6 万段 YouTube 视频片段，每段约 10 秒</text>
+
+  <!-- Row 1: Sports -->
+  <text x="200" y="90" class="cat" font-size="14">🏃 体育运动 (Sports)</text>
+  <rect x="30" y="105" width="340" height="115" class="box"/>
+  <text x="200" y="130" class="emoji">🏀⚽🏊‍♂️🏄‍♂️🎿</text>
+  <text x="200" y="155" class="lbl">playing basketball</text>
+  <text x="200" y="175" class="lbl" font-size="10" fill="#888">swimming · surfing · skiing · skateboarding · archery</text>
+  <text x="200" y="195" class="lbl" font-size="10" fill="#888">playing tennis · bowling · golf · volleyball · baseball</text>
+  <text x="200" y="215" class="lbl" font-size="10" fill="#666">→ 本课程室外场景可用于识别体育行为</text>
+
+  <!-- Row 1: Instruments -->
+  <text x="600" y="90" class="cat" font-size="14">🎸 乐器演奏 (Music)</text>
+  <rect x="430" y="105" width="340" height="115" class="box"/>
+  <text x="600" y="130" class="emoji">🎸🎹🎻🥁</text>
+  <text x="600" y="155" class="lbl">playing guitar</text>
+  <text x="600" y="175" class="lbl" font-size="10" fill="#888">playing piano · playing violin · playing drums</text>
+  <text x="600" y="195" class="lbl" font-size="10" fill="#888">playing trumpet · playing flute · playing saxophone</text>
+  <text x="600" y="215" class="lbl" font-size="10" fill="#666">→ TSN 模型可识别 400 种行为</text>
+
+  <!-- Row 2: Daily -->
+  <text x="200" y="260" class="cat" font-size="14">🍳 日常活动 (Daily Life)</text>
+  <rect x="30" y="275" width="340" height="115" class="box"/>
+  <text x="200" y="300" class="emoji">🍳🍽️🪥🍽️📖</text>
+  <text x="200" y="325" class="lbl">cooking · eating · brushing teeth</text>
+  <text x="200" y="345" class="lbl" font-size="10" fill="#888">washing dishes · reading · drinking · texting</text>
+  <text x="200" y="365" class="lbl" font-size="10" fill="#888">walking the dog · vacuuming · ironing · folding clothes</text>
+  <text x="200" y="385" class="lbl" font-size="10" fill="#666">→ 覆盖广泛的人类日常行为</text>
+
+  <!-- Row 2: Social + Dance -->
+  <text x="600" y="260" class="cat" font-size="14">💃 舞蹈与社交 (Dance &amp; Social)</text>
+  <rect x="430" y="275" width="340" height="115" class="box"/>
+  <text x="600" y="300" class="emoji">💃🕺🤝🤗</text>
+  <text x="600" y="325" class="lbl">dancing ballet · breakdancing · tango</text>
+  <text x="600" y="345" class="lbl" font-size="10" fill="#888">shaking hands · hugging · kissing · high fiving</text>
+  <text x="600" y="365" class="lbl" font-size="10" fill="#888">belly dancing · salsa dancing · robot dancing</text>
+  <text x="600" y="385" class="lbl" font-size="10" fill="#666">→ 社会互动行为识别</text>
+
+  <!-- Row 3: Crafts + Combat -->
+  <text x="200" y="430" class="cat" font-size="14">🔧 手工制作 (Crafts)</text>
+  <rect x="30" y="445" width="340" height="80" class="box"/>
+  <text x="200" y="470" class="lbl">knitting · painting · woodworking · sewing</text>
+  <text x="200" y="490" class="lbl" font-size="10" fill="#888">carpentry · welding · assembling computer</text>
+  <text x="200" y="510" class="lbl" font-size="10" fill="#888">→ 精细动作识别</text>
+
+  <text x="600" y="430" class="cat" font-size="14">🥊 竞技格斗 (Combat)</text>
+  <rect x="430" y="445" width="340" height="80" class="box"/>
+  <text x="600" y="470" class="lbl">boxing · wrestling · judo · fencing</text>
+  <text x="600" y="490" class="lbl" font-size="10" fill="#888">karate · sumo wrestling · tai chi</text>
+  <text x="600" y="510" class="lbl" font-size="10" fill="#888">→ 快速动态动作识别</text>
+</svg>
