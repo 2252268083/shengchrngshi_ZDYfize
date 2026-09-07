@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>金砖大赛课程学习 - 人工智能应用基础</title>
+<!-- Marked.js for Markdown rendering -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<style>
+:root {
+  --bg: #0d1117; --card: #161b22; --card2: #1c2330; --border: #30363d;
+  --text: #e6edf3; --text2: #8b949e; --accent: #58a6ff; --accent2: #79c0ff;
+  --green: #3fb950; --yellow: #d29922; --red: #f85149; --purple: #bc8cff;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg); color: var(--text); line-height:1.7;
+}
+/* ===== Header ===== */
+.header {
+  position: sticky; top:0; z-index:100;
+  background: var(--card); border-bottom: 2px solid var(--accent);
+  padding: 12px 24px; display:flex; align-items:center; justify-content:space-between;
+}
+.header h1 { font-size:1.15em; color:var(--accent); }
+.header .meta { font-size:0.82em; color:var(--text2); }
+.header .progress-bar {
+  width:200px; height:6px; background:var(--border); border-radius:3px; overflow:hidden; margin-top:4px;
+}
+.header .progress-bar .fill { height:100%; background:linear-gradient(90deg,var(--green),var(--accent)); transition:width .5s; }
+.header .right { display:flex; align-items:center; gap:16px; }
+.header .btn-home, .header .btn-reset {
+  background: var(--card2); color: var(--accent2); border:1px solid var(--border);
+  padding:5px 14px; border-radius:6px; cursor:pointer; font-size:0.85em; transition: all .2s;
+}
+.header .btn-home:hover, .header .btn-reset:hover { border-color:var(--accent); background:var(--card); }
+
+/* ===== Home View ===== */
+.home-view { max-width:1000px; margin:0 auto; padding:30px 24px; }
+.home-view h2 { color:var(--accent); font-size:1.4em; margin-bottom:8px; }
+.home-view .subtitle { color:var(--text2); margin-bottom:24px; font-size:0.9em; }
+.course-overview {
+  background: var(--card); border:1px solid var(--border); border-radius:12px;
+  padding:20px 24px; margin-bottom:24px;
+}
+.course-overview h3 { color:var(--yellow); font-size:1.1em; margin-bottom:12px; }
+.course-overview ul { list-style:none; padding-left:0; }
+.course-overview li {
+  padding:5px 0 5px 20px; position:relative; font-size:0.9em; color:var(--text);
+}
+.course-overview li::before {
+  content:"▸"; position:absolute; left:0; color:var(--accent);
+}
+
+.module-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px; }
+.module-card {
+  background: var(--card); border:1px solid var(--border); border-radius:10px;
+  padding:16px 20px; cursor:pointer; transition: all .25s; position:relative;
+}
+.module-card:hover { border-color:var(--accent); transform:translateY(-2px); box-shadow:0 4px 20px rgba(88,166,255,.15); }
+.module-card .m-num {
+  position:absolute; top:12px; right:16px; font-size:2em; font-weight:800;
+  color:var(--border); opacity:.5;
+}
+.module-card .m-title { color:var(--accent2); font-size:1.05em; font-weight:700; margin-bottom:8px; padding-right:40px; }
+.module-card .m-desc { font-size:0.82em; color:var(--text2); margin-bottom:10px; }
+.module-card .m-chapters { font-size:0.8em; color:var(--text2); }
+.module-card .m-chapters span { display:inline-block; margin-right:10px; }
+.module-card .m-status {
+  display:inline-block; padding:2px 8px; border-radius:4px; font-size:0.75em; margin-top:8px;
+}
+.m-status.done { background:rgba(63,185,80,.18); color:var(--green); }
+.m-status.progress { background:rgba(210,153,34,.18); color:var(--yellow); }
+.m-status.todo { background:rgba(139,148,158,.18); color:var(--text2); }
+
+.start-btn {
+  display:block; margin:24px auto; padding:12px 40px; font-size:1em;
+  background: linear-gradient(135deg,var(--accent),var(--purple));
+  color:#fff; border:none; border-radius:8px; cursor:pointer; transition: all .25s;
+}
+.start-btn:hover { transform:translateY(-2px); box-shadow:0 6px 24px rgba(88,166,255,.35); }
+
+/* ===== Learn View ===== */
+.learn-view { display:none; }
+.learn-layout { display:flex; min-height: calc(100vh - 60px); }
+.sidebar {
+  width:260px; background:var(--card); border-right:1px solid var(--border);
+  padding:16px 0; position:sticky; top:60px; height:calc(100vh - 60px); overflow-y:auto;
+}
+.sidebar h3 { color:var(--accent); font-size:0.95em; padding:0 16px 10px; border-bottom:1px solid var(--border); margin-bottom:8px;}
+.sidebar .mod-group { margin-bottom:8px; }
+.sidebar .mod-header {
+  padding:8px 16px; font-size:0.88em; font-weight:700; color:var(--accent2);
+  cursor:pointer; display:flex; align-items:center; gap:6px;
+}
+.sidebar .mod-header .caret { transition:transform .2s; font-size:.7em; }
+.sidebar .mod-header.collapsed .caret { transform:rotate(-90deg); }
+.sidebar .mod-items { overflow:hidden; }
+.sidebar .mod-header.collapsed + .mod-items { display:none; }
+.sidebar .chapter-item {
+  display:flex; align-items:center; gap:8px; padding:6px 16px 6px 28px;
+  font-size:0.84em; color:var(--text2); cursor:pointer; border-left:2px solid transparent; transition:all .15s;
+}
+.sidebar .chapter-item:hover { background:var(--card2); color:var(--text); }
+.sidebar .chapter-item.active {
+  background:var(--card2); color:var(--accent); border-left-color:var(--accent); font-weight:600;
+}
+.sidebar .chapter-item .check {
+  width:16px; height:16px; border-radius:50%; border:1.5px solid var(--border);
+  display:inline-flex; align-items:center; justify-content:center; font-size:.6em; flex-shrink:0;
+}
+.sidebar .chapter-item .check.done { background:var(--green); border-color:var(--green); color:#fff; }
+
+.content-area { flex:1; padding:24px 32px; max-width:900px; margin:0 auto; }
+/* Breadcrumb */
+.breadcrumb { font-size:0.82em; color:var(--text2); margin-bottom:12px; }
+.breadcrumb span { color:var(--accent2); }
+
+/* Summary box */
+.summary-box {
+  background: linear-gradient(135deg, rgba(188,140,255,.08), rgba(88,166,255,.08));
+  border:1px solid rgba(188,140,255,.3); border-radius:10px; padding:16px 20px; margin-bottom:20px;
+}
+.summary-box h4 { color:var(--purple); font-size:0.95em; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+.summary-box ul { list-style:none; padding-left:0; }
+.summary-box li {
+  padding:4px 0 4px 18px; position:relative; font-size:0.88em;
+}
+.summary-box li::before { content:"★"; position:absolute; left:0; color:var(--yellow); font-size:.85em; }
+
+/* Markdown content */
+.md-content { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:24px 28px; }
+.md-content h1 { color:var(--accent); font-size:1.4em; margin:16px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+.md-content h2 { color:var(--accent2); font-size:1.2em; margin:20px 0 10px; }
+.md-content h3 { color:var(--text); font-size:1.05em; margin:16px 0 8px; }
+.md-content p { margin:8px 0; font-size:0.9em; }
+.md-content ul, .md-content ol { padding-left:24px; margin:8px 0; font-size:0.9em; }
+.md-content li { margin:4px 0; }
+.md-content code {
+  background:#0d1117; border:1px solid var(--border); padding:1px 6px; border-radius:4px;
+  font-size:0.86em; color:var(--accent2);
+}
+.md-content pre {
+  background:#0d1117; border:1px solid var(--border); border-radius:8px; padding:14px; overflow-x:auto; margin:10px 0;
+}
+.md-content pre code { background:none; border:none; padding:0; }
+.md-content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:0.85em; }
+.md-content th, .md-content td { border:1px solid var(--border); padding:6px 10px; text-align:left; }
+.md-content th { background:var(--card2); color:var(--accent2); }
+.md-content img { max-width:100%; border-radius:8px; margin:8px 0; }
+.md-content blockquote {
+  border-left:3px solid var(--accent); padding:8px 16px; margin:10px 0;
+  background:var(--card2); border-radius:0 6px 6px 0; color:var(--text2);
+}
+
+/* Nav buttons */
+.nav-buttons {
+  display:flex; justify-content:space-between; margin-top:24px; padding:16px 0; border-top:1px solid var(--border);
+}
+.nav-buttons button {
+  padding:8px 24px; border-radius:8px; font-size:0.9em; cursor:pointer; transition:all .2s; border:1px solid var(--border);
+  background:var(--card2); color:var(--text);
+}
+.nav-buttons button:hover:not(:disabled) { border-color:var(--accent); color:var(--accent); }
+.nav-buttons button:disabled { opacity:.4; cursor:not-allowed; }
+.nav-buttons .btn-mark-done {
+  background: linear-gradient(135deg,var(--green),#2ea043); color:#fff; border:none;
+}
+.nav-buttons .btn-mark-done:hover { opacity:.9; }
+
+/* Toast */
+.toast {
+  position:fixed; top:70px; right:24px; z-index:200;
+  background:var(--card); border:1px solid var(--green); border-radius:8px;
+  padding:10px 20px; color:var(--green); font-size:0.88em;
+  transform:translateX(400px); transition:transform .3s;
+}
+.toast.show { transform:translateX(0); }
+
+/* Loading */
+.loading { text-align:center; padding:40px; color:var(--text2); }
+.loading .spinner { width:40px; height:40px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 1s linear infinite; margin:0 auto 12px; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .module-grid { grid-template-columns: 1fr; }
+  .sidebar { display:none; }
+  .content-area { padding:16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>📚 人工智能应用基础 — 金砖大赛课程</h1>
+    <div class="meta">教师：孙莉娜 · 共4模块12节</div>
+    <div class="progress-bar"><div class="fill" id="progFill" style="width:0%"></div></div>
+  </div>
+  <div class="right">
+    <button class="btn-home" id="btnHome">🏠 首页</button>
+    <button class="btn-reset" id="btnReset">↺ 重置进度</button>
+  </div>
+</div>
+
+<!-- ===== 首页视图 ===== -->
+<div class="home-view" id="homeView">
+  <h2>课程总览</h2>
+  <p class="subtitle">金砖大赛人工智能赛项课程 — 涵盖情感计算、具身智能平台、智能体开发四大模块</p>
+
+  <div class="course-overview">
+    <h3>🎯 全课程核心知识点速览</h3>
+    <ul id="overviewList"></ul>
+  </div>
+
+  <h2 style="margin-top:20px">四大模块</h2>
+  <div class="module-grid" id="moduleGrid"></div>
+
+  <button class="start-btn" id="btnStart">🚀 开始学习 / 继续学习</button>
+</div>
+
+<!-- ===== 学习视图 ===== -->
+<div class="learn-view" id="learnView">
+  <div class="learn-layout">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="content-area" id="contentArea">
+      <div class="breadcrumb" id="breadcrumb"></div>
+      <div class="summary-box" id="summaryBox" style="display:none">
+        <h4>⭐ 本节核心要点</h4>
+        <ul id="summaryList"></ul>
+      </div>
+      <div class="md-content" id="mdContent">
+        <div class="loading"><div class="spinner"></div>加载中...</div>
+      </div>
+      <div class="nav-buttons">
+        <button id="btnPrev">◀ 上一节</button>
+        <button class="btn-mark-done" id="btnDone">✓ 标记完成并下一节</button>
+        <button id="btnNext">下一节 ▶</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== 课程数据 =====
+const MODULES = [
+  {
+    id: 1, name: "情感计算之人脸表情识别",
+    desc: "FER基础理论、CNN模型体系、FER-2013数据集、Flask接口",
+    chapters: [
+      { name: "基础知识", file: "course/module1_fer/basics.md" },
+      { name: "课程简报", file: null, isPdf: true },
+      { name: "实操手册", file: "course/module1_fer/manual.md" }
+    ]
+  },
+  {
+    id: 2, name: "情感计算之人体行为识别",
+    desc: "人体行为识别理论、YOLOv8检测、ByteTrack跟踪、MMAction2",
+    chapters: [
+      { name: "基础知识", file: "course/module2_har/basics.md" },
+      { name: "课程简报", file: null, isPdf: true },
+      { name: "实操手册", file: "course/module2_har/manual.md" }
+    ]
+  },
+  {
+    id: 3, name: "具身智能平台部署与运维",
+    desc: "具身智能概念、ROS2通信、Docker编排、Dify/OpenClaw平台",
+    chapters: [
+      { name: "基础知识", file: "course/module3_embodied_ai/basics.md" },
+      { name: "课程简报", file: null, isPdf: true },
+      { name: "实操手册", file: "course/module3_embodied_ai/manual.md" }
+    ]
+  },
+  {
+    id: 4, name: "智能体应用开发",
+    desc: "OpenClaw Skill、Dify智能体、LangGraph、RAG知识库",
+    chapters: [
+      { name: "基础知识", file: "course/module4_agent/basics.md" },
+      { name: "课程简报", file: null, isPdf: true },
+      { name: "实操手册", file: "course/module4_agent/manual.md" }
+    ]
+  }
+];
+
+// 每章节要点总结（由AI分析课程文档生成）
+const SUMMARIES = {
+  // ===== 模块1 =====
+  "1-基础知识": [
+    "人脸表情识别（FER）是情感计算的核心技术，完整流程包含人脸检测、对齐预处理、特征提取（CNN/Transformer）和表情分类四步，输出7类表情概率",
+    "FER的心理学根基是Ekman基本情绪理论，存在跨文化、与生俱来的基本情绪；FER-2013数据集采用愤怒、厌恶、恐惧、快乐、悲伤、惊讶、中性7类分类体系",
+    "深度学习模型体系涵盖VGG、ResNet、MobileNet、MobileViT四类CNN，从经典深网络到轻量化移动端模型，适配不同算力场景",
+    "模型训练流程基于FER-2013数据集与Python/PyTorch，训练后导出为ONNX格式以便跨平台高效推理，并通过RESTful接口与Flask前端对外提供服务"
+  ],
+  "1-实操手册": [
+    "项目工程face-fer包含train.py、inference.py、run_api.py等入口，以及src、configs、dataset_data、checkpoints、models等目录结构，配套前端与测试脚本",
+    "环境搭建流程：从文件服务器下载代码包与venv，创建Python 3.10虚拟环境，安装PyTorch（CPU/CUDA版本）及requirements.txt依赖，通过check_deps.py验证完整性",
+    "提供fer2013、fer2013_affectnet、RAF-DB、kdef-dataset等多个数据集，主力使用fer2013，可用analyze_dataset.py统计样本分布",
+    "checkpoints下已含四个在FER-2013上训练完成的模型权重，可直接启动Web API服务进行表情识别验证"
+  ],
+  // ===== 模块2 =====
+  "2-基础知识": [
+    "人体行为识别（HAR）完整流水线：YOLO人体检测→ByteTrack多目标跟踪→分场景识别（室内姿态规则引擎6类/室外MMAction2 TSN 400类）→结果输出",
+    "YOLOv8采用无Anchor检测与解耦头设计，nano版本参数量仅约3.2M可在CPU实时运行；YOLOv8n-pose变体还能输出17个COCO关键点用于姿态估计",
+    "ByteTrack通过BYTE关联策略充分利用低分检测框来减少身份切换和漏跟，实现轻量高效的多目标跟踪",
+    "室内场景基于YOLO-Pose 17点骨架+姿态规则引擎识别听讲、举手、写字、低头、站立等行为；室外场景使用MMAction2 TSN时序模型对Kinetics-400的400类行为进行分类",
+    "HAR经历了手工特征、双流CNN、3D卷积（I3D/SlowFast）、Video Transformer四个阶段，本课程聚焦YOLOv8+ByteTrack+MMAction2构建可部署的实时推理系统"
+  ],
+  "2-实操手册": [
+    "项目module_b_behavior实现双场景行为识别系统：室内（图片/视频，6类行为）与室外（仅视频，Kinetics-400的400类），提供run_api.py（Web+API）和run_infer.py（CLI）两个入口",
+    "技术栈为YOLO检测+ByteTrack跟踪+室内姿态规则推断/室外MMAction2 TSN时序分类，输出标注视频、标注图片、行为统计与JSON结构化结果",
+    "工程目录结构清晰，包含configs、src（api、classroom、extracurricular、detect、track、pipeline、visualize、web等模块）、data/demo、models、scripts、tests",
+    "已提供demo数据与预训练推理权重，无需下载训练集，室外仅使用Kinetics-400预训练权重、不涉及微调；本版聚焦推理与Web演示，不包含训练模块"
+  ],
+  // ===== 模块3 =====
+  "3-基础知识": [
+    "具身智能(Embodied AI)强调智能体必须具备物理或仿真的身体，通过与环境的实时交互实现感知-决策-行动的闭环",
+    "本模块构建的仓库小车仿真平台是典型具身智能系统，核心挑战包括仿真与现实差距、实时性要求、多组件协同、环境一致性、人机交互",
+    "ROS2是机器人软件开发的开源中间件框架，基于DDS协议实现去中心化、自动发现、QoS策略和实时通信，相比ROS1支持多操作系统、实时控制和原生多机器人",
+    "ROS2核心通信机制包括节点(Node)、话题(Topic,异步发布订阅)、服务(Service,同步请求响应)、动作(Action,带反馈的长任务)，通过/cmd_vel、/scan、/odom等关键话题实现机器人控制",
+    "模块涉及完整工具链：Gazebo仿真、Docker/Docker Compose容器化编排、code-server浏览器IDE、rosbridge WebSocket通信、OpenClaw智能体网关和Dify LLM应用平台"
+  ],
+  "3-实操手册": [
+    "基于ydy-eia-jzbase镜像(Ubuntu 22.04桌面+noVNC+VS Code+Docker)，需自装ROS 2 Humble、Dify、OpenClaw，仿真对象为ROS 2 turtlesim，实验容器需特权模式",
+    "从文件服务器下载安装脚本与离线安装包，按scripts/ros2/dify/openclaw同级目录组织，ROS2优先离线deb安装否则用清华源",
+    "任务1编写docker-compose.yml启动nginx:alpine验证容器编排，任务2安装ROS 2 Humble并启动turtlesim_node验证图形仿真",
+    "任务3创建ament_python功能包cmd_vel_pub，编写节点向/turtle1/cmd_vel发布Twist速度指令，用colcon build编译运行",
+    "后续任务依次部署Dify并配置DeepSeek模型、部署OpenClaw并验证大模型对话、最终完成OpenClaw控制turtlesim的端到端联调验证"
+  ],
+  // ===== 模块4 =====
+  "4-基础知识": [
+    "OpenClaw Skill是由YAML元数据+Markdown正文组成的纯文本技能说明书(SKILL.md)，定义自然语言到Shell命令的映射，本身不执行操作，仅指导智能体选择命令",
+    "OpenClaw采用三层架构：理解层(自然语言→命令)、封装层(Shell初始化环境)、执行层(Python业务逻辑)，各层职责清晰分离",
+    "SKILL.md规范包含name、description、version、metadata.openclaw.requires等字段，支持环境变量、二进制依赖声明和Allowlist安全控制",
+    "Dify智能体基于工作流架构，通过提示词、记忆、RAG等关键组件构建LLM应用，适用于智能翻译、知识问答等场景",
+    "LangGraph用于构建有状态、多步骤的智能体，相比LangChain支持图结构编排，核心概念包括节点、边、状态，适合构建需要复杂流程控制的智能体应用"
+  ],
+  "4-实操手册": [
+    "基于ydy-eia-jzfull镜像，预装ROS 2 Humble、Dify、OpenClaw并开机自启，Dify地址http://127.0.0.1:3000，OpenClaw地址http://127.0.0.1:18789，Token为jzfull-lab-token",
+    "整体架构为自然语言→Dify应用(提示词/记忆/RAG)、OpenClaw+Skills(Shell/Python)、LangChain Agent+Tools(Twist)→/turtle1/cmd_vel→turtlesim，最终通过前端页面串联",
+    "任务1在Dify创建聊天助手，配置DeepSeek模型供应商，编写系统提示词并开启对话记忆，验证多轮对话能引用前文目标",
+    "任务2创建Dify知识库上传操作手册文档，配置分段与Top-K，关联至聊天助手应用验证RAG增强问答效果",
+    "任务3-5依次完成OpenClaw Skills自动巡检、LangChain Function Calling控制ROS2、智能体前端对接与联调"
+  ]
+};
+
+// 全课程总览（基于AI分析全部课程文档生成）
+const OVERVIEW = [
+  "FER人脸表情识别：Ekman七种基本情绪理论 + FER-2013数据集 + CNN模型体系(VGG/ResNet/MobileNet/MobileViT) → ONNX导出 → Flask接口部署",
+  "HAR人体行为识别：YOLOv8检测 → ByteTrack多目标跟踪 → 室内姿态规则引擎6类 / 室外MMAction2 TSN 400类行为分类",
+  "具身智能闭环：智能体与环境实时交互的感知-决策-行动闭环，仓库小车仿真平台为核心实验载体",
+  "ROS2通信框架：基于DDS去中心化通信，核心机制为节点/话题(异步)/服务(同步)/动作(带反馈)，通过/cmd_vel等话题控制机器人",
+  "平台工具链：Gazebo仿真 + Docker Compose容器编排 + code-server + rosbridge + OpenClaw智能体网关 + Dify LLM平台",
+  "OpenClaw Skill：YAML元数据+Markdown正文定义自然语言到Shell命令的映射，三层架构(理解→封装→执行)，本身不执行操作",
+  "Dify智能体：工作流架构搭建LLM应用，通过提示词、记忆、RAG知识库构建知识问答/智能翻译等应用",
+  "LangGraph智能体：构建有状态、多步骤图结构智能体，支持节点、边、状态管理，适合复杂流程控制",
+  "RAG检索增强：文档分块→Embedding向量化→向量库存储→相似度检索→拼入Prompt，增强模型知识并减少幻觉",
+  "端到端串联：自然语言→Dify应用→OpenClaw Skills→LangChain Agent→/turtle1/cmd_vel→turtlesim仿真",
+  "统一工程流程：环境搭建(ydy-eia-jzbase镜像)→代码下载→依赖安装→数据准备→推理验证→Web API服务"
+];
+
+// ===== 进度管理 =====
+const PROG_KEY = "jz_course_progress_v1";
+function loadProgress() {
+  try { return JSON.parse(localStorage.getItem(PROG_KEY)) || {}; }
+  catch(e) { return {}; }
+}
+function saveProgress(p) { localStorage.setItem(PROG_KEY, JSON.stringify(p)); }
+function getDoneSet() {
+  const p = loadProgress();
+  return new Set(p.done || []);
+}
+function toggleDone(key) {
+  const p = loadProgress();
+  p.done = p.done || [];
+  const idx = p.done.indexOf(key);
+  if (idx > -1) p.done.splice(idx, 1); else p.done.push(key);
+  p.current = key;
+  saveProgress(p);
+}
+function getCurrent() {
+  const p = loadProgress();
+  return p.current || null;
+}
+function setCurrent(key) {
+  const p = loadProgress();
+  p.current = key;
+  saveProgress(p);
+}
+
+// 获取所有可学章节（有md文件的）
+function getLearnableChapters() {
+  const list = [];
+  MODULES.forEach(m => {
+    m.chapters.forEach((ch, ci) => {
+      if (ch.file) list.push({ modId:m.id, modName:m.name, chName:ch.name, chIndex:ci, file:ch.file, key:`${m.id}-${ci}` });
+    });
+  });
+  return list;
+}
+
+// ===== 渲染首页 =====
+function renderHome() {
+  document.getElementById('homeView').style.display = 'block';
+  document.getElementById('learnView').style.display = 'none';
+
+  // 总览
+  const ovList = document.getElementById('overviewList');
+  ovList.innerHTML = OVERVIEW.map(s => `<li>${s}</li>`).join('');
+
+  // 模块卡片
+  const done = getDoneSet();
+  const grid = document.getElementById('moduleGrid');
+  grid.innerHTML = MODULES.map(m => {
+    const total = m.chapters.filter(c => c.file).length;
+    const doneCount = m.chapters.filter((c, ci) => c.file && done.has(`${m.id}-${ci}`)).length;
+    const status = doneCount === 0 ? 'todo' : doneCount === total ? 'done' : 'progress';
+    const statusText = doneCount === 0 ? '未开始' : doneCount === total ? '已完成' : `学习中 ${doneCount}/${total}`;
+    return `
+      <div class="module-card" onclick="jumpToModule(${m.id})">
+        <div class="m-num">${m.id}</div>
+        <div class="m-title">${m.name}</div>
+        <div class="m-desc">${m.desc}</div>
+        <div class="m-chapters">${m.chapters.map(c => `<span>📄${c.name}</span>`).join('')}</div>
+        <div class="m-status ${status}">${statusText}</div>
+      </div>`;
+  }).join('');
+
+  // 进度条
+  const all = getLearnableChapters();
+  const doneAll = all.filter(c => done.has(c.key)).length;
+  document.getElementById('progFill').style.width = (all.length ? doneAll/all.length*100 : 0) + '%';
+}
+
+function jumpToModule(modId) {
+  const all = getLearnableChapters();
+  const first = all.find(c => c.modId === modId && !getDoneSet().has(c.key));
+  const target = first || all.find(c => c.modId === modId);
+  if (target) loadChapter(target.modId, target.chIndex);
+}
+
+// ===== 渲染侧边栏 =====
+function renderSidebar() {
+  const done = getDoneSet();
+  const current = getCurrent();
+  const sb = document.getElementById('sidebar');
+  sb.innerHTML = '<h3>📖 课程目录</h3>' + MODULES.map(m => {
+    const items = m.chapters.map((ch, ci) => {
+      const key = `${m.id}-${ci}`;
+      const isDone = done.has(key);
+      const isActive = current === key;
+      const clickable = ch.file;
+      return `<div class="chapter-item ${isActive?'active':''}" ${clickable?`onclick="loadChapter(${m.id},${ci})"`:'style="opacity:.5"'}>
+        <span class="check ${isDone?'done':''}">${isDone?'✓':''}</span>
+        ${ch.name}${ch.isPdf?' 📕':''}
+      </div>`;
+    }).join('');
+    return `
+      <div class="mod-group">
+        <div class="mod-header" onclick="this.classList.toggle('collapsed')">
+          <span class="caret">▼</span>模块${m.id} ${m.name}
+        </div>
+        <div class="mod-items">${items}</div>
+      </div>`;
+  }).join('');
+}
+
+// ===== 加载章节 =====
+async function loadChapter(modId, chIndex) {
+  const mod = MODULES.find(m => m.id === modId);
+  const ch = mod.chapters[chIndex];
+  if (!ch.file) { showToast('该章节为PDF简报，暂不支持在线预览'); return; }
+
+  setCurrent(`${modId}-${chIndex}`);
+  renderSidebar();
+
+  // 面包屑
+  document.getElementById('breadcrumb').innerHTML = `模块${modId} <span>${mod.name}</span> / <span>${ch.name}</span>`;
+
+  // 要点
+  const summaryKey = `${modId}-${ch.name}`;
+  const summary = SUMMARIES[summaryKey];
+  const sBox = document.getElementById('summaryBox');
+  if (summary) {
+    document.getElementById('summaryList').innerHTML = summary.map(s => `<li>${s}</li>`).join('');
+    sBox.style.display = 'block';
+  } else {
+    sBox.style.display = 'none';
+  }
+
+  // 加载md
+  const mdEl = document.getElementById('mdContent');
+  mdEl.innerHTML = '<div class="loading"><div class="spinner"></div>加载中...</div>';
+
+  document.getElementById('homeView').style.display = 'none';
+  document.getElementById('learnView').style.display = 'block';
+
+  try {
+    const resp = await fetch(ch.file);
+    const text = await resp.text();
+    // 去掉BOM
+    const clean = text.replace(/^\uFEFF/, '');
+    mdEl.innerHTML = marked.parse(clean);
+    // 滚动到顶部
+    document.querySelector('.content-area').scrollTo(0, 0);
+    window.scrollTo(0, 0);
+  } catch(e) {
+    mdEl.innerHTML = `<p style="color:var(--red)">加载失败：${e.message}<br>文件路径：${ch.file}</p>`;
+  }
+
+  updateNavButtons(modId, chIndex);
+}
+
+function updateNavButtons(modId, chIndex) {
+  const all = getLearnableChapters();
+  const curIdx = all.findIndex(c => c.modId === modId && c.chIndex === chIndex);
+  document.getElementById('btnPrev').disabled = curIdx <= 0;
+  document.getElementById('btnNext').disabled = curIdx >= all.length - 1;
+}
+
+// ===== 导航按钮 =====
+document.getElementById('btnHome').onclick = () => { renderHome(); renderSidebar(); };
+document.getElementById('btnStart').onclick = () => {
+  const current = getCurrent();
+  if (current) {
+    const [modId, chIdx] = current.split('-');
+    loadChapter(parseInt(modId), parseInt(chIdx));
+  } else {
+    loadChapter(1, 0);
+  }
+};
+document.getElementById('btnPrev').onclick = () => {
+  const cur = getCurrent();
+  if (!cur) return;
+  const [modId, chIdx] = cur.split('-').map(Number);
+  const all = getLearnableChapters();
+  const idx = all.findIndex(c => c.modId === modId && c.chIndex === chIdx);
+  if (idx > 0) loadChapter(all[idx-1].modId, all[idx-1].chIndex);
+};
+document.getElementById('btnNext').onclick = () => {
+  const cur = getCurrent();
+  if (!cur) return;
+  const [modId, chIdx] = cur.split('-').map(Number);
+  const all = getLearnableChapters();
+  const idx = all.findIndex(c => c.modId === modId && c.chIndex === chIdx);
+  if (idx < all.length - 1) loadChapter(all[idx+1].modId, all[idx+1].chIndex);
+};
+document.getElementById('btnDone').onclick = () => {
+  const cur = getCurrent();
+  if (!cur) return;
+  const [modId, chIdx] = cur.split('-').map(Number);
+  const key = `${modId}-${chIdx}`;
+  toggleDone(key);
+  showToast('✓ 已标记完成！');
+  renderSidebar();
+  renderHome();
+  // 自动跳下一节
+  const all = getLearnableChapters();
+  const idx = all.findIndex(c => c.modId === modId && c.chIndex === chIdx);
+  if (idx < all.length - 1) loadChapter(all[idx+1].modId, all[idx+1].chIndex);
+  else { showToast('🎉 全部章节已学完！'); }
+};
+document.getElementById('btnReset').onclick = () => {
+  if (confirm('确定要重置所有学习进度吗？此操作不可撤销。')) {
+    localStorage.removeItem(PROG_KEY);
+    renderHome();
+    renderSidebar();
+    showToast('进度已重置');
+  }
+};
+
+// ===== Toast =====
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ===== 初始化 =====
+renderHome();
+renderSidebar();
+</script>
+</body>
+</html>
