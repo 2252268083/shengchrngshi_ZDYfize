@@ -261,11 +261,72 @@ body {
 .loading .spinner { width:40px; height:40px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 1s linear infinite; margin:0 auto 12px; }
 @keyframes spin { to { transform:rotate(360deg); } }
 
+/* ===== PDF 全屏预览 ===== */
+.pdf-viewer-wrap {
+  width:100%; height:calc(100vh - 240px); min-height:500px;
+  border:1px solid var(--border); border-radius:10px; overflow:hidden; position:relative; background:#000;
+}
+.pdf-viewer-wrap iframe { width:100%; height:100%; border:none; }
+.pdf-toolbar {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:8px 12px; background:var(--card2); border:1px solid var(--border);
+  border-radius:8px 8px 0 0; margin-bottom:-1px; font-size:0.82em; color:var(--text2);
+}
+.pdf-toolbar .pdf-actions { display:flex; gap:8px; }
+.pdf-toolbar .pdf-btn {
+  padding:4px 10px; background:var(--card); color:var(--accent2);
+  border:1px solid var(--border); border-radius:5px; cursor:pointer; font-size:0.9em;
+}
+.pdf-toolbar .pdf-btn:hover { border-color:var(--accent); }
+
+/* 全屏PDF模式 */
+body.pdf-fullscreen .learn-view .content-area { max-width:100%; padding:8px; }
+body.pdf-fullscreen .pdf-viewer-wrap { height:calc(100vh - 120px); }
+body.pdf-fullscreen .study-statusbar,
+body.pdf-fullscreen .breadcrumb,
+body.pdf-fullscreen .summary-box,
+body.pdf-fullscreen .nav-buttons { display:none !important; }
+
+/* ===== 移动端目录按钮 ===== */
+.btn-catalog {
+  background: var(--card2); color: var(--accent2); border:1px solid var(--border);
+  padding:5px 14px; border-radius:6px; cursor:pointer; font-size:0.85em; transition: all .2s;
+  display:none; /* 默认隐藏，移动端显示 */
+}
+.btn-catalog:hover { border-color:var(--accent); background:var(--card); }
+
+/* 移动端侧边栏遮罩 */
+.sidebar-overlay {
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,.6);
+  z-index:200; opacity:0; transition:opacity .25s;
+}
+.sidebar-overlay.show { display:block; opacity:1; }
+
 /* Responsive */
 @media (max-width: 768px) {
   .module-grid { grid-template-columns: 1fr; }
-  .sidebar { display:none; }
-  .content-area { padding:16px; }
+  .header h1 { font-size:0.98em; }
+  .header .meta { font-size:0.72em; }
+  .header .progress-bar { width:120px; }
+  .btn-catalog { display:inline-block; }
+  .header .btn-home, .header .btn-reset { padding:5px 10px; font-size:0.78em; }
+  /* 侧边栏改为抽屉式 */
+  .sidebar {
+    position:fixed; top:0; left:0; bottom:0; z-index:300;
+    width:280px; transform:translateX(-100%); transition:transform .25s;
+    height:100vh; padding-top:60px;
+  }
+  .sidebar.open { transform:translateX(0); }
+  .content-area { padding:12px; max-width:100%; }
+  /* 统计面板适配 */
+  .stats-grid { grid-template-columns:repeat(2,1fr); }
+  .stats-detail { grid-template-columns:1fr; }
+  .stat-card { padding:10px 12px; }
+  .stat-card .stat-value { font-size:1.4em; }
+  /* PDF 全屏化 */
+  .pdf-viewer-wrap { height:calc(100vh - 180px); min-height:400px; }
+  .md-content { padding:14px 16px; }
+  .md-content pre { font-size:0.8em; }
 }
 </style>
 </head>
@@ -278,10 +339,12 @@ body {
     <div class="progress-bar"><div class="fill" id="progFill" style="width:0%"></div></div>
   </div>
   <div class="right">
+    <button class="btn-catalog" id="btnCatalog">📖 目录</button>
     <button class="btn-home" id="btnHome">🏠 首页</button>
     <button class="btn-reset" id="btnReset">↺ 重置进度</button>
   </div>
 </div>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
 <!-- ===== 首页视图 ===== -->
 <div class="home-view" id="homeView">
@@ -859,6 +922,8 @@ async function loadChapter(modId, chIndex) {
   // 切换章节计时：先结算上一章节，再进入新章节
   enterChapter(`${modId}-${chIndex}`);
   renderSidebar();
+  // 移动端：选完章节自动关闭抽屉
+  if (window.innerWidth <= 768) closeSidebar();
 
   // 面包屑
   document.getElementById('breadcrumb').innerHTML = `模块${modId} <span>${mod.name}</span> / <span>${ch.name}</span>`;
@@ -885,9 +950,21 @@ async function loadChapter(modId, chIndex) {
   renderStatusbar();
   startStatusTimer();
 
-  // PDF 文件用 iframe 预览
+  // PDF 文件用 iframe 全屏预览（view=FitH 按页面宽度自适应，字体更大）
   if (ch.isPdf) {
-    mdEl.innerHTML = `<iframe src="${ch.file}" style="width:100%; height:75vh; border:1px solid var(--border); border-radius:8px;" allowfullscreen></iframe>`;
+    // 隐藏摘要框（PDF自带内容）
+    sBox.style.display = 'none';
+    mdEl.innerHTML = `
+      <div class="pdf-toolbar">
+        <span>📕 ${ch.name} - ${mod.name}</span>
+        <div class="pdf-actions">
+          <button class="pdf-btn" onclick="togglePdfFullscreen()">⛶ 全屏</button>
+          <a class="pdf-btn" href="${ch.file}" target="_blank" style="text-decoration:none">↗ 新窗口</a>
+        </div>
+      </div>
+      <div class="pdf-viewer-wrap">
+        <iframe src="${ch.file}#view=FitH" allowfullscreen></iframe>
+      </div>`;
     document.querySelector('.content-area').scrollTo(0, 0);
     window.scrollTo(0, 0);
     updateNavButtons(modId, chIndex);
@@ -1021,6 +1098,29 @@ window.addEventListener('beforeunload', () => {
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) leaveChapter();
 });
+
+// ===== 移动端目录抽屉 =====
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebarOverlay').classList.add('show');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('show');
+}
+document.getElementById('btnCatalog').onclick = openSidebar;
+document.getElementById('sidebarOverlay').onclick = closeSidebar;
+
+// ===== PDF 全屏切换 =====
+function togglePdfFullscreen() {
+  document.body.classList.toggle('pdf-fullscreen');
+  const btn = event.target;
+  if (document.body.classList.contains('pdf-fullscreen')) {
+    btn.textContent = '🗗 退出全屏';
+  } else {
+    btn.textContent = '⛶ 全屏';
+  }
+}
 
 // ===== 初始化 =====
 renderHome();
