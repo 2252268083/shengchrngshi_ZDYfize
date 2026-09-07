@@ -81,6 +81,84 @@ body {
 }
 .start-btn:hover { transform:translateY(-2px); box-shadow:0 6px 24px rgba(88,166,255,.35); }
 
+/* ===== 学习数据中心 ===== */
+.stats-panel {
+  background: linear-gradient(135deg, rgba(88,166,255,.06), rgba(188,140,255,.06));
+  border:1px solid var(--border); border-radius:12px; padding:20px 24px; margin-bottom:24px;
+}
+.stats-panel h3 { color:var(--yellow); font-size:1.1em; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+.stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+.stat-card {
+  background:var(--card); border:1px solid var(--border); border-radius:8px; padding:14px 16px;
+  text-align:center; transition:all .2s;
+}
+.stat-card:hover { border-color:var(--accent); transform:translateY(-1px); }
+.stat-card .stat-value {
+  font-size:1.8em; font-weight:800; color:var(--accent); line-height:1.1; margin-bottom:4px;
+  font-variant-numeric: tabular-nums;
+}
+.stat-card .stat-label { font-size:0.78em; color:var(--text2); }
+.stat-card .stat-sub { font-size:0.72em; color:var(--text2); margin-top:2px; }
+
+.stats-detail {
+  margin-top:16px; display:grid; grid-template-columns:1fr 1fr; gap:16px;
+}
+.detail-block { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:14px 16px; }
+.detail-block h4 { color:var(--accent2); font-size:0.92em; margin-bottom:10px; }
+.detail-block .last-pos { font-size:0.88em; color:var(--text); padding:6px 0; }
+.detail-block .last-pos .pos-mod { color:var(--purple); }
+.detail-block .last-pos .pos-ch { color:var(--accent2); }
+.detail-block .resume-btn {
+  margin-top:8px; padding:6px 14px; font-size:0.82em;
+  background:var(--card2); color:var(--accent); border:1px solid var(--border);
+  border-radius:6px; cursor:pointer; transition:all .15s;
+}
+.detail-block .resume-btn:hover { border-color:var(--accent); background:var(--bg); }
+
+/* 章节时长列表 */
+.chapter-time-list { list-style:none; padding:0; max-height:200px; overflow-y:auto; }
+.chapter-time-list li {
+  display:flex; justify-content:space-between; align-items:center;
+  font-size:0.82em; padding:5px 0; border-bottom:1px dashed var(--border);
+}
+.chapter-time-list li:last-child { border-bottom:none; }
+.chapter-time-list .ct-name { color:var(--text); flex:1; padding-right:8px; }
+.chapter-time-list .ct-time {
+  color:var(--green); font-variant-numeric: tabular-nums; font-weight:600;
+}
+.chapter-time-list .empty { color:var(--text2); text-align:center; padding:14px; }
+
+/* 学习日历热力图 */
+.heatmap { display:flex; flex-wrap:wrap; gap:3px; }
+.heatmap .day-cell {
+  width:14px; height:14px; border-radius:3px; background:var(--border);
+  title:attr(data-tip);
+}
+.heatmap .day-cell.l1 { background:rgba(63,185,80,.25); }
+.heatmap .day-cell.l2 { background:rgba(63,185,80,.5); }
+.heatmap .day-cell.l3 { background:rgba(63,185,80,.75); }
+.heatmap .day-cell.l4 { background:var(--green); }
+.heatmap-legend { display:flex; align-items:center; gap:4px; font-size:0.72em; color:var(--text2); margin-top:8px; }
+.heatmap-legend .day-cell { width:10px; height:10px; }
+
+/* ===== 学习视图状态条 ===== */
+.study-statusbar {
+  background:var(--card2); border:1px solid var(--border); border-radius:8px;
+  padding:10px 16px; margin-bottom:16px; display:flex; justify-content:space-between;
+  align-items:center; font-size:0.82em; flex-wrap:wrap; gap:8px;
+}
+.study-statusbar .status-item { display:flex; align-items:center; gap:6px; color:var(--text2); }
+.study-statusbar .status-item .v {
+  color:var(--accent); font-weight:700; font-variant-numeric: tabular-nums;
+}
+.study-statusbar .status-item .v.active { color:var(--green); }
+.study-statusbar .status-item .v.total { color:var(--purple); }
+.study-statusbar .pulse {
+  display:inline-block; width:8px; height:8px; border-radius:50%;
+  background:var(--green); animation:pulse 1.5s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.3;} }
+
 /* ===== Learn View ===== */
 .learn-view { display:none; }
 .learn-layout { display:flex; min-height: calc(100vh - 60px); }
@@ -210,6 +288,57 @@ body {
   <h2>课程总览</h2>
   <p class="subtitle">金砖大赛人工智能赛项课程 — 涵盖情感计算、具身智能平台、智能体开发四大模块</p>
 
+  <!-- 学习数据中心 -->
+  <div class="stats-panel">
+    <h3>📊 我的学习记录</h3>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value" id="statTime">0h0m</div>
+        <div class="stat-label">累计学习时长</div>
+        <div class="stat-sub" id="statTimeSub">本周 0m</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statDone">0/12</div>
+        <div class="stat-label">已完成章节</div>
+        <div class="stat-sub" id="statDoneSub">完成率 0%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statStreak">0</div>
+        <div class="stat-label">连续学习天数</div>
+        <div class="stat-sub" id="statStreakSub">总计 0 天</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statLast">—</div>
+        <div class="stat-label">上次学习</div>
+        <div class="stat-sub" id="statLastSub">尚未开始</div>
+      </div>
+    </div>
+    <div class="stats-detail">
+      <div class="detail-block">
+        <h4>📌 上次学习位置</h4>
+        <div class="last-pos" id="lastPosText">尚未开始学习，点击下方按钮开始吧！</div>
+        <button class="resume-btn" id="btnResume" style="display:none">▶ 继续上次学习</button>
+        <h4 style="margin-top:14px">📅 最近30天学习热力图</h4>
+        <div class="heatmap" id="heatmap"></div>
+        <div class="heatmap-legend">
+          <span>少</span>
+          <div class="day-cell"></div>
+          <div class="day-cell l1"></div>
+          <div class="day-cell l2"></div>
+          <div class="day-cell l3"></div>
+          <div class="day-cell l4"></div>
+          <span>多</span>
+        </div>
+      </div>
+      <div class="detail-block">
+        <h4>⏱ 各章节学习时长</h4>
+        <ul class="chapter-time-list" id="chapterTimeList">
+          <li class="empty">还没有学习记录</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
   <div class="course-overview">
     <h3>🎯 全课程核心知识点速览</h3>
     <ul id="overviewList"></ul>
@@ -226,6 +355,12 @@ body {
   <div class="learn-layout">
     <div class="sidebar" id="sidebar"></div>
     <div class="content-area" id="contentArea">
+      <div class="study-statusbar" id="studyStatusbar">
+        <div class="status-item"><span class="pulse"></span>本节 <span class="v active" id="curChTime">00:00</span></div>
+        <div class="status-item">📅 <span id="curChDate">—</span></div>
+        <div class="status-item">⏱ 累计 <span class="v total" id="curTotalTime">0h0m</span></div>
+        <div class="status-item">✓ 已完成 <span class="v" id="curDoneCount">0/12</span></div>
+      </div>
       <div class="breadcrumb" id="breadcrumb"></div>
       <div class="summary-box" id="summaryBox" style="display:none">
         <h4>⭐ 本节核心要点</h4>
@@ -362,17 +497,121 @@ const OVERVIEW = [
   "统一工程流程：环境搭建(ydy-eia-jzbase镜像)→代码下载→依赖安装→数据准备→推理验证→Web API服务"
 ];
 
-// ===== 进度管理 =====
-const PROG_KEY = "jz_course_progress_v1";
+// ===== 进度与时间管理（本地存储）=====
+const PROG_KEY = "jz_course_progress_v2";
+const PROG_LEGACY = "jz_course_progress_v1"; // 旧版数据迁移
+
 function loadProgress() {
-  try { return JSON.parse(localStorage.getItem(PROG_KEY)) || {}; }
-  catch(e) { return {}; }
+  try {
+    let p = JSON.parse(localStorage.getItem(PROG_KEY));
+    if (!p) {
+      // 迁移旧版数据
+      const legacy = JSON.parse(localStorage.getItem(PROG_LEGACY)) || {};
+      p = {
+        done: legacy.done || [],
+        current: legacy.current || null,
+        totalTime: 0,
+        chapterTimes: {},
+        chapterEnterTs: 0,
+        lastActive: null,
+        studyDays: {}
+      };
+    }
+    // 确保字段完整
+    p.done = p.done || [];
+    p.chapterTimes = p.chapterTimes || {};
+    p.studyDays = p.studyDays || {};
+    if (typeof p.totalTime !== 'number') p.totalTime = 0;
+    if (typeof p.chapterEnterTs !== 'number') p.chapterEnterTs = 0;
+    return p;
+  } catch(e) {
+    return { done:[], current:null, totalTime:0, chapterTimes:{}, chapterEnterTs:0, lastActive:null, studyDays:{} };
+  }
 }
-function saveProgress(p) { localStorage.setItem(PROG_KEY, JSON.stringify(p)); }
+function saveProgress(p) {
+  try { localStorage.setItem(PROG_KEY, JSON.stringify(p)); }
+  catch(e) { console.warn('保存进度失败:', e); }
+}
 function getDoneSet() {
   const p = loadProgress();
   return new Set(p.done || []);
 }
+
+// ===== 时间工具 =====
+function fmtSec(sec) {
+  sec = Math.floor(sec || 0);
+  const h = Math.floor(sec/3600);
+  const m = Math.floor((sec%3600)/60);
+  const s = sec%60;
+  if (h > 0) return `${h}h${m}m`;
+  if (m > 0) return `${m}m${s}s`;
+  return `${s}s`;
+}
+function fmtClock(sec) {
+  sec = Math.floor(sec || 0);
+  const m = Math.floor(sec/60).toString().padStart(2,'0');
+  const s = (sec%60).toString().padStart(2,'0');
+  return `${m}:${s}`;
+}
+function todayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2,'0')}-${d.getDate().toString().padStart(2,'0')}`;
+}
+function dateStr(ts) {
+  if (!ts) return '—';
+  const d = new Date(ts);
+  const now = new Date();
+  const diff = Math.floor((now - d) / 86400000);
+  if (diff === 0) return '今天';
+  if (diff === 1) return '昨天';
+  if (diff < 7) return `${diff}天前`;
+  return `${d.getMonth()+1}月${d.getDate()}日`;
+}
+
+// ===== 学习时长累积（核心）=====
+// 进入章节时调用，记录开始时间戳
+function enterChapter(key) {
+  const p = loadProgress();
+  // 若上一章节还在计时，先结算（防止丢失）
+  flushChapterTime(p);
+  p.chapterEnterTs = Date.now();
+  p.current = key;
+  // 当日学习记录
+  const today = todayStr();
+  if (!p.studyDays[today]) p.studyDays[today] = 0;
+  p.lastActive = new Date().toISOString();
+  saveProgress(p);
+}
+
+// 结算当前章节的累计时间（不切换章节，仅落盘）
+function flushChapterTime(p) {
+  if (!p) p = loadProgress();
+  if (!p.chapterEnterTs || !p.current) return 0;
+  const now = Date.now();
+  const elapsed = Math.floor((now - p.chapterEnterTs) / 1000);
+  if (elapsed > 0 && elapsed < 86400) { // 单次不超过1天，防异常
+    p.chapterTimes[p.current] = (p.chapterTimes[p.current] || 0) + elapsed;
+    p.totalTime = (p.totalTime || 0) + elapsed;
+    const today = todayStr();
+    p.studyDays[today] = (p.studyDays[today] || 0) + elapsed;
+    p.chapterEnterTs = now; // 重置开始时间，继续计时
+    p.lastActive = new Date().toISOString();
+  } else if (elapsed >= 86400) {
+    // 异常长，重置
+    p.chapterEnterTs = now;
+  }
+  return elapsed;
+}
+
+// 离开/切换章节时调用
+function leaveChapter() {
+  const p = loadProgress();
+  flushChapterTime(p);
+  // chapterEnterTs 留作下次进入时再重置，避免多余保存
+  saveProgress(p);
+}
+
+// 标记完成/取消完成
 function toggleDone(key) {
   const p = loadProgress();
   p.done = p.done || [];
@@ -391,7 +630,7 @@ function setCurrent(key) {
   saveProgress(p);
 }
 
-// 获取所有可学章节（有md文件的）
+// 获取所有可学章节（有file的）
 function getLearnableChapters() {
   const list = [];
   MODULES.forEach(m => {
@@ -402,6 +641,143 @@ function getLearnableChapters() {
   return list;
 }
 
+// ===== 渲染学习数据中心 =====
+function renderStats() {
+  const p = loadProgress();
+  const all = getLearnableChapters();
+  const done = new Set(p.done);
+
+  // 1. 累计时长
+  document.getElementById('statTime').textContent = fmtSec(p.totalTime || 0);
+  // 本周时长
+  let weekSec = 0;
+  const now = new Date();
+  for (let i=0; i<7; i++) {
+    const d = new Date(now); d.setDate(d.getDate()-i);
+    const ds = `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2,'0')}-${d.getDate().toString().padStart(2,'0')}`;
+    weekSec += p.studyDays[ds] || 0;
+  }
+  document.getElementById('statTimeSub').textContent = `本周 ${fmtSec(weekSec)}`;
+
+  // 2. 已完成章节
+  const doneCount = all.filter(c => done.has(c.key)).length;
+  document.getElementById('statDone').textContent = `${doneCount}/${all.length}`;
+  const rate = all.length ? Math.round(doneCount/all.length*100) : 0;
+  document.getElementById('statDoneSub').textContent = `完成率 ${rate}%`;
+
+  // 3. 连续学习天数
+  let streak = 0;
+  for (let i=0; i<365; i++) {
+    const d = new Date(now); d.setDate(d.getDate()-i);
+    const ds = `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2,'0')}-${d.getDate().toString().padStart(2,'0')}`;
+    if (p.studyDays[ds] > 0) streak++;
+    else if (i > 0) break; // 今天没学不算中断，但昨天没学就中断
+  }
+  const totalDays = Object.keys(p.studyDays).filter(k => p.studyDays[k] > 0).length;
+  document.getElementById('statStreak').textContent = streak;
+  document.getElementById('statStreakSub').textContent = `总计 ${totalDays} 天`;
+
+  // 4. 上次学习
+  if (p.lastActive) {
+    document.getElementById('statLast').textContent = dateStr(new Date(p.lastActive).getTime());
+    const d = new Date(p.lastActive);
+    document.getElementById('statLastSub').textContent = `${d.getMonth()+1}月${d.getDate()}日 ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+  } else {
+    document.getElementById('statLast').textContent = '—';
+    document.getElementById('statLastSub').textContent = '尚未开始';
+  }
+
+  // 5. 上次学习位置 + 继续按钮
+  const lastPosText = document.getElementById('lastPosText');
+  const btnResume = document.getElementById('btnResume');
+  if (p.current) {
+    const [modId, chIdx] = p.current.split('-').map(Number);
+    const mod = MODULES.find(m => m.id === modId);
+    if (mod && mod.chapters[chIdx]) {
+      lastPosText.innerHTML = `<span class="pos-mod">模块${modId} ${mod.name}</span><br><span class="pos-ch">▸ ${mod.chapters[chIdx].name}</span>${mod.chapters[chIdx].isPdf?' 📕':''}`;
+      btnResume.style.display = 'inline-block';
+    }
+  } else {
+    lastPosText.textContent = '尚未开始学习，点击下方按钮开始吧！';
+    btnResume.style.display = 'none';
+  }
+
+  // 6. 各章节时长列表
+  const ctList = document.getElementById('chapterTimeList');
+  const entries = Object.entries(p.chapterTimes || {})
+    .map(([k,v]) => {
+      const [mid, ci] = k.split('-').map(Number);
+      const m = MODULES.find(x => x.id === mid);
+      const name = m && m.chapters[ci] ? `模块${mid} - ${m.chapters[ci].name}` : k;
+      return { key:k, name, sec:v };
+    })
+    .sort((a,b) => b.sec - a.sec);
+  if (entries.length === 0) {
+    ctList.innerHTML = '<li class="empty">还没有学习记录</li>';
+  } else {
+    ctList.innerHTML = entries.map(e => `<li><span class="ct-name">${e.name}</span><span class="ct-time">${fmtSec(e.sec)}</span></li>`).join('');
+  }
+
+  // 7. 热力图（最近30天）
+  const heatmap = document.getElementById('heatmap');
+  let cells = '';
+  for (let i=29; i>=0; i--) {
+    const d = new Date(now); d.setDate(d.getDate()-i);
+    const ds = `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2,'0')}-${d.getDate().toString().padStart(2,'0')}`;
+    const sec = p.studyDays[ds] || 0;
+    let lvl = '';
+    if (sec >= 3600) lvl = 'l4';
+    else if (sec >= 1800) lvl = 'l3';
+    else if (sec >= 600) lvl = 'l2';
+    else if (sec > 0) lvl = 'l1';
+    const tip = `${ds}：${fmtSec(sec)}`;
+    cells += `<div class="day-cell ${lvl}" title="${tip}"></div>`;
+  }
+  heatmap.innerHTML = cells;
+}
+
+// 渲染学习视图状态条（实时刷新）
+function renderStatusbar() {
+  const p = loadProgress();
+  // 当前章节时间（实时）
+  let curSec = p.chapterTimes[p.current] || 0;
+  if (p.chapterEnterTs && p.current) {
+    curSec += Math.floor((Date.now() - p.chapterEnterTs) / 1000);
+  }
+  document.getElementById('curChTime').textContent = fmtClock(curSec);
+  document.getElementById('curTotalTime').textContent = fmtSec(p.totalTime || 0);
+
+  // 已完成
+  const all = getLearnableChapters();
+  const doneCount = all.filter(c => p.done.includes(c.key)).length;
+  document.getElementById('curDoneCount').textContent = `${doneCount}/${all.length}`;
+
+  // 日期
+  if (p.lastActive) {
+    const d = new Date(p.lastActive);
+    document.getElementById('curChDate').textContent = `${d.getMonth()+1}/${d.getDate()}`;
+  }
+}
+
+// ===== 章节内实时计时器（每秒刷新状态条）=====
+let statusTimer = null;
+function startStatusTimer() {
+  if (statusTimer) clearInterval(statusTimer);
+  statusTimer = setInterval(() => {
+    renderStatusbar();
+    // 顺便每30秒落盘一次
+    const p = loadProgress();
+    const now = Date.now();
+    if (p.chapterEnterTs && now - p.chapterEnterTs > 30000) {
+      flushChapterTime(p);
+      saveProgress(p);
+    }
+  }, 1000);
+}
+function stopStatusTimer() {
+  if (statusTimer) { clearInterval(statusTimer); statusTimer = null; }
+}
+
 // ===== 渲染首页 =====
 function renderHome() {
   document.getElementById('homeView').style.display = 'block';
@@ -410,6 +786,9 @@ function renderHome() {
   // 总览
   const ovList = document.getElementById('overviewList');
   ovList.innerHTML = OVERVIEW.map(s => `<li>${s}</li>`).join('');
+
+  // 渲染学习数据中心
+  renderStats();
 
   // 模块卡片
   const done = getDoneSet();
@@ -433,6 +812,9 @@ function renderHome() {
   const all = getLearnableChapters();
   const doneAll = all.filter(c => done.has(c.key)).length;
   document.getElementById('progFill').style.width = (all.length ? doneAll/all.length*100 : 0) + '%';
+
+  // 离开学习视图时停止计时
+  stopStatusTimer();
 }
 
 function jumpToModule(modId) {
@@ -474,7 +856,8 @@ async function loadChapter(modId, chIndex) {
   const ch = mod.chapters[chIndex];
   if (!ch.file) { showToast('该章节无法打开'); return; }
 
-  setCurrent(`${modId}-${chIndex}`);
+  // 切换章节计时：先结算上一章节，再进入新章节
+  enterChapter(`${modId}-${chIndex}`);
   renderSidebar();
 
   // 面包屑
@@ -497,6 +880,10 @@ async function loadChapter(modId, chIndex) {
 
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('learnView').style.display = 'block';
+
+  // 启动实时计时器
+  renderStatusbar();
+  startStatusTimer();
 
   // PDF 文件用 iframe 预览
   if (ch.isPdf) {
@@ -534,8 +921,24 @@ function updateNavButtons(modId, chIndex) {
 }
 
 // ===== 导航按钮 =====
-document.getElementById('btnHome').onclick = () => { renderHome(); renderSidebar(); };
+document.getElementById('btnHome').onclick = () => {
+  // 返回首页前先结算当前章节时间
+  leaveChapter();
+  stopStatusTimer();
+  renderHome();
+  renderSidebar();
+};
 document.getElementById('btnStart').onclick = () => {
+  const current = getCurrent();
+  if (current) {
+    const [modId, chIdx] = current.split('-');
+    loadChapter(parseInt(modId), parseInt(chIdx));
+  } else {
+    loadChapter(1, 0);
+  }
+};
+// 继续上次学习
+document.getElementById('btnResume').onclick = () => {
   const current = getCurrent();
   if (current) {
     const [modId, chIdx] = current.split('-');
@@ -568,19 +971,37 @@ document.getElementById('btnDone').onclick = () => {
   toggleDone(key);
   showToast('✓ 已标记完成！');
   renderSidebar();
-  renderHome();
   // 自动跳下一节
   const all = getLearnableChapters();
   const idx = all.findIndex(c => c.modId === modId && c.chIndex === chIdx);
   if (idx < all.length - 1) loadChapter(all[idx+1].modId, all[idx+1].chIndex);
-  else { showToast('🎉 全部章节已学完！'); }
+  else {
+    stopStatusTimer();
+    leaveChapter();
+    renderHome();
+    showToast('🎉 全部章节已学完！');
+  }
 };
+
+// 重置进度（toast二次确认，避免confirm被浏览器拦截）
+let resetConfirmTimer = null;
+let resetPending = false;
 document.getElementById('btnReset').onclick = () => {
-  if (confirm('确定要重置所有学习进度吗？此操作不可撤销。')) {
+  if (resetPending) {
+    // 第二次点击：确认重置
+    clearTimeout(resetConfirmTimer);
+    resetPending = false;
+    stopStatusTimer();
     localStorage.removeItem(PROG_KEY);
+    localStorage.removeItem(PROG_LEGACY);
     renderHome();
     renderSidebar();
-    showToast('进度已重置');
+    showToast('✓ 进度与学习记录已重置');
+  } else {
+    // 第一次点击：弹出确认提示
+    resetPending = true;
+    showToast('⚠ 再次点击确认重置所有学习进度与时间记录');
+    resetConfirmTimer = setTimeout(() => { resetPending = false; }, 3000);
   }
 };
 
@@ -591,6 +1012,15 @@ function showToast(msg) {
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2500);
 }
+
+// ===== 页面关闭/刷新前保存学习时长 =====
+window.addEventListener('beforeunload', () => {
+  leaveChapter();
+});
+// 页面失焦（切到其他标签页）也保存
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) leaveChapter();
+});
 
 // ===== 初始化 =====
 renderHome();
