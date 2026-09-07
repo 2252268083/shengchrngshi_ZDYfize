@@ -354,9 +354,19 @@ body.pdf-fullscreen .nav-buttons { display:none !important; }
 .chapter-toc {
   position:fixed; right:20px; top:80px; width:240px; max-height:calc(100vh - 120px);
   background:var(--card); border:1px solid var(--border); border-radius:10px;
-  padding:14px 16px; overflow-y:auto; z-index:50; font-size:0.82em;
+  padding:14px 16px; overflow:hidden; z-index:50; font-size:0.82em;
+  display:flex; flex-direction:column;
 }
-.chapter-toc h5 { color:var(--accent); font-size:0.9em; margin-bottom:8px; }
+.chapter-toc .toc-header {
+  display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;
+}
+.chapter-toc h5 { color:var(--accent); font-size:0.9em; margin:0; }
+.chapter-toc .toc-close {
+  cursor:pointer; color:var(--text2); padding:2px 6px; border-radius:4px; font-size:0.85em;
+  line-height:1;
+}
+.chapter-toc .toc-close:hover { background:var(--card2); color:var(--red); }
+.chapter-toc .toc-body { overflow-y:auto; flex:1; }
 .chapter-toc ul { list-style:none; padding:0; }
 .chapter-toc li { padding:3px 0; }
 .chapter-toc a { color:var(--text2); text-decoration:none; display:block; padding:2px 8px; border-radius:4px; transition:all .15s; font-size:0.88em; }
@@ -624,6 +634,10 @@ body.focus-mode .focus-exit-hint { display:block; }
   cursor:pointer; font-size:0.84em; transition:all .15s;
 }
 .step-block .check-btn:hover { opacity:.9; }
+.step-block .check-btn.mark-done-btn {
+  background:var(--green);
+}
+.step-block .check-btn.mark-done-btn:hover { opacity:.9; }
 .step-block .check-result { font-size:0.82em; padding:4px 10px; border-radius:5px; }
 .step-block .check-result.pass { color:var(--green); background:rgba(63,185,80,.15); }
 .step-block .check-result.fail { color:var(--red); background:rgba(248,81,73,.15); }
@@ -779,6 +793,7 @@ body.focus-mode .focus-exit-hint { display:block; }
         <span class="tool-sep">|</span>
         <button class="tool-btn" id="btnTheme2">🌓 主题</button>
         <span class="tool-sep">|</span>
+        <button class="tool-btn" id="btnToc">📑 目录</button>
         <button class="tool-btn" id="btnFocus">🎯 专注</button>
         <button class="tool-btn" id="btnBookmark">🔖 书签</button>
         <button class="tool-btn" id="btnHighlight">🖍 高亮</button>
@@ -819,7 +834,13 @@ body.focus-mode .focus-exit-hint { display:block; }
   </div>
 </div>
 <!-- 章节内浮动目录 -->
-<div class="chapter-toc" id="chapterToc" style="display:none"></div>
+<div class="chapter-toc" id="chapterToc" style="display:none">
+  <div class="toc-header">
+    <h5>📑 本章目录</h5>
+    <span class="toc-close" onclick="document.getElementById('chapterToc').style.display='none'">✕</span>
+  </div>
+  <div class="toc-body"></div>
+</div>
 <!-- 专注模式退出提示 -->
 <div class="focus-exit-hint" id="focusExitHint" onclick="toggleFocusMode()">✕ 退出专注 (F)</div>
 <!-- 划线高亮弹窗 -->
@@ -1469,6 +1490,9 @@ async function loadChapter(modId, chIndex) {
     // 实操手册：渲染为交互式步骤检查器
     if (ch.name === '实操手册') {
       renderManualChecker(mdEl, clean, `${modId}-${chIndex}`);
+      // 实操手册无h2/h3标题，隐藏浮动目录
+      document.getElementById('chapterToc').style.display = 'none';
+      buildChapterMindmap(`${modId}-${chIndex}`, ch.name);
     } else {
       mdEl.innerHTML = marked.parse(clean);
       // 渲染后恢复高亮、生成段落锚点、构建浮动目录
@@ -2009,16 +2033,33 @@ function buildChapterToc() {
   const mdEl = document.getElementById('mdContent');
   const headings = mdEl.querySelectorAll('h2, h3');
   const toc = document.getElementById('chapterToc');
-  if (!headings.length) { toc.style.display = 'none'; return; }
-  let html = '<h5>📑 本章目录</h5><ul>';
+  const body = toc.querySelector('.toc-body');
+  if (!headings.length) {
+    body.innerHTML = '<div class="toc-empty">本章暂无小标题</div>';
+    toc.style.display = 'none';
+    return;
+  }
+  let html = '<ul>';
   headings.forEach((h, i) => {
     if (!h.id) h.id = 'hd-' + i;
     const cls = h.tagName === 'H3' ? 'h3' : '';
     html += `<li><a class="${cls}" onclick="document.getElementById('${h.id}').scrollIntoView({behavior:'smooth',block:'start'})">${escapeHtml(h.textContent)}</a></li>`;
   });
   html += '</ul>';
-  toc.innerHTML = html;
-  toc.style.display = window.innerWidth > 1100 ? 'block' : 'none';
+  body.innerHTML = html;
+  toc.style.display = window.innerWidth > 1100 ? 'flex' : 'none';
+}
+function toggleChapterToc() {
+  const toc = document.getElementById('chapterToc');
+  if (toc.style.display === 'none' || !toc.style.display) {
+    toc.style.display = window.innerWidth > 1100 ? 'flex' : 'none';
+    if (window.innerWidth <= 1100) {
+      // 移动端强制显示
+      toc.style.display = 'flex';
+    }
+  } else {
+    toc.style.display = 'none';
+  }
 }
 // 章节思维导图缓存：{chapterKey: treeData}
 let mindmapCache = {};
@@ -2307,9 +2348,10 @@ function renderManualChecker(mdEl, mdText, chapterKey) {
     s.commands.forEach(c => { html += `<div class="cmd-block">${escapeHtml(c)}</div>`; });
     if (s.expected) html += `<div class="expected-block">${escapeHtml(s.expected)}</div>`;
     html += `<div class="check-area">
-      <textarea id="stepInput-${s.id}" placeholder="粘贴你的实际输出...">${escapeHtml(state.lastOutput || '')}</textarea>
+      <textarea id="stepInput-${s.id}" placeholder="粘贴你的实际输出（可选，用于自动对比）...">${escapeHtml(state.lastOutput || '')}</textarea>
       <div class="check-actions">
-        <button class="check-btn" onclick="checkManualStep('${chapterKey}','${s.id}', ${idx})">检查</button>
+        <button class="check-btn" onclick="checkManualStep('${chapterKey}','${s.id}', ${idx})">📋 检查输出</button>
+        <button class="check-btn mark-done-btn" onclick="markStepDone('${chapterKey}','${s.id}', ${idx})">✓ 我已完成</button>
         <span class="check-result" id="result-${s.id}"></span>
       </div>
       <div class="diff-block" id="diff-${s.id}"></div>
@@ -2381,6 +2423,32 @@ function checkManualStep(chapterKey, stepId, idx) {
   updateStepProgress(chapterKey);
   showToast(passed ? '✓ 步骤通过！' : `✗ 未通过，请查看差异`);
 }
+function markStepDone(chapterKey, stepId, idx) {
+  const stepBlock = document.getElementById('step-' + stepId);
+  const resultEl = document.getElementById('result-' + stepId);
+  const metaEl = document.getElementById('meta-' + stepId);
+  const diffEl = document.getElementById('diff-' + stepId);
+  // 保存状态
+  const p = loadProgress();
+  if (!p.manualSteps[chapterKey]) p.manualSteps[chapterKey] = {};
+  p.manualSteps[chapterKey][stepId] = {
+    passed: true,
+    attempts: (p.manualSteps[chapterKey][stepId]?.attempts || 0) + 1,
+    lastAttempt: Date.now(),
+    passRate: 1
+  };
+  saveProgress(p);
+  // 更新UI
+  stepBlock.classList.remove('failed');
+  stepBlock.classList.add('passed');
+  resultEl.className = 'check-result pass';
+  resultEl.textContent = '✓ 已标记完成';
+  diffEl.classList.remove('show');
+  diffEl.innerHTML = '';
+  metaEl.textContent = `已尝试 ${p.manualSteps[chapterKey][stepId].attempts} 次 · ${new Date().toLocaleString()}`;
+  updateStepProgress(chapterKey);
+  showToast('✓ 步骤已标记完成');
+}
 function updateStepProgress(chapterKey) {
   // 重新统计通过数
   const p = loadProgress();
@@ -2404,6 +2472,7 @@ function escapeHtml(s) {
 // ============================================================
 // ===== 事件绑定 =====
 // ============================================================
+document.getElementById('btnToc').onclick = toggleChapterToc;
 document.getElementById('btnFocus').onclick = toggleFocusMode;
 document.getElementById('btnBookmark').onclick = addBookmark;
 document.getElementById('btnHighlight').onclick = () => {
