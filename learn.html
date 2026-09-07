@@ -1300,6 +1300,38 @@ function renderStats() {
     cells += `<div class="day-cell ${lvl}" title="${tip}"></div>`;
   }
   heatmap.innerHTML = cells;
+
+  // 8. 学习目标
+  const goalTimeEl = document.getElementById('goalTime');
+  const goalChEl = document.getElementById('goalCh');
+  if (goalTimeEl) goalTimeEl.value = Math.round((p.goals.dailyTime || 1800) / 60);
+  if (goalChEl) goalChEl.value = p.goals.dailyChapters || 2;
+  // 今日目标进度
+  const today = todayStr();
+  const todayTime = p.studyDays[today] || 0;
+  const goalSec = (p.goals.dailyTime || 1800);
+  const doneChapters = Object.values(p.chapterTimes || {}).filter(v => v > 0).length; // 近似：学过的章节数
+  // 更准确：今日完成章节数用 goals.today
+  const todayCh = (p.goals.today && p.goals.today.date === today) ? p.goals.today.chDone : 0;
+  const gp = document.getElementById('goalProgress');
+  if (gp) gp.textContent = `今日完成：${fmtSec(todayTime)} / ${doneChapters}节`;
+  const gbf = document.getElementById('goalBarFill');
+  if (gbf) {
+    const timePct = Math.min(100, Math.round(todayTime / goalSec * 100));
+    gbf.style.width = timePct + '%';
+  }
+}
+
+// ===== 学习目标 =====
+function saveGoal() {
+  const p = loadProgress();
+  const mins = parseInt(document.getElementById('goalTime').value) || 30;
+  const chs = parseInt(document.getElementById('goalCh').value) || 2;
+  p.goals.dailyTime = mins * 60;
+  p.goals.dailyChapters = chs;
+  saveProgress(p);
+  renderStats();
+  showToast('🎯 学习目标已保存');
 }
 
 // 渲染学习视图状态条（实时刷新）
@@ -1509,7 +1541,38 @@ async function loadChapter(modId, chIndex) {
     mdEl.innerHTML = `<p style="color:var(--red)">加载失败：${e.message}<br>文件路径：${ch.file}</p>`;
   }
 
+  // 加载笔记
+  loadNote(`${modId}-${chIndex}`);
+
   updateNavButtons(modId, chIndex);
+}
+
+// ===== 学习笔记 =====
+function loadNote(chapterKey) {
+  const p = loadProgress();
+  const noteEl = document.getElementById('noteText');
+  const infoEl = document.getElementById('noteInfo');
+  const note = p.notes[chapterKey];
+  if (noteEl) noteEl.value = note ? note.content : '';
+  if (infoEl) {
+    infoEl.textContent = note ? `上次编辑：${new Date(note.ts).toLocaleString()}` : '尚未保存笔记';
+  }
+}
+function saveNote(chapterKey) {
+  const p = loadProgress();
+  const content = document.getElementById('noteText').value;
+  p.notes[chapterKey] = { content, ts: Date.now() };
+  saveProgress(p);
+  document.getElementById('noteInfo').textContent = `已保存：${new Date().toLocaleString()}`;
+  showToast('✓ 笔记已保存');
+}
+function deleteNote(chapterKey) {
+  const p = loadProgress();
+  delete p.notes[chapterKey];
+  saveProgress(p);
+  document.getElementById('noteText').value = '';
+  document.getElementById('noteInfo').textContent = '笔记已删除';
+  showToast('笔记已删除');
 }
 
 function updateNavButtons(modId, chIndex) {
@@ -2470,8 +2533,99 @@ function escapeHtml(s) {
 }
 
 // ============================================================
+// ===== 主题切换 =====
+// ============================================================
+function toggleTheme() {
+  const p = loadProgress();
+  p.prefs.theme = p.prefs.theme === 'dark' ? 'light' : 'dark';
+  saveProgress(p);
+  applyTheme();
+  showToast(`已切换到${p.prefs.theme === 'dark' ? '深色' : '浅色'}主题`);
+}
+function applyTheme() {
+  const p = loadProgress();
+  document.body.classList.toggle('theme-light', p.prefs.theme === 'light');
+}
+
+// ===== 字体大小调节 =====
+function adjustFont(delta) {
+  const sizes = ['small', 'medium', 'large', 'xlarge'];
+  const p = loadProgress();
+  let cur = sizes.indexOf(p.prefs.fontSize);
+  if (cur < 0) cur = 1;
+  cur = Math.max(0, Math.min(sizes.length - 1, cur + delta));
+  p.prefs.fontSize = sizes[cur];
+  saveProgress(p);
+  document.body.className = document.body.className.replace(/font-\w+/g, '');
+  document.body.classList.add('font-' + sizes[cur]);
+  const label = { small:'小', medium:'中', large:'大', xlarge:'超大' }[sizes[cur]];
+  showToast(`字体大小：${label}`);
+}
+
+// ===== 导出/导入学习记录 =====
+function exportData() {
+  const p = loadProgress();
+  const data = JSON.stringify(p, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `jz_学习记录_${todayStr()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('📤 学习记录已导出');
+}
+function importData(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      // 基础校验
+      if (!data.done || typeof data.totalTime !== 'number') throw new Error('格式不正确');
+      localStorage.setItem(PROG_KEY, JSON.stringify(data));
+      renderHome();
+      renderSidebar();
+      applyTheme();
+      document.body.className = document.body.className.replace(/font-\w+/g, '');
+      document.body.classList.add('font-' + (data.prefs?.fontSize || 'medium'));
+      showToast('📥 学习记录已导入');
+    } catch(err) {
+      showToast('⚠ 导入失败：' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+// ============================================================
 // ===== 事件绑定 =====
 // ============================================================
+// 主题切换（header + 工具栏各一个）
+document.getElementById('btnTheme').onclick = toggleTheme;
+document.getElementById('btnTheme2').onclick = toggleTheme;
+// 字体调节
+document.getElementById('btnFontPlus').onclick = () => adjustFont(1);
+document.getElementById('btnFontMinus').onclick = () => adjustFont(-1);
+// 学习目标
+document.getElementById('btnSaveGoal').onclick = saveGoal;
+// 学习笔记
+document.getElementById('btnSaveNote').onclick = () => {
+  const cur = getCurrent();
+  if (cur) saveNote(cur);
+};
+document.getElementById('btnDeleteNote').onclick = () => {
+  const cur = getCurrent();
+  if (cur) {
+    if (confirm('确定删除当前笔记？')) deleteNote(cur);
+  }
+};
+// 导出导入
+document.getElementById('btnExport').onclick = exportData;
+document.getElementById('btnImport').onclick = () => document.getElementById('importFile').click();
+document.getElementById('importFile').onchange = (e) => {
+  if (e.target.files[0]) importData(e.target.files[0]);
+  e.target.value = '';
+};
+// 新功能按钮
 document.getElementById('btnToc').onclick = toggleChapterToc;
 document.getElementById('btnFocus').onclick = toggleFocusMode;
 document.getElementById('btnBookmark').onclick = addBookmark;
@@ -2518,9 +2672,8 @@ setupHighlightListeners();
 const initP = loadProgress();
 applyFocusMode();
 applyNotificationState();
+applyTheme();
 document.getElementById('ttsRate').value = initP.prefs.ttsRate || 1;
-// 应用主题
-if (initP.prefs.theme === 'light') document.body.classList.add('theme-light');
 // 应用字体大小
 document.body.classList.add('font-' + (initP.prefs.fontSize || 'medium'));
 
