@@ -328,6 +328,318 @@ body.pdf-fullscreen .nav-buttons { display:none !important; }
   .md-content { padding:14px 16px; }
   .md-content pre { font-size:0.8em; }
 }
+
+/* ===== 学习笔记 ===== */
+.note-section {
+  background:var(--card); border:1px solid var(--border); border-radius:10px;
+  padding:16px 20px; margin-top:20px;
+}
+.note-section h4 { color:var(--yellow); font-size:0.95em; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+.note-section textarea {
+  width:100%; min-height:100px; background:var(--bg); color:var(--text);
+  border:1px solid var(--border); border-radius:8px; padding:10px 12px;
+  font-size:0.88em; font-family:inherit; resize:vertical; line-height:1.6;
+}
+.note-section textarea:focus { outline:none; border-color:var(--accent); }
+.note-section .note-actions { display:flex; gap:8px; margin-top:8px; }
+.note-section .note-btn {
+  padding:5px 14px; border-radius:6px; cursor:pointer; font-size:0.82em; border:1px solid var(--border);
+  background:var(--card2); color:var(--text); transition:all .15s;
+}
+.note-section .note-btn.save { background:var(--green); color:#fff; border:none; }
+.note-section .note-btn:hover { border-color:var(--accent); }
+.note-section .note-info { font-size:0.78em; color:var(--text2); margin-top:6px; }
+
+/* ===== 章节内浮动目录 ===== */
+.chapter-toc {
+  position:fixed; right:20px; top:80px; width:240px; max-height:calc(100vh - 120px);
+  background:var(--card); border:1px solid var(--border); border-radius:10px;
+  padding:14px 16px; overflow-y:auto; z-index:50; font-size:0.82em;
+}
+.chapter-toc h5 { color:var(--accent); font-size:0.9em; margin-bottom:8px; }
+.chapter-toc ul { list-style:none; padding:0; }
+.chapter-toc li { padding:3px 0; }
+.chapter-toc a { color:var(--text2); text-decoration:none; display:block; padding:2px 8px; border-radius:4px; transition:all .15s; font-size:0.88em; }
+.chapter-toc a:hover { background:var(--card2); color:var(--accent); }
+.chapter-toc a.h3 { padding-left:20px; font-size:0.82em; }
+.chapter-toc .toc-empty { color:var(--text2); font-size:0.85em; }
+
+/* ===== 工具栏（字体/主题）===== */
+.read-toolbar {
+  display:flex; align-items:center; gap:8px; margin-bottom:12px;
+  padding:8px 12px; background:var(--card); border:1px solid var(--border); border-radius:8px;
+}
+.read-toolbar .tool-btn {
+  background:var(--card2); color:var(--accent2); border:1px solid var(--border);
+  padding:4px 10px; border-radius:6px; cursor:pointer; font-size:0.82em; transition:all .15s;
+}
+.read-toolbar .tool-btn:hover { border-color:var(--accent); }
+.read-toolbar .tool-sep { color:var(--border); margin:0 4px; }
+.read-toolbar .tool-label { font-size:0.78em; color:var(--text2); }
+
+/* ===== 浅色主题 ===== */
+body.theme-light {
+  --bg: #f6f8fa; --card: #ffffff; --card2: #f0f2f5; --border: #d0d7de;
+  --text: #1f2328; --text2: #656d76; --accent: #0969da; --accent2: #0550ae;
+  --green: #1a7f37; --yellow: #9a6700; --red: #cf222e; --purple: #8250df;
+}
+body.theme-light .md-content code { background:#eff1f3; }
+body.theme-light .md-content pre { background:#f6f8fa; }
+
+/* ===== 字体大小 ===== */
+body.font-small .md-content { font-size:0.82em; }
+body.font-medium .md-content { font-size:0.9em; }
+body.font-large .md-content { font-size:1.02em; }
+body.font-xlarge .md-content { font-size:1.15em; }
+
+/* ===== 学习目标 ===== */
+.goal-panel {
+  background:var(--card); border:1px solid var(--border); border-radius:8px;
+  padding:14px 16px; margin-bottom:16px;
+}
+.goal-panel h4 { color:var(--purple); font-size:0.92em; margin-bottom:10px; }
+.goal-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; font-size:0.82em; }
+.goal-row label { color:var(--text2); min-width:90px; }
+.goal-row input[type=number] {
+  width:70px; background:var(--bg); color:var(--text); border:1px solid var(--border);
+  border-radius:6px; padding:4px 8px; font-size:0.88em;
+}
+.goal-progress { margin-top:10px; font-size:0.82em; color:var(--text2); }
+.goal-bar { width:100%; height:8px; background:var(--border); border-radius:4px; overflow:hidden; margin-top:4px; }
+.goal-bar .fill { height:100%; background:linear-gradient(90deg,var(--green),var(--accent)); transition:width .5s; }
+
+/* 移动端隐藏浮动目录 */
+@media (max-width: 1100px) { .chapter-toc { display:none; } }
+
+/* ===== 专注阅读模式 ===== */
+body.focus-mode .sidebar,
+body.focus-mode .chapter-toc,
+body.focus-mode .study-statusbar,
+body.focus-mode .read-toolbar,
+body.focus-mode .breadcrumb,
+body.focus-mode .summary-box { display:none !important; }
+body.focus-mode .content-area { max-width:780px; margin:0 auto; padding:32px 24px; }
+body.focus-mode .nav-buttons { opacity:.25; transition:opacity .25s; }
+body.focus-mode .nav-buttons:hover { opacity:1; }
+body.focus-mode .note-section { opacity:.4; transition:opacity .25s; }
+body.focus-mode .note-section:hover { opacity:1; }
+.focus-exit-hint {
+  position:fixed; top:12px; right:12px; z-index:150;
+  background:var(--card2); border:1px solid var(--border); border-radius:6px;
+  padding:5px 10px; font-size:0.78em; color:var(--text2); cursor:pointer;
+  display:none;
+}
+body.focus-mode .focus-exit-hint { display:block; }
+
+/* ===== 书签 ===== */
+.bookmark-panel {
+  background:var(--card); border:1px solid var(--border); border-radius:8px;
+  padding:12px 16px; margin-bottom:16px;
+}
+.bookmark-panel h4 { color:var(--yellow); font-size:0.92em; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+.bookmark-list { list-style:none; padding:0; max-height:240px; overflow-y:auto; }
+.bookmark-list li {
+  display:flex; align-items:center; gap:8px; padding:6px 8px; border-radius:6px;
+  font-size:0.82em; cursor:pointer; transition:background .15s; border-bottom:1px dashed var(--border);
+}
+.bookmark-list li:hover { background:var(--card2); }
+.bookmark-list li:last-child { border-bottom:none; }
+.bookmark-list .bm-label { flex:1; color:var(--text); }
+.bookmark-list .bm-meta { color:var(--text2); font-size:0.85em; }
+.bookmark-list .bm-del { color:var(--red); opacity:.6; cursor:pointer; padding:2px 6px; }
+.bookmark-list .bm-del:hover { opacity:1; }
+.bookmark-list .empty { color:var(--text2); text-align:center; padding:14px; cursor:default; }
+
+/* ===== 学习提醒 ===== */
+.notif-on { color:var(--green) !important; }
+.notif-dot {
+  display:inline-block; width:8px; height:8px; border-radius:50%;
+  background:var(--green); margin-left:4px; vertical-align:middle;
+}
+
+/* ===== TTS 工具栏 ===== */
+.tts-controls {
+  display:none; align-items:center; gap:8px; margin-top:8px; padding:8px 12px;
+  background:var(--card); border:1px solid var(--border); border-radius:8px; font-size:0.82em;
+}
+.tts-controls.show { display:flex; }
+.tts-controls .tool-btn { background:var(--card2); color:var(--accent2); border:1px solid var(--border); padding:4px 10px; border-radius:6px; cursor:pointer; }
+.tts-controls .tool-btn:hover { border-color:var(--accent); }
+.tts-controls .tts-status { color:var(--text2); flex:1; }
+.tts-controls input[type=range] { width:80px; }
+.md-content p.tts-active { background:rgba(88,166,255,.18); border-radius:4px; }
+
+/* ===== 划线高亮 ===== */
+.md-content mark {
+  background:rgba(210,153,34,.45); color:inherit; padding:1px 2px; border-radius:3px;
+  cursor:pointer; border-bottom:1px dashed var(--yellow); transition:all .15s;
+}
+.md-content mark.c-green { background:rgba(63,185,80,.35); border-bottom-color:var(--green); }
+.md-content mark.c-blue { background:rgba(88,166,255,.35); border-bottom-color:var(--accent); }
+.md-content mark.c-pink { background:rgba(248,81,73,.35); border-bottom-color:var(--red); }
+.md-content mark:hover { filter:brightness(1.1); }
+.highlight-popup {
+  position:absolute; z-index:200; background:var(--card); border:1px solid var(--border);
+  border-radius:8px; padding:10px; box-shadow:0 6px 24px rgba(0,0,0,.4);
+  min-width:220px; display:none;
+}
+.highlight-popup.show { display:block; }
+.highlight-popup .hp-colors { display:flex; gap:6px; margin-bottom:8px; }
+.highlight-popup .hp-color {
+  width:18px; height:18px; border-radius:50%; cursor:pointer; border:2px solid transparent;
+}
+.highlight-popup .hp-color.c-yellow { background:var(--yellow); }
+.highlight-popup .hp-color.c-green { background:var(--green); }
+.highlight-popup .hp-color.c-blue { background:var(--accent); }
+.highlight-popup .hp-color.c-pink { background:var(--red); }
+.highlight-popup .hp-color.sel { border-color:#fff; }
+.highlight-popup textarea {
+  width:100%; min-height:50px; background:var(--bg); color:var(--text);
+  border:1px solid var(--border); border-radius:6px; padding:6px 8px; font-size:0.82em; font-family:inherit; resize:vertical;
+}
+.highlight-popup .hp-actions { display:flex; gap:6px; margin-top:6px; justify-content:flex-end; }
+.highlight-popup .hp-btn {
+  padding:4px 10px; font-size:0.8em; border:1px solid var(--border); border-radius:5px;
+  background:var(--card2); color:var(--text); cursor:pointer;
+}
+.highlight-popup .hp-btn.save { background:var(--green); color:#fff; border:none; }
+.highlight-popup .hp-btn.del { background:var(--red); color:#fff; border:none; }
+.highlight-panel {
+  background:var(--card); border:1px solid var(--border); border-radius:8px;
+  padding:12px 16px; margin-bottom:16px;
+}
+.highlight-panel h4 { color:var(--purple); font-size:0.92em; margin-bottom:8px; }
+.highlight-list { list-style:none; padding:0; max-height:240px; overflow-y:auto; }
+.highlight-list li {
+  padding:6px 8px; font-size:0.82em; border-bottom:1px dashed var(--border); cursor:pointer; border-radius:6px;
+}
+.highlight-list li:hover { background:var(--card2); }
+.highlight-list .hl-text { color:var(--text); display:block; }
+.highlight-list .hl-note { color:var(--text2); font-size:0.88em; margin-top:2px; }
+.highlight-list .hl-meta { color:var(--text2); font-size:0.8em; margin-top:2px; }
+.highlight-list .empty { color:var(--text2); text-align:center; padding:14px; cursor:default; }
+
+/* ===== 思维导图弹窗 ===== */
+.modal-overlay {
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:400;
+  align-items:center; justify-content:center;
+}
+.modal-overlay.show { display:flex; }
+.modal-box {
+  background:var(--card); border:1px solid var(--border); border-radius:12px;
+  width:92%; max-width:880px; max-height:88vh; overflow:hidden; display:flex; flex-direction:column;
+}
+.modal-header {
+  padding:12px 18px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;
+}
+.modal-header h3 { color:var(--accent); font-size:1em; }
+.modal-close { background:none; border:none; color:var(--text2); font-size:1.3em; cursor:pointer; }
+.modal-body { padding:16px; overflow:auto; }
+.mindmap-svg { width:100%; height:auto; min-height:300px; }
+.mindmap-node { cursor:pointer; transition:all .15s; }
+.mindmap-node rect { transition:fill .15s; }
+.mindmap-node:hover rect { fill:var(--card2); }
+.mindmap-node text { fill:var(--text); font-size:11px; }
+.mindmap-edge { stroke:var(--border); fill:none; }
+
+/* ===== 闪卡复习 ===== */
+.flashcard-view { max-width:760px; margin:0 auto; padding:20px 16px; }
+.flashcard-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px; }
+.flashcard-stats .fs-card {
+  background:var(--card); border:1px solid var(--border); border-radius:8px; padding:12px; text-align:center;
+}
+.flashcard-stats .fs-val { font-size:1.6em; font-weight:800; color:var(--accent); }
+.flashcard-stats .fs-lbl { font-size:0.78em; color:var(--text2); margin-top:2px; }
+.flashcard-box {
+  perspective:1200px; margin:24px auto; width:100%; max-width:560px; height:320px;
+}
+.flashcard {
+  position:relative; width:100%; height:100%; cursor:pointer; transform-style:preserve-3d;
+  transition:transform .6s;
+}
+.flashcard.flipped { transform:rotateY(180deg); }
+.flashcard-face {
+  position:absolute; inset:0; backface-visibility:hidden; border-radius:14px; padding:24px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+  border:2px solid var(--border);
+}
+.flashcard-front { background:linear-gradient(135deg,var(--card),var(--card2)); }
+.flashcard-back { background:linear-gradient(135deg,rgba(63,185,80,.1),rgba(88,166,255,.1)); transform:rotateY(180deg); }
+.flashcard-face .fc-tag { font-size:0.74em; color:var(--text2); margin-bottom:12px; }
+.flashcard-face .fc-text { font-size:1.05em; color:var(--text); line-height:1.6; }
+.flashcard-face .fc-hint { font-size:0.76em; color:var(--text2); margin-top:auto; padding-top:14px; }
+.flashcard-actions { display:flex; justify-content:center; gap:8px; margin-top:18px; flex-wrap:wrap; }
+.fc-btn {
+  padding:8px 18px; border-radius:8px; border:1px solid var(--border); background:var(--card2);
+  color:var(--text); cursor:pointer; font-size:0.88em; transition:all .15s;
+}
+.fc-btn:hover { transform:translateY(-1px); }
+.fc-btn.again { background:var(--red); color:#fff; border:none; }
+.fc-btn.hard { background:var(--yellow); color:#fff; border:none; }
+.fc-btn.good { background:var(--accent); color:#fff; border:none; }
+.fc-btn.easy { background:var(--green); color:#fff; border:none; }
+
+/* ===== 实操步骤检查器 ===== */
+.step-progress-bar {
+  background:var(--card); border:1px solid var(--border); border-radius:8px;
+  padding:10px 14px; margin-bottom:16px;
+}
+.step-progress-bar .sp-head { display:flex; justify-content:space-between; font-size:0.85em; color:var(--text2); margin-bottom:6px; }
+.step-progress-bar .sp-head .sp-count { color:var(--green); font-weight:700; }
+.step-progress-bar .sp-track { width:100%; height:8px; background:var(--border); border-radius:4px; overflow:hidden; }
+.step-progress-bar .sp-fill { height:100%; background:linear-gradient(90deg,var(--green),var(--accent)); transition:width .4s; }
+.step-block {
+  background:var(--card); border:1px solid var(--border); border-radius:10px;
+  padding:16px 18px; margin-bottom:14px;
+}
+.step-block.passed { border-color:var(--green); box-shadow:0 0 0 1px rgba(63,185,80,.3); }
+.step-block.failed { border-color:var(--red); }
+.step-block h4 { color:var(--accent2); font-size:0.98em; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+.step-block .step-num {
+  display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px;
+  background:var(--accent); color:#fff; border-radius:50%; font-size:0.78em; font-weight:700;
+}
+.step-block.passed .step-num { background:var(--green); }
+.step-block .cmd-block {
+  background:#0d1117; border:1px solid var(--border); border-radius:6px;
+  padding:10px 12px; margin:8px 0; font-family:Consolas,Monaco,monospace;
+  font-size:0.82em; color:var(--accent2); white-space:pre-wrap; word-break:break-all;
+}
+.step-block .expected-block {
+  background:var(--card2); border:1px dashed var(--border); border-radius:6px;
+  padding:8px 12px; margin:8px 0; font-family:Consolas,Monaco,monospace;
+  font-size:0.8em; color:var(--text2); white-space:pre-wrap;
+}
+.step-block .expected-block::before { content:"预期输出："; color:var(--yellow); font-size:0.88em; display:block; margin-bottom:4px; }
+.step-block .check-area { margin-top:10px; }
+.step-block .check-area textarea {
+  width:100%; min-height:70px; background:var(--bg); color:var(--text);
+  border:1px solid var(--border); border-radius:6px; padding:8px 10px;
+  font-family:Consolas,Monaco,monospace; font-size:0.82em; resize:vertical;
+}
+.step-block .check-area textarea:focus { outline:none; border-color:var(--accent); }
+.step-block .check-actions { display:flex; gap:8px; margin-top:8px; align-items:center; }
+.step-block .check-btn {
+  padding:6px 16px; background:var(--accent); color:#fff; border:none; border-radius:6px;
+  cursor:pointer; font-size:0.84em; transition:all .15s;
+}
+.step-block .check-btn:hover { opacity:.9; }
+.step-block .check-result { font-size:0.82em; padding:4px 10px; border-radius:5px; }
+.step-block .check-result.pass { color:var(--green); background:rgba(63,185,80,.15); }
+.step-block .check-result.fail { color:var(--red); background:rgba(248,81,73,.15); }
+.step-block .diff-block {
+  margin-top:8px; background:var(--bg); border:1px solid var(--border); border-radius:6px;
+  padding:8px 12px; font-family:Consolas,Monaco,monospace; font-size:0.8em; display:none;
+}
+.step-block .diff-block.show { display:block; }
+.step-block .diff-line { white-space:pre-wrap; padding:1px 4px; }
+.step-block .diff-line.match { color:var(--green); }
+.step-block .diff-line.miss { color:var(--red); background:rgba(248,81,73,.1); }
+.step-block .diff-line.extra { color:var(--yellow); }
+.step-meta { font-size:0.76em; color:var(--text2); margin-top:6px; }
+
+/* 工具栏新按钮 */
+.read-toolbar .tool-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); }
 </style>
 </head>
 <body>
@@ -341,7 +653,12 @@ body.pdf-fullscreen .nav-buttons { display:none !important; }
   <div class="right">
     <button class="btn-catalog" id="btnCatalog">📖 目录</button>
     <button class="btn-home" id="btnHome">🏠 首页</button>
-    <button class="btn-reset" id="btnReset">↺ 重置进度</button>
+    <button class="btn-reset" id="btnNotif">🔔 提醒</button>
+    <button class="btn-reset" id="btnTheme">🌓 主题</button>
+    <button class="btn-reset" id="btnExport">📤 导出</button>
+    <button class="btn-reset" id="btnImport">📥 导入</button>
+    <button class="btn-reset" id="btnReset">↺ 重置</button>
+    <input type="file" id="importFile" accept=".json" style="display:none">
   </div>
 </div>
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -376,6 +693,19 @@ body.pdf-fullscreen .nav-buttons { display:none !important; }
         <div class="stat-sub" id="statLastSub">尚未开始</div>
       </div>
     </div>
+    <!-- 学习目标 -->
+    <div class="goal-panel">
+      <h4>🎯 今日学习目标</h4>
+      <div class="goal-row">
+        <label>每日时长</label>
+        <input type="number" id="goalTime" min="5" max="1440" step="5"> <span style="color:var(--text2)">分钟</span>
+        <label style="margin-left:20px">每日章节</label>
+        <input type="number" id="goalCh" min="1" max="12" step="1"> <span style="color:var(--text2)">节</span>
+        <button class="note-btn save" id="btnSaveGoal" style="margin-left:auto">保存目标</button>
+      </div>
+      <div class="goal-progress" id="goalProgress">今日完成：0分钟 / 0节</div>
+      <div class="goal-bar"><div class="fill" id="goalBarFill" style="width:0%"></div></div>
+    </div>
     <div class="stats-detail">
       <div class="detail-block">
         <h4>📌 上次学习位置</h4>
@@ -400,6 +730,22 @@ body.pdf-fullscreen .nav-buttons { display:none !important; }
         </ul>
       </div>
     </div>
+
+    <!-- 我的书签 + 高亮合集 -->
+    <div class="stats-detail" style="margin-top:16px">
+      <div class="bookmark-panel">
+        <h4>🔖 我的书签</h4>
+        <ul class="bookmark-list" id="homeBookmarkList">
+          <li class="empty">还没有书签，阅读时点击「🔖 书签」按钮添加</li>
+        </ul>
+      </div>
+      <div class="highlight-panel">
+        <h4>🖍 我的高亮</h4>
+        <ul class="highlight-list" id="homeHighlightList">
+          <li class="empty">还没有高亮，阅读时选中文字后点击「🖍 高亮」</li>
+        </ul>
+      </div>
+    </div>
   </div>
 
   <div class="course-overview">
@@ -411,6 +757,7 @@ body.pdf-fullscreen .nav-buttons { display:none !important; }
   <div class="module-grid" id="moduleGrid"></div>
 
   <button class="start-btn" id="btnStart">🚀 开始学习 / 继续学习</button>
+  <button class="btn-home" id="btnFlashcard" style="display:block;margin:0 auto 20px;padding:10px 28px;font-size:0.92em">🎴 闪卡复习（间隔重复）</button>
 </div>
 
 <!-- ===== 学习视图 ===== -->
@@ -425,6 +772,27 @@ body.pdf-fullscreen .nav-buttons { display:none !important; }
         <div class="status-item">✓ 已完成 <span class="v" id="curDoneCount">0/12</span></div>
       </div>
       <div class="breadcrumb" id="breadcrumb"></div>
+      <div class="read-toolbar" id="readToolbar">
+        <span class="tool-label">字体</span>
+        <button class="tool-btn" id="btnFontMinus">A-</button>
+        <button class="tool-btn" id="btnFontPlus">A+</button>
+        <span class="tool-sep">|</span>
+        <button class="tool-btn" id="btnTheme2">🌓 主题</button>
+        <span class="tool-sep">|</span>
+        <button class="tool-btn" id="btnFocus">🎯 专注</button>
+        <button class="tool-btn" id="btnBookmark">🔖 书签</button>
+        <button class="tool-btn" id="btnHighlight">🖍 高亮</button>
+        <button class="tool-btn" id="btnTts">🔊 朗读</button>
+        <button class="tool-btn" id="btnMind">🌳 导图</button>
+      </div>
+      <!-- TTS 控制条 -->
+      <div class="tts-controls" id="ttsControls">
+        <button class="tool-btn" id="ttsPlay">⏸ 暂停</button>
+        <button class="tool-btn" id="ttsStop">⏹ 停止</button>
+        <span class="tool-label">语速</span>
+        <input type="range" id="ttsRate" min="0.5" max="2" step="0.1" value="1">
+        <span class="tts-status" id="ttsStatus">就绪</span>
+      </div>
       <div class="summary-box" id="summaryBox" style="display:none">
         <h4>⭐ 本节核心要点</h4>
         <ul id="summaryList"></ul>
@@ -432,12 +800,66 @@ body.pdf-fullscreen .nav-buttons { display:none !important; }
       <div class="md-content" id="mdContent">
         <div class="loading"><div class="spinner"></div>加载中...</div>
       </div>
+      <!-- 学习笔记 -->
+      <div class="note-section" id="noteSection">
+        <h4>📝 我的笔记</h4>
+        <textarea id="noteText" placeholder="在此记录学习笔记，自动保存到本地..."></textarea>
+        <div class="note-actions">
+          <button class="note-btn save" id="btnSaveNote">💾 保存笔记</button>
+          <button class="note-btn" id="btnDeleteNote">🗑 删除笔记</button>
+        </div>
+        <div class="note-info" id="noteInfo"></div>
+      </div>
       <div class="nav-buttons">
         <button id="btnPrev">◀ 上一节</button>
         <button class="btn-mark-done" id="btnDone">✓ 标记完成并下一节</button>
         <button id="btnNext">下一节 ▶</button>
       </div>
     </div>
+  </div>
+</div>
+<!-- 章节内浮动目录 -->
+<div class="chapter-toc" id="chapterToc" style="display:none"></div>
+<!-- 专注模式退出提示 -->
+<div class="focus-exit-hint" id="focusExitHint" onclick="toggleFocusMode()">✕ 退出专注 (F)</div>
+<!-- 划线高亮弹窗 -->
+<div class="highlight-popup" id="highlightPopup">
+  <div class="hp-colors">
+    <div class="hp-color c-yellow sel" data-color="yellow" title="黄色"></div>
+    <div class="hp-color c-green" data-color="green" title="绿色"></div>
+    <div class="hp-color c-blue" data-color="blue" title="蓝色"></div>
+    <div class="hp-color c-pink" data-color="pink" title="粉色"></div>
+  </div>
+  <textarea id="hlNote" placeholder="批注（可选）..."></textarea>
+  <div class="hp-actions">
+    <button class="hp-btn del" id="hlDelete" style="display:none">删除</button>
+    <button class="hp-btn" id="hlCancel">取消</button>
+    <button class="hp-btn save" id="hlSave">保存</button>
+  </div>
+</div>
+<!-- 思维导图弹窗 -->
+<div class="modal-overlay" id="mindmapModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="mindmapTitle">章节结构图</h3>
+      <button class="modal-close" onclick="closeMindmap()">×</button>
+    </div>
+    <div class="modal-body" id="mindmapBody"></div>
+  </div>
+</div>
+
+<!-- 闪卡复习视图 -->
+<div class="flashcard-view" id="flashcardView" style="display:none">
+  <h2 style="color:var(--accent);text-align:center">🎴 闪卡复习</h2>
+  <p style="color:var(--text2);text-align:center;font-size:0.86em;margin-bottom:8px">基于艾宾浩斯遗忘曲线，主动回忆+间隔重复</p>
+  <div class="flashcard-stats">
+    <div class="fs-card"><div class="fs-val" id="fsDue">0</div><div class="fs-lbl">今日待复习</div></div>
+    <div class="fs-card"><div class="fs-val" id="fsNew">0</div><div class="fs-lbl">新卡片</div></div>
+    <div class="fs-card"><div class="fs-val" id="fsDone">0</div><div class="fs-lbl">今日已复习</div></div>
+  </div>
+  <div id="flashcardArea"></div>
+  <div style="text-align:center;margin-top:20px">
+    <button class="btn-home" onclick="showHomeFromFlashcard()">← 返回首页</button>
   </div>
 </div>
 
@@ -560,24 +982,69 @@ const OVERVIEW = [
   "统一工程流程：环境搭建(ydy-eia-jzbase镜像)→代码下载→依赖安装→数据准备→推理验证→Web API服务"
 ];
 
+// ===== 闪卡数据（按章节分组）=====
+// SM-2 间隔重复算法的卡牌库。卡牌id格式：模块号-序号
+const FLASHCARDS = [
+  // 模块1 - 人脸表情识别
+  { id:'1-1', front:'人脸表情识别（FER）的完整流水线四步是什么？', back:'① 人脸检测 ② 对齐预处理 ③ 特征提取（CNN/Transformer）④ 表情分类。输出7类表情概率。' },
+  { id:'1-2', front:'FER-2013数据集采用哪7类表情分类？', back:'愤怒、厌恶、恐惧、快乐、悲伤、惊讶、中性（基于Ekman基本情绪理论）' },
+  { id:'1-3', front:'本课程FER模型体系涵盖哪四类CNN？', back:'VGG、ResNet、MobileNet、MobileViT — 从经典深网络到轻量化移动端模型' },
+  { id:'1-4', front:'FER模型训练后导出为什么格式？为什么？', back:'ONNX格式。原因：跨平台高效推理，便于部署到不同硬件后端。' },
+  { id:'1-5', front:'face-fer项目的check_deps.py作用？', back:'依赖完整性检查脚本，验证PyTorch、timm、onnxruntime等核心依赖是否正确安装。' },
+  { id:'1-6', front:'FER项目提供哪几个预训练模型权重？', back:'checkpoints目录下4个在FER-2013上训练完成的模型权重，可直接启动Web API服务验证。' },
+  // 模块2 - 人体行为识别
+  { id:'2-1', front:'HAR人体行为识别的完整流水线？', back:'YOLO人体检测 → ByteTrack多目标跟踪 → 分场景识别（室内姿态规则6类 / 室外MMAction2 TSN 400类）→ 结果输出' },
+  { id:'2-2', front:'YOLOv8相比早期YOLO的两个关键改进？', back:'① 无Anchor设计（Anchor-free） ② 解耦头（Decoupled Head）。nano版本参数量仅约3.2M可在CPU实时运行。' },
+  { id:'2-3', front:'ByteTrack的核心创新？', back:'BYTE关联策略：充分利用低分检测框来减少身份切换（ID Switch）和漏跟，实现轻量高效多目标跟踪。' },
+  { id:'2-4', front:'室内场景基于哪两个组件识别6类行为？', back:'YOLO-Pose 17点骨架 + 姿态规则引擎。识别听讲、举手、写字、低头、站立等行为。' },
+  { id:'2-5', front:'室外场景使用什么模型识别多少类行为？', back:'MMAction2 TSN时序模型，对Kinetics-400的400类行为进行分类。' },
+  { id:'2-6', front:'HAR经历了哪四个发展阶段？', back:'① 手工特征 ② 双流CNN ③ 3D卷积（I3D/SlowFast）④ Video Transformer。本课程聚焦YOLOv8+ByteTrack+MMAction2。' },
+  // 模块3 - 具身智能
+  { id:'3-1', front:'具身智能(Embodied AI)的核心定义？', back:'智能体必须具备物理或仿真的身体，通过与环境的实时交互实现感知-决策-行动的闭环。' },
+  { id:'3-2', front:'ROS2基于什么协议？相比ROS1的关键优势？', back:'基于DDS协议。优势：去中心化、自动发现、QoS策略、实时通信、原生多机器人支持。' },
+  { id:'3-3', front:'ROS2核心通信机制（4种）？', back:'① Node节点 ② Topic话题（异步发布订阅）③ Service服务（同步请求响应）④ Action动作（带反馈的长任务）' },
+  { id:'3-4', front:'控制机器人移动的关键话题名是？', back:'/cmd_vel（发布Twist速度指令）。其他重要话题：/scan（激光雷达）、/odom（里程计）' },
+  { id:'3-5', front:'具身智能模块涉及哪些工具链？', back:'Gazebo仿真、Docker/Docker Compose容器化、code-server浏览器IDE、rosbridge WebSocket、OpenClaw智能体网关、Dify LLM平台' },
+  { id:'3-6', front:'ament_python功能包cmd_vel_pub的作用？', back:'编写节点向/turtle1/cmd_vel发布Twist速度指令，用colcon build编译运行，验证ROS2通信。' },
+  // 模块4 - 智能体应用开发
+  { id:'4-1', front:'OpenClaw Skill（SKILL.md）由哪两部分组成？', back:'YAML元数据 + Markdown正文。定义自然语言到Shell命令的映射，本身不执行操作，仅指导智能体选择命令。' },
+  { id:'4-2', front:'OpenClaw的三层架构？', back:'① 理解层（自然语言→命令）② 封装层（Shell初始化环境）③ 执行层（Python业务逻辑）' },
+  { id:'4-3', front:'Dify智能体基于什么架构？关键组件？', back:'工作流架构。关键组件：提示词、记忆、RAG知识库。适用于智能翻译、知识问答等场景。' },
+  { id:'4-4', front:'LangGraph vs LangChain 的关键区别？', back:'LangGraph支持图结构编排，用于构建有状态、多步骤智能体。核心概念：节点、边、状态。适合复杂流程控制。' },
+  { id:'4-5', front:'RAG检索增强的工作流程？', back:'文档分块 → Embedding向量化 → 向量库存储 → 相似度检索 → 拼入Prompt。增强模型知识并减少幻觉。' },
+  { id:'4-6', front:'模块4端到端串联的完整链路？', back:'自然语言 → Dify应用（提示词/记忆/RAG）→ OpenClaw+Skills（Shell/Python）→ LangChain Agent+Tools（Twist）→ /turtle1/cmd_vel → turtlesim仿真' }
+];
+
 // ===== 进度与时间管理（本地存储）=====
-const PROG_KEY = "jz_course_progress_v2";
-const PROG_LEGACY = "jz_course_progress_v1"; // 旧版数据迁移
+const PROG_KEY = "jz_course_progress_v3";
+const PROG_LEGACY2 = "jz_course_progress_v2";
+const PROG_LEGACY1 = "jz_course_progress_v1";
 
 function loadProgress() {
   try {
     let p = JSON.parse(localStorage.getItem(PROG_KEY));
     if (!p) {
-      // 迁移旧版数据
-      const legacy = JSON.parse(localStorage.getItem(PROG_LEGACY)) || {};
+      // 迁移v2旧版数据
+      const v2 = JSON.parse(localStorage.getItem(PROG_LEGACY2)) || {};
+      const v1 = JSON.parse(localStorage.getItem(PROG_LEGACY1)) || {};
       p = {
-        done: legacy.done || [],
-        current: legacy.current || null,
-        totalTime: 0,
-        chapterTimes: {},
-        chapterEnterTs: 0,
-        lastActive: null,
-        studyDays: {}
+        done: v2.done || v1.done || [],
+        current: v2.current || v1.current || null,
+        totalTime: v2.totalTime || 0,
+        chapterTimes: v2.chapterTimes || {},
+        chapterEnterTs: v2.chapterEnterTs || 0,
+        lastActive: v2.lastActive || null,
+        studyDays: v2.studyDays || {},
+        // v3 新增字段
+        notes: {},
+        scrollPos: {},
+        prefs: { fontSize: 'medium', theme: 'dark', focusMode: false, notif: false, ttsRate: 1 },
+        goals: { dailyTime: 1800, dailyChapters: 2, today: { date:'', timeDone:0, chDone:0 } },
+        // v4 新增字段
+        bookmarks: [],
+        highlights: {},
+        manualSteps: {},
+        flashcards: {}
       };
     }
     // 确保字段完整
@@ -586,9 +1053,24 @@ function loadProgress() {
     p.studyDays = p.studyDays || {};
     if (typeof p.totalTime !== 'number') p.totalTime = 0;
     if (typeof p.chapterEnterTs !== 'number') p.chapterEnterTs = 0;
+    p.notes = p.notes || {};
+    p.scrollPos = p.scrollPos || {};
+    p.prefs = p.prefs || { fontSize: 'medium', theme: 'dark' };
+    p.prefs.fontSize = p.prefs.fontSize || 'medium';
+    p.prefs.theme = p.prefs.theme || 'dark';
+    if (typeof p.prefs.focusMode !== 'boolean') p.prefs.focusMode = false;
+    if (typeof p.prefs.notif !== 'boolean') p.prefs.notif = false;
+    if (typeof p.prefs.ttsRate !== 'number') p.prefs.ttsRate = 1;
+    p.goals = p.goals || { dailyTime: 1800, dailyChapters: 2, today: { date:'', timeDone:0, chDone:0 } };
+    p.goals.today = p.goals.today || { date:'', timeDone:0, chDone:0 };
+    // v4 字段补全
+    p.bookmarks = p.bookmarks || [];
+    p.highlights = p.highlights || {};
+    p.manualSteps = p.manualSteps || {};
+    p.flashcards = p.flashcards || {};
     return p;
   } catch(e) {
-    return { done:[], current:null, totalTime:0, chapterTimes:{}, chapterEnterTs:0, lastActive:null, studyDays:{} };
+    return { done:[], current:null, totalTime:0, chapterTimes:{}, chapterEnterTs:0, lastActive:null, studyDays:{}, notes:{}, scrollPos:{}, prefs:{fontSize:'medium',theme:'dark',focusMode:false,notif:false,ttsRate:1}, goals:{dailyTime:1800,dailyChapters:2,today:{date:'',timeDone:0,chDone:0}}, bookmarks:[], highlights:{}, manualSteps:{}, flashcards:{} };
   }
 }
 function saveProgress(p) {
@@ -852,6 +1334,11 @@ function renderHome() {
 
   // 渲染学习数据中心
   renderStats();
+  // 渲染书签和高亮合集
+  renderHomeBookmarks();
+  renderHomeHighlights();
+  // 隐藏闪卡视图
+  document.getElementById('flashcardView').style.display = 'none';
 
   // 模块卡片
   const done = getDoneSet();
@@ -979,7 +1466,18 @@ async function loadChapter(modId, chIndex) {
     // 提取文件所在目录作为base路径
     const baseDir = ch.file.substring(0, ch.file.lastIndexOf('/'));
     clean = clean.replace(/(\!\[[^\]]*\]\()images\//g, '$1' + baseDir + '/images/');
-    mdEl.innerHTML = marked.parse(clean);
+    // 实操手册：渲染为交互式步骤检查器
+    if (ch.name === '实操手册') {
+      renderManualChecker(mdEl, clean, `${modId}-${chIndex}`);
+    } else {
+      mdEl.innerHTML = marked.parse(clean);
+      // 渲染后恢复高亮、生成段落锚点、构建浮动目录
+      setTimeout(() => {
+        restoreHighlights(`${modId}-${chIndex}`);
+        buildChapterToc();
+        buildChapterMindmap(`${modId}-${chIndex}`, ch.name);
+      }, 50);
+    }
     // 滚动到顶部
     document.querySelector('.content-area').scrollTo(0, 0);
     window.scrollTo(0, 0);
@@ -1070,7 +1568,8 @@ document.getElementById('btnReset').onclick = () => {
     resetPending = false;
     stopStatusTimer();
     localStorage.removeItem(PROG_KEY);
-    localStorage.removeItem(PROG_LEGACY);
+    localStorage.removeItem(PROG_LEGACY1);
+    localStorage.removeItem(PROG_LEGACY2);
     renderHome();
     renderSidebar();
     showToast('✓ 进度与学习记录已重置');
@@ -1122,9 +1621,844 @@ function togglePdfFullscreen() {
   }
 }
 
+// ============================================================
+// ===== 1. 专注阅读模式 =====
+// ============================================================
+function toggleFocusMode() {
+  const p = loadProgress();
+  p.prefs.focusMode = !p.prefs.focusMode;
+  saveProgress(p);
+  applyFocusMode();
+  if (p.prefs.focusMode) showToast('🎯 已进入专注模式（按F退出）');
+}
+function applyFocusMode() {
+  const p = loadProgress();
+  document.body.classList.toggle('focus-mode', p.prefs.focusMode);
+}
+
+// ============================================================
+// ===== 2. 书签收藏 =====
+// ============================================================
+function addBookmark() {
+  const cur = getCurrent();
+  if (!cur) { showToast('请先进入一个章节'); return; }
+  const [modId, chIdx] = cur.split('-').map(Number);
+  const mod = MODULES.find(m => m.id === modId);
+  if (!mod) return;
+  const ch = mod.chapters[chIdx];
+  const label = prompt('书签名称（可留空自动生成）:', `${mod.name} - ${ch.name}`);
+  if (label === null) return; // 取消
+  const contentArea = document.querySelector('.content-area');
+  const scrollY = contentArea ? Math.round(contentArea.scrollTop) : 0;
+  const p = loadProgress();
+  p.bookmarks.push({
+    id: Date.now().toString(36),
+    chapterKey: cur,
+    modId, chIdx,
+    modName: mod.name,
+    chName: ch.name,
+    label: label || `${mod.name} - ${ch.name}`,
+    scrollY,
+    ts: Date.now()
+  });
+  saveProgress(p);
+  showToast('🔖 书签已添加');
+}
+function renderHomeBookmarks() {
+  const p = loadProgress();
+  const el = document.getElementById('homeBookmarkList');
+  if (!p.bookmarks.length) {
+    el.innerHTML = '<li class="empty">还没有书签，阅读时点击「🔖 书签」按钮添加</li>';
+    return;
+  }
+  el.innerHTML = p.bookmarks.slice().reverse().map(b => `
+    <li onclick="jumpToBookmark('${b.id}')">
+      <span class="bm-label">🔖 ${escapeHtml(b.label)}</span>
+      <span class="bm-meta">${b.modName} · ${dateStr(b.ts)}</span>
+      <span class="bm-del" onclick="event.stopPropagation();deleteBookmark('${b.id}')">✕</span>
+    </li>`).join('');
+}
+function jumpToBookmark(id) {
+  const p = loadProgress();
+  const b = p.bookmarks.find(x => x.id === id);
+  if (!b) return;
+  loadChapter(b.modId, b.chIdx).then(() => {
+    setTimeout(() => {
+      const ca = document.querySelector('.content-area');
+      if (ca) ca.scrollTo(0, b.scrollY || 0);
+    }, 200);
+  });
+}
+function deleteBookmark(id) {
+  const p = loadProgress();
+  p.bookmarks = p.bookmarks.filter(b => b.id !== id);
+  saveProgress(p);
+  renderHomeBookmarks();
+  showToast('书签已删除');
+}
+
+// ============================================================
+// ===== 3. 学习提醒（浏览器通知）=====
+// ============================================================
+function toggleNotification() {
+  const p = loadProgress();
+  if (p.prefs.notif) {
+    p.prefs.notif = false;
+    saveProgress(p);
+    applyNotificationState();
+    showToast('🔕 已关闭学习提醒');
+  } else {
+    if (!('Notification' in window)) {
+      showToast('⚠ 该浏览器不支持通知');
+      return;
+    }
+    Notification.requestPermission().then(perm => {
+      if (perm === 'granted') {
+        p.prefs.notif = true;
+        saveProgress(p);
+        applyNotificationState();
+        showToast('🔔 已开启学习提醒');
+        checkAndNotify(true);
+      } else {
+        showToast('⚠ 通知权限被拒绝');
+      }
+    });
+  }
+}
+function applyNotificationState() {
+  const p = loadProgress();
+  const btn = document.getElementById('btnNotif');
+  if (p.prefs.notif) {
+    btn.classList.add('notif-on');
+    btn.innerHTML = '🔔<span class="notif-dot"></span>';
+  } else {
+    btn.classList.remove('notif-on');
+    btn.textContent = '🔔 提醒';
+  }
+}
+function checkAndNotify(force) {
+  const p = loadProgress();
+  if (!p.prefs.notif) return;
+  const today = todayStr();
+  const todayTime = p.studyDays[today] || 0;
+  const goalSec = (p.goals.dailyTime || 30) * 60;
+  if (force || todayTime < goalSec) {
+    const remainMin = Math.max(0, Math.round((goalSec - todayTime) / 60));
+    try {
+      new Notification('📚 金砖大赛课程提醒', {
+        body: `今日还差 ${remainMin} 分钟达成学习目标，坚持就是胜利！`,
+        icon: 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#58a6ff"><text y="20" font-size="20">📚</text></svg>')
+      });
+    } catch(e) {}
+  }
+}
+
+// ============================================================
+// ===== 4. 文本转语音 (TTS) =====
+// ============================================================
+let ttsQueue = [];
+let ttsIdx = 0;
+let ttsPaused = false;
+function startTTS() {
+  if (!('speechSynthesis' in window)) {
+    showToast('⚠ 该浏览器不支持语音合成');
+    return;
+  }
+  stopTTS();
+  const paragraphs = [...document.querySelectorAll('.md-content p, .md-content li, .md-content h2, .md-content h3')];
+  ttsQueue = paragraphs.filter(p => p.textContent.trim());
+  ttsIdx = 0;
+  ttsPaused = false;
+  if (!ttsQueue.length) { showToast('无可朗读内容'); return; }
+  document.getElementById('ttsControls').classList.add('show');
+  document.getElementById('ttsPlay').textContent = '⏸ 暂停';
+  speakNext();
+}
+function speakNext() {
+  if (ttsIdx >= ttsQueue.length) {
+    document.getElementById('ttsStatus').textContent = '朗读完成';
+    document.getElementById('ttsPlay').textContent = '▶ 重读';
+    ttsIdx = 0;
+    return;
+  }
+  // 清除上一个高亮
+  document.querySelectorAll('.md-content p.tts-active').forEach(e => e.classList.remove('tts-active'));
+  const cur = ttsQueue[ttsIdx];
+  cur.classList.add('tts-active');
+  cur.scrollIntoView({ behavior:'smooth', block:'center' });
+  const u = new SpeechSynthesisUtterance(cur.textContent);
+  u.lang = 'zh-CN';
+  const p = loadProgress();
+  u.rate = p.prefs.ttsRate || 1;
+  document.getElementById('ttsStatus').textContent = `朗读中 ${ttsIdx+1}/${ttsQueue.length}`;
+  u.onend = () => { if (!ttsPaused) { ttsIdx++; speakNext(); } };
+  speechSynthesis.speak(u);
+}
+function pauseTTS() {
+  if (ttsPaused) {
+    speechSynthesis.resume();
+    ttsPaused = false;
+    document.getElementById('ttsPlay').textContent = '⏸ 暂停';
+    document.getElementById('ttsStatus').textContent = `朗读中 ${ttsIdx+1}/${ttsQueue.length}`;
+  } else {
+    speechSynthesis.pause();
+    ttsPaused = true;
+    document.getElementById('ttsPlay').textContent = '▶ 继续';
+    document.getElementById('ttsStatus').textContent = '已暂停';
+  }
+}
+function stopTTS() {
+  speechSynthesis.cancel();
+  ttsQueue = []; ttsIdx = 0; ttsPaused = false;
+  document.querySelectorAll('.md-content p.tts-active').forEach(e => e.classList.remove('tts-active'));
+  document.getElementById('ttsPlay').textContent = '⏸ 暂停';
+  document.getElementById('ttsStatus').textContent = '就绪';
+}
+
+// ============================================================
+// ===== 5. 划线高亮 =====
+// ============================================================
+let hlPendingRange = null;
+let hlCurrentColor = 'yellow';
+let hlEditingId = null;
+function setupHighlightListeners() {
+  document.addEventListener('mouseup', (e) => {
+    // 仅在 mdContent 内的选中
+    const mdEl = document.getElementById('mdContent');
+    if (!mdEl || !mdEl.contains(e.target)) { hideHighlightPopup(); return; }
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed || sel.rangeCount === 0) { hideHighlightPopup(); return; }
+    const range = sel.getRangeAt(0);
+    if (range.toString().trim().length < 2) { hideHighlightPopup(); return; }
+    // 检查是否在已有mark内（避免嵌套）
+    if (range.startContainer.parentElement.closest('mark')) { hideHighlightPopup(); return; }
+    hlPendingRange = range.cloneRange();
+    // 显示弹窗在选区附近
+    const rect = range.getBoundingClientRect();
+    const popup = document.getElementById('highlightPopup');
+    popup.style.left = (rect.left + window.scrollX) + 'px';
+    popup.style.top = (rect.bottom + window.scrollY + 6) + 'px';
+    popup.classList.add('show');
+    // 重置表单
+    document.getElementById('hlNote').value = '';
+    document.getElementById('hlDelete').style.display = 'none';
+    hlEditingId = null;
+    // 颜色选中
+    document.querySelectorAll('.hp-color').forEach(c => c.classList.toggle('sel', c.dataset.color === hlCurrentColor));
+  });
+  // 颜色切换
+  document.querySelectorAll('.hp-color').forEach(c => {
+    c.onclick = () => {
+      hlCurrentColor = c.dataset.color;
+      document.querySelectorAll('.hp-color').forEach(x => x.classList.remove('sel'));
+      c.classList.add('sel');
+    };
+  });
+  document.getElementById('hlSave').onclick = () => {
+    if (!hlPendingRange) return;
+    saveHighlightFromRange();
+  };
+  document.getElementById('hlCancel').onclick = hideHighlightPopup;
+  document.getElementById('hlDelete').onclick = () => {
+    if (hlEditingId) deleteHighlight(hlEditingId);
+    hideHighlightPopup();
+  };
+  // 点击外部关闭弹窗
+  document.addEventListener('mousedown', (e) => {
+    const popup = document.getElementById('highlightPopup');
+    if (!popup.contains(e.target) && !e.target.closest('mark')) hideHighlightPopup();
+  });
+}
+function hideHighlightPopup() {
+  document.getElementById('highlightPopup').classList.remove('show');
+  hlPendingRange = null;
+  hlEditingId = null;
+}
+// 为段落生成稳定锚点（基于段落索引）
+function ensureParaIds() {
+  const mdEl = document.getElementById('mdContent');
+  const paras = mdEl.querySelectorAll('p, li, h2, h3, td, pre');
+  paras.forEach((p, i) => { if (!p.dataset.pidx) p.dataset.pidx = String(i); });
+}
+function saveHighlightFromRange() {
+  const cur = getCurrent();
+  if (!cur || !hlPendingRange) return;
+  ensureParaIds();
+  const range = hlPendingRange;
+  const startEl = range.startContainer.parentElement;
+  const endEl = range.endContainer.parentElement;
+  const startPara = startEl.closest('[data-pidx]') || startEl;
+  const endPara = endEl.closest('[data-pidx]') || endEl;
+  const startPidx = startPara.dataset.pidx || '0';
+  const endPidx = endPara.dataset.pidx || startPidx;
+  const text = range.toString();
+  const note = document.getElementById('hlNote').value.trim();
+  const id = Date.now().toString(36);
+  const p = loadProgress();
+  if (!p.highlights[cur]) p.highlights[cur] = [];
+  p.highlights[cur].push({
+    id, startPidx, endPidx, startOffset: range.startOffset, endOffset: range.endOffset,
+    text, color: hlCurrentColor, note, ts: Date.now()
+  });
+  saveProgress(p);
+  // 立即应用到DOM
+  applyHighlightToDOM(range, id, hlCurrentColor, note);
+  hideHighlightPopup();
+  showToast('🖍 高亮已保存');
+}
+function applyHighlightToDOM(range, id, color, note) {
+  try {
+    const mark = document.createElement('mark');
+    mark.className = 'c-' + color;
+    mark.dataset.hid = id;
+    if (note) mark.title = note;
+    mark.onclick = (e) => { e.stopPropagation(); showHighlightInfo(id); };
+    range.surroundContents(mark);
+  } catch(e) { /* 跨节点，忽略 */ }
+}
+function restoreHighlights(chapterKey) {
+  const p = loadProgress();
+  const list = p.highlights[chapterKey] || [];
+  if (!list.length) return;
+  ensureParaIds();
+  list.forEach(h => {
+    try {
+      const startEl = document.querySelector(`[data-pidx="${h.startPidx}"]`);
+      const endEl = document.querySelector(`[data-pidx="${h.endPidx}"]`);
+      if (!startEl || !endEl) return;
+      const range = document.createRange();
+      range.setStart(startEl.firstChild || startEl, Math.min(h.startOffset, (startEl.firstChild?.textContent || startEl.textContent || '').length));
+      range.setEnd(endEl.lastChild || endEl, Math.min(h.endOffset, (endEl.lastChild?.textContent || endEl.textContent || '').length));
+      applyHighlightToDOM(range, h.id, h.color, h.note);
+    } catch(e) {}
+  });
+}
+function showHighlightInfo(id) {
+  const cur = getCurrent();
+  const p = loadProgress();
+  const list = p.highlights[cur] || [];
+  const h = list.find(x => x.id === id);
+  if (!h) return;
+  const popup = document.getElementById('highlightPopup');
+  const mark = document.querySelector(`mark[data-hid="${id}"]`);
+  if (mark) {
+    const rect = mark.getBoundingClientRect();
+    popup.style.left = (rect.left + window.scrollX) + 'px';
+    popup.style.top = (rect.bottom + window.scrollY + 6) + 'px';
+  }
+  popup.classList.add('show');
+  document.getElementById('hlNote').value = h.note || '';
+  document.getElementById('hlDelete').style.display = 'inline-block';
+  hlEditingId = id;
+  document.querySelectorAll('.hp-color').forEach(c => c.classList.toggle('sel', c.dataset.color === h.color));
+}
+function deleteHighlight(id) {
+  const cur = getCurrent();
+  const p = loadProgress();
+  if (!p.highlights[cur]) return;
+  p.highlights[cur] = p.highlights[cur].filter(x => x.id !== id);
+  saveProgress(p);
+  // 从DOM移除
+  const mark = document.querySelector(`mark[data-hid="${id}"]`);
+  if (mark) {
+    const parent = mark.parentNode;
+    while (mark.firstChild) parent.insertBefore(mark.firstChild, mark);
+    parent.removeChild(mark);
+    parent.normalize();
+  }
+  renderHomeHighlights();
+  showToast('高亮已删除');
+}
+function renderHomeHighlights() {
+  const p = loadProgress();
+  const el = document.getElementById('homeHighlightList');
+  const all = [];
+  Object.keys(p.highlights).forEach(ck => {
+    (p.highlights[ck] || []).forEach(h => {
+      const [modId, chIdx] = ck.split('-').map(Number);
+      const mod = MODULES.find(m => m.id === modId);
+      const ch = mod && mod.chapters[chIdx];
+      all.push({ ...h, chapterKey: ck, modName: mod ? mod.name : '', chName: ch ? ch.name : '' });
+    });
+  });
+  if (!all.length) {
+    el.innerHTML = '<li class="empty">还没有高亮，阅读时选中文字后点击「🖍 高亮」</li>';
+    return;
+  }
+  el.innerHTML = all.slice().sort((a,b) => b.ts - a.ts).slice(0, 50).map(h => `
+    <li onclick="jumpToHighlight('${h.chapterKey}','${h.id}')">
+      <span class="hl-text"><mark class="c-${h.color}">${escapeHtml(h.text.substring(0,60))}${h.text.length>60?'...':''}</mark></span>
+      ${h.note ? `<span class="hl-note">📝 ${escapeHtml(h.note)}</span>` : ''}
+      <span class="hl-meta">${h.modName} · ${h.chName} · ${dateStr(h.ts)}</span>
+    </li>`).join('');
+}
+function jumpToHighlight(chapterKey, hid) {
+  const [modId, chIdx] = chapterKey.split('-').map(Number);
+  loadChapter(modId, chIdx).then(() => {
+    setTimeout(() => {
+      const mark = document.querySelector(`mark[data-hid="${hid}"]`);
+      if (mark) mark.scrollIntoView({ behavior:'smooth', block:'center' });
+    }, 300);
+  });
+}
+
+// ============================================================
+// ===== 6. 章节内浮动目录 + 思维导图 =====
+// ============================================================
+function buildChapterToc() {
+  const mdEl = document.getElementById('mdContent');
+  const headings = mdEl.querySelectorAll('h2, h3');
+  const toc = document.getElementById('chapterToc');
+  if (!headings.length) { toc.style.display = 'none'; return; }
+  let html = '<h5>📑 本章目录</h5><ul>';
+  headings.forEach((h, i) => {
+    if (!h.id) h.id = 'hd-' + i;
+    const cls = h.tagName === 'H3' ? 'h3' : '';
+    html += `<li><a class="${cls}" onclick="document.getElementById('${h.id}').scrollIntoView({behavior:'smooth',block:'start'})">${escapeHtml(h.textContent)}</a></li>`;
+  });
+  html += '</ul>';
+  toc.innerHTML = html;
+  toc.style.display = window.innerWidth > 1100 ? 'block' : 'none';
+}
+// 章节思维导图缓存：{chapterKey: treeData}
+let mindmapCache = {};
+function buildChapterMindmap(chapterKey, chName) {
+  const mdEl = document.getElementById('mdContent');
+  const headings = mdEl.querySelectorAll('h1, h2, h3');
+  const tree = { name: chName, level: 0, children: [] };
+  let h1Node = tree, h2Node = tree;
+  headings.forEach(h => {
+    const node = { name: h.textContent, id: h.id || '', level: parseInt(h.tagName[1]) };
+    if (h.tagName === 'H1') { tree.children.push(node); node.children = []; h1Node = node; h2Node = node; }
+    else if (h.tagName === 'H2') { (h1Node.children = h1Node.children || []).push(node); node.children = []; h2Node = node; }
+    else if (h.tagName === 'H3') { (h2Node.children = h2Node.children || []).push(node); node.children = []; }
+  });
+  mindmapCache[chapterKey] = tree;
+}
+function openMindmap() {
+  const cur = getCurrent();
+  if (!cur) { showToast('请先进入章节'); return; }
+  const tree = mindmapCache[cur];
+  if (!tree) { showToast('导图不可用'); return; }
+  const mod = MODULES.find(m => m.id === parseInt(cur.split('-')[0]));
+  document.getElementById('mindmapTitle').textContent = `🌳 ${mod ? mod.name : ''} - 思维导图`;
+  renderMindmapSVG(tree);
+  document.getElementById('mindmapModal').classList.add('show');
+}
+function closeMindmap() {
+  document.getElementById('mindmapModal').classList.remove('show');
+}
+function renderMindmapSVG(tree) {
+  // 计算节点布局（横向树）
+  const W = 820;
+  const rowH = 32;
+  let nodes = [];
+  let yCursor = 0;
+  function layout(node, depth, parentY) {
+    if (!node.children || node.children.length === 0) {
+      const y = yCursor * rowH + 20;
+      yCursor++;
+      nodes.push({ name: node.name, depth, y, id: node.id || '', isLeaf: true });
+      return y;
+    }
+    const childYs = [];
+    (node.children || []).forEach(c => childYs.push(layout(c, depth+1)));
+    const y = (childYs[0] + childYs[childYs.length-1]) / 2;
+    nodes.push({ name: node.name, depth, y, id: node.id || '', children: node.children, childYs });
+    return y;
+  }
+  layout(tree, 0);
+  const totalH = Math.max(yCursor * rowH + 40, 300);
+  const colW = 200;
+  const svgParts = [`<svg class="mindmap-svg" viewBox="0 0 ${W} ${totalH}" xmlns="http://www.w3.org/2000/svg">`];
+  // 绘制边
+  nodes.forEach(n => {
+    if (n.childYs) {
+      n.childYs.forEach(cy => {
+        const x1 = n.depth * colW + 130;
+        const y1 = n.y + 10;
+        const x2 = (n.depth + 1) * colW + 20;
+        const y2 = cy + 10;
+        const mx = (x1 + x2) / 2;
+        svgParts.push(`<path class="mindmap-edge" d="M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}"/>`);
+      });
+    }
+  });
+  // 绘制节点
+  nodes.forEach(n => {
+    const x = n.depth * colW + 20;
+    const y = n.y;
+    const isRoot = n.depth === 0;
+    const fill = isRoot ? 'var(--accent)' : n.depth === 1 ? 'var(--card2)' : 'var(--card)';
+    const textFill = isRoot ? '#fff' : 'var(--text)';
+    const w = Math.min(220, n.name.length * 12 + 24);
+    svgParts.push(`<g class="mindmap-node" ${n.id ? `onclick="document.getElementById('${n.id}').scrollIntoView({behavior:'smooth',block:'start'});closeMindmap();"` : ''}>`);
+    svgParts.push(`<rect x="${x}" y="${y}" width="${w}" height="22" rx="4" fill="${fill}" stroke="var(--border)"/>`);
+    const text = n.name.length > 16 ? n.name.substring(0,15) + '…' : n.name;
+    svgParts.push(`<text x="${x+8}" y="${y+15}" fill="${textFill}">${escapeHtml(text)}</text>`);
+    svgParts.push('</g>');
+  });
+  svgParts.push('</svg>');
+  document.getElementById('mindmapBody').innerHTML = svgParts.join('');
+}
+
+// ============================================================
+// ===== 7. 闪卡 + SM-2 间隔重复算法 =====
+// ============================================================
+function openFlashcardView() {
+  document.getElementById('homeView').style.display = 'none';
+  document.getElementById('learnView').style.display = 'none';
+  document.getElementById('flashcardView').style.display = 'block';
+  leaveChapter();
+  stopStatusTimer();
+  renderFlashcardStats();
+  renderNextFlashcard();
+}
+function showHomeFromFlashcard() {
+  document.getElementById('flashcardView').style.display = 'none';
+  renderHome();
+  renderSidebar();
+}
+// SM-2 算法实现（quality: 0-5，0-2算"忘了"）
+function sm2(card, quality) {
+  // card: {repetitions, easiness, interval, dueDate, lastReview}
+  let reps = card.repetitions || 0;
+  let ease = card.easiness || 2.5;
+  let interval = card.interval || 0;
+  if (quality < 3) {
+    reps = 0;
+    interval = 1;
+  } else {
+    ease = Math.max(1.3, ease + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)));
+    reps += 1;
+    if (reps === 1) interval = 1;
+    else if (reps === 2) interval = 6;
+    else interval = Math.round(interval * ease);
+  }
+  const now = Date.now();
+  const due = now + interval * 86400000;
+  return { repetitions: reps, easiness: ease, interval, dueDate: due, lastReview: now };
+}
+function getCardState(cardId) {
+  const p = loadProgress();
+  return p.flashcards[cardId] || { repetitions: 0, easiness: 2.5, interval: 0, dueDate: 0, lastReview: 0 };
+}
+function isCardDue(cardId) {
+  const s = getCardState(cardId);
+  if (!s.lastReview) return true; // 新卡
+  return Date.now() >= (s.dueDate || 0);
+}
+function renderFlashcardStats() {
+  const p = loadProgress();
+  let due = 0, isNew = 0;
+  FLASHCARDS.forEach(c => {
+    const s = p.flashcards[c.id];
+    if (!s || !s.lastReview) { isNew++; due++; }
+    else if (Date.now() >= (s.dueDate || 0)) due++;
+  });
+  const today = todayStr();
+  const reviewedToday = Object.values(p.flashcards).filter(s => {
+    if (!s.lastReview) return false;
+    const d = new Date(s.lastReview);
+    return `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2,'0')}-${d.getDate().toString().padStart(2,'0')}` === today;
+  }).length;
+  document.getElementById('fsDue').textContent = due;
+  document.getElementById('fsNew').textContent = isNew;
+  document.getElementById('fsDone').textContent = reviewedToday;
+}
+let currentFlashcard = null;
+function renderNextFlashcard() {
+  const next = FLASHCARDS.find(c => isCardDue(c.id));
+  const area = document.getElementById('flashcardArea');
+  if (!next) {
+    area.innerHTML = `<div style="text-align:center;padding:40px 20px;color:var(--text2)">
+      <div style="font-size:3em;margin-bottom:12px">🎉</div>
+      <p>今日复习已完成！</p>
+      <p style="font-size:0.85em;margin-top:8px">明天再来巩固记忆吧</p>
+    </div>`;
+    renderFlashcardStats();
+    return;
+  }
+  currentFlashcard = next;
+  const modId = next.id.split('-')[0];
+  const mod = MODULES.find(m => m.id === parseInt(modId));
+  const cardState = getCardState(next.id);
+  const isNew = !cardState.lastReview;
+  area.innerHTML = `
+    <div class="flashcard-box">
+      <div class="flashcard" id="flashcard" onclick="flipFlashcard()">
+        <div class="flashcard-face flashcard-front">
+          <div class="fc-tag">模块${modId} ${mod ? mod.name : ''} · ${isNew ? '新卡' : '复习'}</div>
+          <div class="fc-text">${escapeHtml(next.front)}</div>
+          <div class="fc-hint">点击卡片查看答案</div>
+        </div>
+        <div class="flashcard-face flashcard-back">
+          <div class="fc-tag">✓ 答案</div>
+          <div class="fc-text">${escapeHtml(next.back)}</div>
+        </div>
+      </div>
+    </div>
+    <div class="flashcard-actions" id="fcActions" style="display:none">
+      <button class="fc-btn again" onclick="rateFlashcard(0)">重来 (0)</button>
+      <button class="fc-btn hard" onclick="rateFlashcard(3)">困难 (3)</button>
+      <button class="fc-btn good" onclick="rateFlashcard(4)">良好 (4)</button>
+      <button class="fc-btn easy" onclick="rateFlashcard(5)">简单 (5)</button>
+    </div>`;
+  renderFlashcardStats();
+}
+function flipFlashcard() {
+  const card = document.getElementById('flashcard');
+  if (!card) return;
+  card.classList.add('flipped');
+  setTimeout(() => {
+    const a = document.getElementById('fcActions');
+    if (a) a.style.display = 'flex';
+  }, 300);
+}
+function rateFlashcard(quality) {
+  if (!currentFlashcard) return;
+  const p = loadProgress();
+  const oldState = p.flashcards[currentFlashcard.id] || { repetitions:0, easiness:2.5, interval:0, dueDate:0, lastReview:0 };
+  p.flashcards[currentFlashcard.id] = sm2(oldState, quality);
+  saveProgress(p);
+  const intervalDays = p.flashcards[currentFlashcard.id].interval;
+  showToast(`已评分 · 下次复习：${intervalDays}天后`);
+  setTimeout(renderNextFlashcard, 200);
+}
+
+// ============================================================
+// ===== 8. 实操步骤检查器 =====
+// ============================================================
+function renderManualChecker(mdEl, mdText, chapterKey) {
+  // 解析markdown：按 ### 标题分块，提取命令块和"预期输出"块
+  const lines = mdText.split('\n');
+  const steps = [];
+  let curStep = null;
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    // 检测 ### 标题
+    const h3 = line.match(/^###\s+(\d+\.\d+)\s+(.+)/);
+    const h3NoNum = line.match(/^###\s+(.+)/);
+    if (h3 || h3NoNum) {
+      if (curStep) steps.push(curStep);
+      curStep = {
+        id: h3 ? h3[1] : `step-${steps.length+1}`,
+        title: h3 ? h3[2] : h3NoNum[1],
+        commands: [],
+        expected: '',
+        description: []
+      };
+      i++; continue;
+    }
+    // 检测 ## 主标题（章节级）
+    if (line.match(/^##\s+/)) { i++; continue; }
+    if (!curStep) { i++; continue; }
+    // 检测代码块开始
+    if (line.match(/^```(bash|shell|sh)?/)) {
+      const lang = line.match(/^```(\w+)?/)[1] || '';
+      i++;
+      const codeLines = [];
+      while (i < lines.length && !lines[i].match(/^```/)) {
+        codeLines.push(lines[i]);
+        i++;
+      }
+      i++; // 跳过结束的 ```
+      const code = codeLines.join('\n').trim();
+      if (lang.match(/bash|shell|sh/) || code.startsWith('#') || code.includes('$')) {
+        curStep.commands.push(code);
+      } else {
+        // 没有语言标记的代码块，可能是预期输出
+        if (!curStep.expected) curStep.expected = code;
+        else curStep.expected += '\n' + code;
+      }
+      continue;
+    }
+    // 检测"预期输出"文字提示
+    if (line.match(/预期输出|你应该看到|预期结果|预期/)) {
+      // 下一行可能是代码块或文本
+      curStep.description.push(line);
+      i++;
+      // 如果下一段是代码块，会被代码块逻辑捕获
+      continue;
+    }
+    // 普通描述文本
+    if (line.trim()) curStep.description.push(line);
+    i++;
+  }
+  if (curStep) steps.push(curStep);
+  // 只保留有命令或有预期输出的步骤
+  const validSteps = steps.filter(s => s.commands.length || s.expected);
+  // 渲染
+  const p = loadProgress();
+  const stepStates = p.manualSteps[chapterKey] || {};
+  const passedCount = validSteps.filter(s => stepStates[s.id] && stepStates[s.id].passed).length;
+  let html = `<div class="step-progress-bar">
+    <div class="sp-head"><span>实操步骤完成进度</span><span class="sp-count">${passedCount}/${validSteps.length}</span></div>
+    <div class="sp-track"><div class="sp-fill" id="stepProgressFill" style="width:${validSteps.length ? passedCount/validSteps.length*100 : 0}%"></div></div>
+  </div>`;
+  html += `<div class="summary-box"><h4>⭐ 本节核心要点</h4><ul>${(SUMMARIES[chapterKey.replace('-','_')] || SUMMARIES[chapterKey] || []).map(s => `<li>${s}</li>`).join('')}</ul></div>`;
+  validSteps.forEach((s, idx) => {
+    const state = stepStates[s.id] || {};
+    const cls = state.passed ? 'passed' : (state.attempts && !state.passed ? 'failed' : '');
+    html += `<div class="step-block ${cls}" id="step-${s.id}">
+      <h4><span class="step-num">${idx+1}</span>${escapeHtml(s.title)}</h4>`;
+    s.description.forEach(d => { if (d.trim() && !d.match(/^预期/)) html += `<p style="font-size:0.86em;color:var(--text2)">${escapeHtml(d)}</p>`; });
+    s.commands.forEach(c => { html += `<div class="cmd-block">${escapeHtml(c)}</div>`; });
+    if (s.expected) html += `<div class="expected-block">${escapeHtml(s.expected)}</div>`;
+    html += `<div class="check-area">
+      <textarea id="stepInput-${s.id}" placeholder="粘贴你的实际输出...">${escapeHtml(state.lastOutput || '')}</textarea>
+      <div class="check-actions">
+        <button class="check-btn" onclick="checkManualStep('${chapterKey}','${s.id}', ${idx})">检查</button>
+        <span class="check-result" id="result-${s.id}"></span>
+      </div>
+      <div class="diff-block" id="diff-${s.id}"></div>
+      <div class="step-meta" id="meta-${s.id}">${state.attempts ? `已尝试 ${state.attempts} 次 · ${state.lastAttempt ? '上次：' + new Date(state.lastAttempt).toLocaleString() : ''}` : ''}</div>
+    </div></div>`;
+  });
+  mdEl.innerHTML = html;
+}
+function checkManualStep(chapterKey, stepId, idx) {
+  const mdEl = document.getElementById('mdContent');
+  // 从DOM重新读取预期输出
+  const stepBlock = document.getElementById('step-' + stepId);
+  const expectedEl = stepBlock.querySelector('.expected-block');
+  const expected = expectedEl ? expectedEl.textContent.replace(/^预期输出：/, '').trim() : '';
+  const actual = document.getElementById('stepInput-' + stepId).value.trim();
+  if (!actual) { showToast('请先粘贴实际输出'); return; }
+  // 对比：按行归一化，统计匹配率
+  const norm = s => s.replace(/\s+/g, ' ').trim().toLowerCase();
+  const expLines = expected.split('\n').map(l => norm(l)).filter(l => l);
+  const actLines = actual.split('\n').map(l => norm(l)).filter(l => l);
+  let matched = 0;
+  const diffHtml = [];
+  const expSet = new Set(expLines);
+  const actSet = new Set(actLines);
+  // 标记预期中的关键token是否出现在实际输出中（更宽松，因为终端输出可能多变）
+  const expTokens = expected.split(/[\s,;:|]+/).filter(t => t.length > 2).map(t => t.toLowerCase());
+  const actLower = actual.toLowerCase();
+  const tokenHit = expTokens.filter(t => actLower.includes(t));
+  const tokenRate = expTokens.length ? tokenHit.length / expTokens.length : 0;
+  // 行匹配
+  expLines.forEach(el => {
+    if (actSet.has(el)) { matched++; diffHtml.push(`<div class="diff-line match">✓ ${escapeHtml(el)}</div>`); }
+    else {
+      // 部分匹配
+      const partial = actLines.some(al => al.includes(el) || el.includes(al));
+      if (partial) { matched += 0.6; diffHtml.push(`<div class="diff-line match">≈ ${escapeHtml(el)}</div>`); }
+      else diffHtml.push(`<div class="diff-line miss">✗ ${escapeHtml(el)}</div>`);
+    }
+  });
+  // 多余行
+  actLines.forEach(al => {
+    if (!expSet.has(al) && !expLines.some(el => el.includes(al) || al.includes(el))) {
+      diffHtml.push(`<div class="diff-line extra">+ ${escapeHtml(al)}</div>`);
+    }
+  });
+  const lineRate = expLines.length ? matched / expLines.length : 0;
+  const passRate = Math.max(lineRate, tokenRate);
+  const passed = passRate >= 0.6;
+  // 保存状态
+  const p = loadProgress();
+  if (!p.manualSteps[chapterKey]) p.manualSteps[chapterKey] = {};
+  p.manualSteps[chapterKey][stepId] = {
+    passed, attempts: (p.manualSteps[chapterKey][stepId]?.attempts || 0) + 1,
+    lastAttempt: Date.now(), lastOutput: actual, passRate
+  };
+  saveProgress(p);
+  // 更新UI
+  const resultEl = document.getElementById('result-' + stepId);
+  const diffEl = document.getElementById('diff-' + stepId);
+  const metaEl = document.getElementById('meta-' + stepId);
+  stepBlock.classList.remove('passed', 'failed');
+  stepBlock.classList.add(passed ? 'passed' : 'failed');
+  resultEl.className = 'check-result ' + (passed ? 'pass' : 'fail');
+  resultEl.textContent = passed ? `✓ 通过 (${Math.round(passRate*100)}%匹配)` : `✗ 未通过 (${Math.round(passRate*100)}%匹配)`;
+  diffEl.innerHTML = diffHtml.join('');
+  diffEl.classList.add('show');
+  metaEl.textContent = `已尝试 ${p.manualSteps[chapterKey][stepId].attempts} 次 · ${new Date().toLocaleString()}`;
+  // 更新进度条
+  updateStepProgress(chapterKey);
+  showToast(passed ? '✓ 步骤通过！' : `✗ 未通过，请查看差异`);
+}
+function updateStepProgress(chapterKey) {
+  // 重新统计通过数
+  const p = loadProgress();
+  const states = p.manualSteps[chapterKey] || {};
+  const allBlocks = document.querySelectorAll('.step-block');
+  const passed = [...allBlocks].filter(b => b.classList.contains('passed')).length;
+  const fill = document.getElementById('stepProgressFill');
+  if (fill) fill.style.width = (allBlocks.length ? passed/allBlocks.length*100 : 0) + '%';
+  const spCount = document.querySelector('.sp-count');
+  if (spCount) spCount.textContent = `${passed}/${allBlocks.length}`;
+}
+
+// ============================================================
+// ===== HTML 转义工具 =====
+// ============================================================
+function escapeHtml(s) {
+  if (s == null) return '';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// ============================================================
+// ===== 事件绑定 =====
+// ============================================================
+document.getElementById('btnFocus').onclick = toggleFocusMode;
+document.getElementById('btnBookmark').onclick = addBookmark;
+document.getElementById('btnHighlight').onclick = () => {
+  const sel = window.getSelection();
+  if (sel && !sel.isCollapsed && sel.rangeCount > 0) {
+    // 已通过mouseup处理
+    showToast('选中文字后弹窗会自动出现');
+  } else {
+    showToast('请先在内容区选中文字');
+  }
+};
+document.getElementById('btnTts').onclick = startTTS;
+document.getElementById('ttsPlay').onclick = pauseTTS;
+document.getElementById('ttsStop').onclick = stopTTS;
+document.getElementById('ttsRate').onchange = (e) => {
+  const p = loadProgress();
+  p.prefs.ttsRate = parseFloat(e.target.value);
+  saveProgress(p);
+};
+document.getElementById('btnMind').onclick = openMindmap;
+document.getElementById('btnNotif').onclick = toggleNotification;
+document.getElementById('btnFlashcard').onclick = openFlashcardView;
+// 键盘快捷键：F=专注模式，J/K=滚动，←/→=上下章节
+document.addEventListener('keydown', (e) => {
+  // 在输入框内不响应快捷键
+  const tag = e.target.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+  if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFocusMode(); }
+  else if (e.key === 'j') { window.scrollBy(0, 80); }
+  else if (e.key === 'k') { window.scrollBy(0, -80); }
+  else if (e.key === 'ArrowLeft') { const b = document.getElementById('btnPrev'); if (b && !b.disabled) b.click(); }
+  else if (e.key === 'ArrowRight') { const b = document.getElementById('btnNext'); if (b && !b.disabled) b.click(); }
+});
+// 弹窗点击外部关闭
+document.getElementById('mindmapModal').onclick = (e) => {
+  if (e.target.id === 'mindmapModal') closeMindmap();
+};
+// 初始化高亮监听器
+setupHighlightListeners();
+
 // ===== 初始化 =====
+// 应用保存的偏好
+const initP = loadProgress();
+applyFocusMode();
+applyNotificationState();
+document.getElementById('ttsRate').value = initP.prefs.ttsRate || 1;
+// 应用主题
+if (initP.prefs.theme === 'light') document.body.classList.add('theme-light');
+// 应用字体大小
+document.body.classList.add('font-' + (initP.prefs.fontSize || 'medium'));
+
 renderHome();
 renderSidebar();
+// 启动后5分钟检查一次通知（如果开启）
+setInterval(() => checkAndNotify(false), 5 * 60 * 1000);
 </script>
 </body>
 </html>
