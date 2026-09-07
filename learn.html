@@ -253,7 +253,7 @@ const MODULES = [
     desc: "FER基础理论、CNN模型体系、FER-2013数据集、Flask接口",
     chapters: [
       { name: "基础知识", file: "course/module1_fer/basics.md" },
-      { name: "课程简报", file: null, isPdf: true },
+      { name: "课程简报", file: "course/module1_fer/briefing.pdf", isPdf: true },
       { name: "实操手册", file: "course/module1_fer/manual.md" }
     ]
   },
@@ -262,7 +262,7 @@ const MODULES = [
     desc: "人体行为识别理论、YOLOv8检测、ByteTrack跟踪、MMAction2",
     chapters: [
       { name: "基础知识", file: "course/module2_har/basics.md" },
-      { name: "课程简报", file: null, isPdf: true },
+      { name: "课程简报", file: "course/module2_har/briefing.pdf", isPdf: true },
       { name: "实操手册", file: "course/module2_har/manual.md" }
     ]
   },
@@ -271,7 +271,7 @@ const MODULES = [
     desc: "具身智能概念、ROS2通信、Docker编排、Dify/OpenClaw平台",
     chapters: [
       { name: "基础知识", file: "course/module3_embodied_ai/basics.md" },
-      { name: "课程简报", file: null, isPdf: true },
+      { name: "课程简报", file: "course/module3_embodied_ai/briefing.pdf", isPdf: true },
       { name: "实操手册", file: "course/module3_embodied_ai/manual.md" }
     ]
   },
@@ -280,7 +280,7 @@ const MODULES = [
     desc: "OpenClaw Skill、Dify智能体、LangGraph、RAG知识库",
     chapters: [
       { name: "基础知识", file: "course/module4_agent/basics.md" },
-      { name: "课程简报", file: null, isPdf: true },
+      { name: "课程简报", file: "course/module4_agent/briefing.pdf", isPdf: true },
       { name: "实操手册", file: "course/module4_agent/manual.md" }
     ]
   }
@@ -472,7 +472,7 @@ function renderSidebar() {
 async function loadChapter(modId, chIndex) {
   const mod = MODULES.find(m => m.id === modId);
   const ch = mod.chapters[chIndex];
-  if (!ch.file) { showToast('该章节为PDF简报，暂不支持在线预览'); return; }
+  if (!ch.file) { showToast('该章节无法打开'); return; }
 
   setCurrent(`${modId}-${chIndex}`);
   renderSidebar();
@@ -491,12 +491,21 @@ async function loadChapter(modId, chIndex) {
     sBox.style.display = 'none';
   }
 
-  // 加载md
+  // 加载内容
   const mdEl = document.getElementById('mdContent');
   mdEl.innerHTML = '<div class="loading"><div class="spinner"></div>加载中...</div>';
 
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('learnView').style.display = 'block';
+
+  // PDF 文件用 iframe 预览
+  if (ch.isPdf) {
+    mdEl.innerHTML = `<iframe src="${ch.file}" style="width:100%; height:75vh; border:1px solid var(--border); border-radius:8px;" allowfullscreen></iframe>`;
+    document.querySelector('.content-area').scrollTo(0, 0);
+    window.scrollTo(0, 0);
+    updateNavButtons(modId, chIndex);
+    return;
+  }
 
   try {
     const resp = await fetch(ch.file);
